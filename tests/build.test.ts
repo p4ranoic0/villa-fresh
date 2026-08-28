@@ -13,7 +13,7 @@ test('la home publicada NO es un contenedor vacío', async () => {
 })
 
 test('el catálogo se publica en su propia carpeta, con su título', async () => {
-  const html = await readFile('dist/catalogo/index.html', 'utf8')
+  const html = await readFile('dist/catalogo.html', 'utf8')
   expect(html).toContain('<title>Catálogo — Villa Fresh | Bidones, recarga y accesorios en Lima</title>')
   expect(html).not.toContain('<div id="root"></div>')
 })
