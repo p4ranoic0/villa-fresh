@@ -167,7 +167,7 @@ No se escriben números de versión a mano: se instala y se deja que Bun los fij
 
 ```bash
 bun add react react-dom react-router
-bun add -d vite @vitejs/plugin-react typescript @types/react @types/react-dom
+bun add -d vite @vitejs/plugin-react typescript @types/react @types/react-dom @types/bun
 bun pm ls
 ```
 
@@ -204,8 +204,7 @@ export default defineConfig({
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "skipLibCheck": true,
-    "types": ["bun-types", "vite/client"]
+    "skipLibCheck": true
   },
   "include": ["src", "scripts", "tests"],
   "references": [{ "path": "./tsconfig.node.json" }]
@@ -223,6 +222,14 @@ export default defineConfig({
   },
   "include": ["vite.config.ts"]
 }
+```
+
+- [ ] **Step 6b: Crear `src/vite-env.d.ts`**
+
+Sin esto, `import.meta.env.PROD` (que usa `main.tsx`) no está tipado.
+
+```ts
+/// <reference types="vite/client" />
 ```
 
 - [ ] **Step 7: Crear `index.html`, la plantilla de Vite**
@@ -1603,10 +1610,12 @@ test('el catálogo publica los 7 productos dentro del HTML, sin depender de Java
   }
 })
 
-test('los productos sin precio se publican como "A cotizar", nunca como S/ 0.00', async () => {
+test('los 5 productos sin precio se publican como "A cotizar"', async () => {
+  // Cuenta exacta en vez de buscar "S/ 0.00": el total del cajón vacío ES "S/ 0.00",
+  // y React separa textos contiguos con <!-- --> al renderizar en servidor, así que
+  // afirmar sobre el fragmento "S/ 0.00 <small>" sería frágil.
   const html = await readFile('dist/catalogo/index.html', 'utf8')
-  expect(html).toContain('A cotizar')
-  expect(html).not.toContain('S/ 0.00 <small>')
+  expect(html.split('A cotizar').length - 1).toBe(5)
 })
 ```
 
@@ -2013,8 +2022,25 @@ export function guardarPedido(lineas: LineaPedido[]): void {
 Tests: JSON corrupto → `[]`; array con basura → sólo las líneas válidas; cantidad 0 o
 negativa → descartada; ida y vuelta de un pedido válido.
 
-En `usePedido`: un efecto que restaura al montar (con acción `restaurar`) y otro que
-guarda cuando `lineas` cambia.
+Amplía `AccionPedido` en `src/features/pedido/pedido.ts` con el caso que falta —en la
+Tarea 5 no existía porque aún no había persistencia:
+
+```ts
+export type AccionPedido =
+  | { tipo: 'agregar'; sku: string }
+  | { tipo: 'incrementar'; sku: string }
+  | { tipo: 'decrementar'; sku: string }
+  | { tipo: 'quitar'; sku: string }
+  | { tipo: 'limpiar' }
+  | { tipo: 'restaurar'; lineas: LineaPedido[] }
+```
+
+En `reducirPedido`, `case 'restaurar': return accion.lineas`. Añade a `tests/pedido.test.ts`
+que restaurar sustituye el estado completo.
+
+En `usePedido`, dos efectos: uno que despacha `restaurar` **una sola vez al montar** —
+nunca durante el render— y otro que llama a `guardarPedido(lineas)` cuando `lineas`
+cambia.
 
 - [ ] **Step 2: Verificar que la persistencia no rompe la hidratación**
 
