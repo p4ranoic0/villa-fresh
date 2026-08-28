@@ -41,6 +41,14 @@ vería sin título ni descripción.
 > página dentro del HTML. Un build que produzca HTML vacío es un build fallido, y así
 > debe fallar: ruidosamente, no en silencio.
 
+**Corolario sobre las URL (28/08/2026, tras verificarlo en el navegador).** El catálogo
+se publica como **`/catalogo.html`**, un archivo literal, no como `/catalogo/index.html`.
+La forma de carpeta obliga a que el hosting resuelva `/catalogo` → `/catalogo/`: Netlify
+y Vercel lo hacen, `vite preview` no, y ahí el fallback SPA sirve el HTML de la Home. El
+servidor pinta entonces un contenido y el cliente otro, y React aborta la hidratación
+(error #418). Un archivo literal se comporta igual en todos los hosts y en local, y es
+además la URL que ya usa el sitio actual, así que ningún enlace existente se rompe.
+
 Todo lo demás en este documento se deriva de esa restricción.
 
 ---
@@ -79,7 +87,7 @@ bun run build
           para cada ruta:
             renderToString(<App url=ruta/>)
             inyecta el HTML y las metaetiquetas en la plantilla
-            escribe dist/index.html  y  dist/catalogo/index.html
+            escribe dist/index.html  y  dist/catalogo.html
 ```
 
 En el navegador, `hydrateRoot()` toma ese HTML ya pintado y le devuelve la interactividad
@@ -107,7 +115,7 @@ villa-fresh/
 ├─ src/
 │  ├─ main.tsx                     hydrateRoot()
 │  ├─ entry-server.tsx             renderToString() por ruta
-│  ├─ App.tsx                      rutas: "/" y "/catalogo"
+│  ├─ App.tsx                      rutas: "/" y "/catalogo.html"
 │  ├─ types.ts                     Producto · Categoria · LineaPedido
 │  ├─ data/
 │  │  ├─ productos.ts              ← EL archivo de contenido (precios y SKUs)

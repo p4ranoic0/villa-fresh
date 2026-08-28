@@ -10,7 +10,7 @@ conservando diseño y comportamiento, y publicando HTML pre-renderizado.
 
 **Arquitectura:** Vite compila dos veces —bundle de cliente y bundle de servidor— y
 después un script propio corriendo en Bun renderiza cada ruta a string con
-`renderToString` y escribe `dist/index.html` y `dist/catalogo/index.html` con el
+`renderToString` y escribe `dist/index.html` y `dist/catalogo.html` con el
 contenido dentro. En el navegador, `hydrateRoot()` devuelve la interactividad. El
 artefacto publicado sigue siendo HTML estático subible a cualquier hosting.
 
@@ -113,7 +113,7 @@ marcado, no se "mejora" la estructura y no se cambian nombres de clase.**
 | `hidden` | `hidden={condición}` |
 | `&nbsp;` | `&nbsp;` (JSX admite entidades en texto) |
 | `viewBox`, `aria-*`, `role`, `d`, `fill`, `stroke` | igual |
-| `href="catalogo.html"` | `<Link to="/catalogo">` |
+| `href="catalogo.html"` | `<Link to="/catalogo.html">` |
 | `href="index.html#proceso"` | `href="/#proceso"` (ancla: `<a>` normal, no `Link`) |
 
 Los enlaces externos conservan `target="_blank" rel="noopener"`.
@@ -294,8 +294,8 @@ export const RUTAS: MetaRuta[] = [
       'Bidón de 20 litros de agua purificada por ósmosis inversa, ozonizada y alcalinizada a pH 8.3. Planta propia, sin intermediarios. Entrega el mismo día en Lima Metropolitana. S/30 el bidón, 2 por S/50.',
   },
   {
-    path: '/catalogo',
-    archivo: 'catalogo/index.html',
+    path: '/catalogo.html',
+    archivo: 'catalogo.html',
     title: 'Catálogo — Villa Fresh | Bidones, recarga y accesorios en Lima',
     description:
       'Catálogo de Villa Fresh: bidón de 20 L a S/30, 2 por S/50, recarga, envase vacío, botellas y dispensador. Arma tu pedido y lo cierras por WhatsApp.',
@@ -328,7 +328,7 @@ export default function App() {
       <Titulo />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/catalogo" element={<Catalogo />} />
+        <Route path="/catalogo.html" element={<Catalogo />} />
       </Routes>
     </>
   )
@@ -423,7 +423,7 @@ contenido para que ningún avance posterior pueda romperla en silencio.
 **Interfaces:**
 - Consumes: `RUTAS` de `src/rutas.ts`; `App` de `src/App.tsx`.
 - Produces: `render(url: string): string` desde `src/entry-server.tsx`;
-  `dist/index.html` y `dist/catalogo/index.html` con el contenido dentro.
+  `dist/index.html` y `dist/catalogo.html` con el contenido dentro.
 
 - [ ] **Step 1: Escribir la prueba que falla**
 
@@ -444,7 +444,7 @@ test('la home publicada NO es un contenedor vacío', async () => {
 })
 
 test('el catálogo se publica en su propia carpeta, con su título', async () => {
-  const html = await readFile('dist/catalogo/index.html', 'utf8')
+  const html = await readFile('dist/catalogo.html', 'utf8')
   expect(html).toContain('<title>Catálogo — Villa Fresh | Bidones, recarga y accesorios en Lima</title>')
   expect(html).not.toContain('<div id="root"></div>')
 })
@@ -456,7 +456,7 @@ test('el catálogo se publica en su propia carpeta, con su título', async () =>
 bun test tests/build.test.ts
 ```
 
-Esperado: FALLA — `dist/catalogo/index.html` no existe y `dist/index.html` todavía
+Esperado: FALLA — `dist/catalogo.html` no existe y `dist/index.html` todavía
 contiene `<!--app-html-->`.
 
 - [ ] **Step 3: Crear `src/entry-server.tsx`**
@@ -544,7 +544,7 @@ bun run test:build
 ```
 
 Esperado: los tres tests en verde y en `dist/` aparecen `index.html` y
-`catalogo/index.html`. Compruébalo también a ojo:
+`catalogo.html`. Compruébalo también a ojo:
 
 ```bash
 grep -c 'Villa Fresh' dist/index.html   # > 0
@@ -1336,7 +1336,7 @@ export default function Nav({ accion, enCatalogo }: Props) {
         </Link>
         <div className="nav-links">
           <a href="/#proceso">Proceso</a>
-          <Link to="/catalogo" aria-current={enCatalogo ? 'page' : undefined}>
+          <Link to="/catalogo.html" aria-current={enCatalogo ? 'page' : undefined}>
             Catálogo
           </Link>
           <a href="/#cobertura">Cobertura</a>
@@ -1474,7 +1474,7 @@ export default function Hero() {
               <IconoWhatsApp />
               Pedir por WhatsApp
             </a>
-            <Link className="btn btn-ghost" to="/catalogo">
+            <Link className="btn btn-ghost" to="/catalogo.html">
               Ver catálogo
             </Link>
           </div>
@@ -1542,7 +1542,7 @@ import Proceso from './home/Proceso'
 export default function Home() {
   return (
     <>
-      <Nav accion={<Link className="btn btn-cyan btn-sm" to="/catalogo">Ver catálogo</Link>} />
+      <Nav accion={<Link className="btn btn-cyan btn-sm" to="/catalogo.html">Ver catálogo</Link>} />
       <Hero />
       <Cinta />
       <BandaPrecio />
@@ -1618,7 +1618,7 @@ Añade a `tests/build.test.ts`:
 
 ```ts
 test('el catálogo publica los 7 productos dentro del HTML, sin depender de JavaScript', async () => {
-  const html = await readFile('dist/catalogo/index.html', 'utf8')
+  const html = await readFile('dist/catalogo.html', 'utf8')
   for (const sku of ['VF-B20', 'VF-B20X2', 'VF-R20', 'VF-EV20', 'VF-BOT', 'VF-DISP', 'VF-EMP']) {
     expect(html).toContain(sku)
   }
@@ -1628,7 +1628,7 @@ test('los 5 productos sin precio se publican como "A cotizar"', async () => {
   // Cuenta exacta en vez de buscar "S/ 0.00": el total del cajón vacío ES "S/ 0.00",
   // y React separa textos contiguos con <!-- --> al renderizar en servidor, así que
   // afirmar sobre el fragmento "S/ 0.00 <small>" sería frágil.
-  const html = await readFile('dist/catalogo/index.html', 'utf8')
+  const html = await readFile('dist/catalogo.html', 'utf8')
   expect(html.split('A cotizar').length - 1).toBe(5)
 })
 ```
@@ -1959,7 +1959,7 @@ python3 -m http.server 8000 -d legacy      # original, http://localhost:8000
 
 - [ ] **Step 2: Capturar ambas en tres anchos**
 
-Con Playwright: `/` y `/catalogo` contra `index.html` y `catalogo.html`, a **375**, **768**
+Con Playwright: `/` y `/catalogo.html` contra `index.html` y `catalogo.html`, a **375**, **768**
 y **1440 px** de ancho, página completa.
 
 - [ ] **Step 3: Comparar y clasificar cada diferencia**
@@ -1967,9 +1967,11 @@ y **1440 px** de ancho, página completa.
 Toda diferencia es un **defecto que se corrige**, no una mejora que se acepta. Se anotan
 en una lista y se corrigen en esta tarea, no en la siguiente.
 
-Diferencias esperadas y admisibles, sólo estas dos:
-- La URL del catálogo (`/catalogo` en vez de `/catalogo.html`).
+Diferencia esperada y admisible, sólo esta:
 - El orden de los atributos en el HTML generado.
+
+Las URL **no** cambian respecto al sitio actual: el catálogo sigue siendo
+`/catalogo.html`.
 
 - [ ] **Step 4: Verificar que no hay scroll horizontal a 390 px**
 
@@ -2078,7 +2080,7 @@ corporativo y dominio", `README.md`). Declara la constante y déjala marcada:
 export const SITIO_URL = 'https://villafresh.pe'
 ```
 
-Verifica: `grep 'og:title' dist/index.html dist/catalogo/index.html`.
+Verifica: `grep 'og:title' dist/index.html dist/catalogo.html`.
 
 - [ ] **Step 4: Foco y estados**
 
