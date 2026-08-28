@@ -2008,18 +2008,23 @@ const CLAVE = 'villafresh:pedido'
 
 /** Devuelve [] ante cualquier fallo: modo privado, cuota llena o JSON corrupto.
  *  Un pedido perdido es molesto; una página que no carga es peor. */
-export function leerPedido(): LineaPedido[] {
+export function leerPedido(productos: Producto[]): LineaPedido[] {
   try {
     const crudo = localStorage.getItem(CLAVE)
     if (!crudo) return []
     const dato: unknown = JSON.parse(crudo)
     if (!Array.isArray(dato)) return []
+    const skusValidos = new Set(productos.map((p) => p.sku))
     return dato.filter(
       (l): l is LineaPedido =>
         typeof l === 'object' && l !== null &&
         typeof (l as LineaPedido).sku === 'string' &&
         typeof (l as LineaPedido).cantidad === 'number' &&
-        (l as LineaPedido).cantidad > 0,
+        (l as LineaPedido).cantidad > 0 &&
+        // Descarta SKU que ya no existen en el catálogo. Sin esto, un producto
+        // retirado de productos.ts dejaría al cliente con el contador marcando
+        // unidades que el cajón no puede mostrar.
+        skusValidos.has((l as LineaPedido).sku),
     )
   } catch {
     return []
@@ -2036,7 +2041,13 @@ export function guardarPedido(lineas: LineaPedido[]): void {
 ```
 
 Tests: JSON corrupto → `[]`; array con basura → sólo las líneas válidas; cantidad 0 o
-negativa → descartada; ida y vuelta de un pedido válido.
+negativa → descartada; **SKU que ya no está en `PRODUCTOS` → descartada**; ida y vuelta
+de un pedido válido.
+
+Ese último caso no es teórico: `totalUnidades` cuenta toda línea, exista o no el
+producto, mientras que `totalSoles` y el cajón la ignoran. Con el pedido sólo en memoria
+era inalcanzable; al persistirlo deja de serlo, y se manifestaría como un contador que
+marca unidades sobre un cajón vacío.
 
 Amplía `AccionPedido` en `src/features/pedido/pedido.ts` con el caso que falta —en la
 Tarea 5 no existía porque aún no había persistencia:
