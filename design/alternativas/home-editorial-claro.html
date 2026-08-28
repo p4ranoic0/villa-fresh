@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Fresh — Agua purificada a domicilio en Lima | Bidón 20L S/30</title>
+<meta name="description" content="Bidón de 20 litros de agua purificada por ósmosis inversa, ozonizada y alcalinizada a pH 8.3. Planta propia, sin intermediarios. Entrega el mismo día en Lima Metropolitana. S/30 el bidón, 2 por S/50.">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./design/tokens.css">
+<style>
+/* ---- Layout base ------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+.container { max-width: var(--vf-container-max); margin-inline: auto; padding-inline: var(--vf-container-pad); }
+@media (min-width: 768px) { .container { padding-inline: var(--vf-container-pad-md); } }
+.band { padding-block: var(--vf-band-pad-sm); }
+@media (min-width: 768px) { .band { padding-block: var(--vf-band-pad); } }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+.ico { width: 1.15em; height: 1.15em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; vertical-align: -0.2em; }
+
+/* ---- Tipografía -------------------------------------------------------- */
+h1, h2, h3 { margin: 0; font-weight: var(--vf-weight-light); line-height: var(--vf-leading-tight); letter-spacing: var(--vf-tracking-tight); }
+h1 { font-size: clamp(2.5rem, 4.4vw, 3.875rem); }
+h2 { font-size: clamp(2rem, 4.5vw, 3.25rem); }
+h3 { font-size: var(--vf-text-h3); font-weight: var(--vf-weight-medium); letter-spacing: 0; }
+p  { margin: 0; }
+.eyebrow { display: inline-block; color: var(--vf-color-primary); font-size: var(--vf-text-sm); font-weight: var(--vf-weight-medium); letter-spacing: var(--vf-tracking-widest); text-transform: uppercase; }
+.lead { font-size: var(--vf-text-lead); font-weight: var(--vf-weight-light); color: var(--vf-color-on-surface-variant); line-height: var(--vf-leading-relaxed); max-width: 52ch; }
+.muted { color: var(--vf-color-text-muted); font-size: var(--vf-text-sm); }
+
+/* ---- Botones ----------------------------------------------------------- */
+.btn { display: inline-flex; align-items: center; gap: var(--vf-space-2); border: 0; cursor: pointer; font-family: inherit; font-weight: var(--vf-weight-medium); border-radius: var(--vf-radius-full); text-decoration: none; transition: all var(--vf-duration-base) var(--vf-ease-standard); }
+.btn-wa { background: var(--vf-color-whatsapp); color: #fff; padding: var(--vf-space-4) var(--vf-space-8); font-size: var(--vf-text-body); box-shadow: 0 10px 25px -5px rgb(37 211 102 / 0.35); }
+.btn-wa:hover { filter: brightness(0.94); transform: translateY(-1px); }
+.btn-primary { background: var(--vf-color-primary); color: var(--vf-color-on-primary); padding: var(--vf-space-3) var(--vf-space-8); font-size: var(--vf-text-sm); box-shadow: var(--vf-shadow-primary); }
+.btn-primary:hover { background: var(--vf-color-primary-hover); }
+.btn-ghost { background: var(--vf-color-surface); color: var(--vf-color-primary); border: 1px solid var(--vf-color-border-subtle); padding: var(--vf-space-3) var(--vf-space-8); font-size: var(--vf-text-sm); box-shadow: var(--vf-shadow-sm); }
+.btn-ghost:hover { background: var(--vf-color-surface-variant); }
+.btn-on-night { background: transparent; color: var(--vf-color-on-night); border: 1px solid var(--vf-color-night-border); padding: var(--vf-space-3) var(--vf-space-8); font-size: var(--vf-text-sm); }
+.btn-on-night:hover { background: rgb(255 255 255 / 0.06); }
+
+/* ---- Navegación -------------------------------------------------------- */
+.nav { position: sticky; top: 0; z-index: var(--vf-z-navbar); background: var(--vf-color-nav-glass); backdrop-filter: blur(12px); border-bottom: 1px solid var(--vf-color-border-subtle); }
+.nav-in { height: var(--vf-navbar-height); display: flex; align-items: center; justify-content: space-between; gap: var(--vf-space-6); }
+.brand { display: flex; align-items: center; gap: var(--vf-space-3); text-decoration: none; }
+.brand img { height: 44px; width: auto; }
+.brand b { font-size: 1.375rem; font-weight: var(--vf-weight-bold); letter-spacing: var(--vf-tracking-tight); }
+.brand .tag { display: block; font-size: 0.625rem; font-weight: var(--vf-weight-medium); letter-spacing: var(--vf-tracking-wider); text-transform: uppercase; color: var(--vf-color-text-muted); margin-top: 2px; }
+.nav-links { display: none; gap: var(--vf-space-8); font-size: var(--vf-text-sm); font-weight: var(--vf-weight-medium); letter-spacing: var(--vf-tracking-wide); text-transform: uppercase; }
+.nav-links a { color: var(--vf-color-on-surface-variant); text-decoration: none; transition: color var(--vf-duration-fast); }
+.nav-links a:hover, .nav-links a.is-active { color: var(--vf-color-primary); }
+@media (min-width: 1024px) { .nav-links { display: flex; } }
+
+/* ---- Hero -------------------------------------------------------------- */
+.hero { position: relative; overflow: hidden; }
+.hero::before { content: ""; position: absolute; right: -8%; top: -14%; width: 52vw; max-width: 720px; aspect-ratio: 100/120; background-image: var(--vf-motif-drop); background-repeat: no-repeat; background-size: contain; opacity: var(--vf-motif-opacity); pointer-events: none; }
+.hero-grid { display: grid; gap: var(--vf-space-16); align-items: center; }
+@media (min-width: 900px) { .hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: var(--vf-space-12); } }
+.hero-copy { display: flex; flex-direction: column; gap: var(--vf-space-6); }
+.trust { display: flex; flex-wrap: wrap; gap: var(--vf-space-3); margin-top: var(--vf-space-2); }
+.pill { display: inline-flex; align-items: center; gap: 6px; background: var(--vf-color-surface-variant); border: 1px solid var(--vf-color-border-subtle); color: var(--vf-color-on-surface-variant); font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); letter-spacing: var(--vf-tracking-wider); text-transform: uppercase; padding: var(--vf-space-2) var(--vf-space-4); border-radius: var(--vf-radius-full); }
+.pill .ico { font-size: 15px; color: var(--vf-color-primary); }
+
+/* Tarjeta de precio — el protagonista del hero */
+.pricecard { background: var(--vf-color-surface); border: 1px solid var(--vf-color-border-subtle); border-radius: var(--vf-radius-2xl); box-shadow: var(--vf-shadow-card); overflow: hidden; }
+.pricecard-head { background: var(--vf-gradient-brand); color: #fff; padding: var(--vf-space-5) var(--vf-space-8); display: flex; justify-content: space-between; align-items: center; }
+.pricecard-head .t { font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); letter-spacing: var(--vf-tracking-wider); text-transform: uppercase; }
+.pricecard-body { padding: var(--vf-space-8); display: grid; gap: var(--vf-space-6); }
+.offer { display: grid; grid-template-columns: 1fr 1fr; gap: var(--vf-space-4); }
+.offer > div { border: 1px solid var(--vf-color-border-subtle); border-radius: var(--vf-radius-lg); padding: var(--vf-space-5); text-align: center; }
+.offer .hi { border-color: var(--vf-color-primary); background: var(--vf-color-primary-container); position: relative; }
+.offer .qty { font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); letter-spacing: var(--vf-tracking-wider); text-transform: uppercase; color: var(--vf-color-text-muted); }
+.offer .hi .qty { color: var(--vf-color-on-primary-container); }
+.offer .amt { font-size: clamp(2.25rem, 5vw, 3.25rem); font-weight: var(--vf-weight-light); letter-spacing: var(--vf-tracking-stat); line-height: 1; margin-top: 6px; }
+.offer .amt sup { font-size: 0.4em; vertical-align: super; font-weight: var(--vf-weight-medium); letter-spacing: 0; }
+.offer .save { display: inline-block; margin-top: var(--vf-space-2); font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); color: var(--vf-color-success); }
+.paylist { display: flex; align-items: center; gap: var(--vf-space-4); font-size: var(--vf-text-xs); color: var(--vf-color-text-muted); border-top: 1px solid var(--vf-color-border-subtle); padding-top: var(--vf-space-4); }
+
+/* ---- Franja de datos duros -------------------------------------------- */
+.stats { border-block: 1px solid var(--vf-color-border-subtle); background: var(--vf-color-surface-variant); }
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 900px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
+.stat { padding: var(--vf-space-10) var(--vf-space-6); border-right: 1px solid var(--vf-color-border-subtle); }
+.stat:nth-child(2n) { border-right: 0; }
+@media (min-width: 900px) { .stat { border-right: 1px solid var(--vf-color-border-subtle); } .stat:nth-child(2n) { border-right: 1px solid var(--vf-color-border-subtle); } .stat:last-child { border-right: 0; } }
+.stat .n { font-size: var(--vf-text-stat); font-weight: var(--vf-weight-stat); letter-spacing: var(--vf-tracking-stat); line-height: 0.95; color: var(--vf-color-on-surface); }
+.stat .n em { font-style: normal; font-size: 0.34em; color: var(--vf-color-primary); letter-spacing: var(--vf-tracking-wide); }
+.stat .n em.blk { display: block; margin-top: var(--vf-space-2); }
+.stat .l { margin-top: var(--vf-space-3); font-size: var(--vf-text-sm); color: var(--vf-color-on-surface-variant); font-weight: var(--vf-weight-light); max-width: 24ch; }
+
+/* ---- Banda oscura ------------------------------------------------------ */
+.night { background: var(--vf-gradient-night); color: var(--vf-color-on-night); position: relative; overflow: hidden; }
+.night::after { content: ""; position: absolute; left: -6%; bottom: -22%; width: 42vw; max-width: 560px; aspect-ratio: 100/120; background-image: var(--vf-motif-drop); background-repeat: no-repeat; background-size: contain; opacity: 0.10; filter: brightness(3); pointer-events: none; }
+.night h2 { color: var(--vf-color-on-night); }
+.night .eyebrow { color: var(--vf-color-night-accent); }
+.night .lead { color: var(--vf-color-on-night-variant); }
+.steps { display: grid; gap: var(--vf-space-4); margin-top: var(--vf-space-16); grid-template-columns: repeat(2, 1fr); position: relative; z-index: 1; }
+@media (min-width: 768px) { .steps { grid-template-columns: repeat(4, 1fr); } }
+.step { background: var(--vf-color-night-raised); border: 1px solid var(--vf-color-night-border); border-radius: var(--vf-radius-lg); padding: var(--vf-space-6); }
+.step .k { font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); letter-spacing: var(--vf-tracking-wider); color: var(--vf-color-night-accent); }
+.step .h { margin-top: var(--vf-space-3); font-size: var(--vf-text-body); font-weight: var(--vf-weight-medium); }
+.step .d { margin-top: var(--vf-space-2); font-size: var(--vf-text-sm); font-weight: var(--vf-weight-light); color: var(--vf-color-on-night-variant); line-height: var(--vf-leading-relaxed); }
+.seals { display: flex; flex-wrap: wrap; gap: var(--vf-space-6); margin-top: var(--vf-space-16); padding-top: var(--vf-space-8); border-top: 1px solid var(--vf-color-night-border); align-items: center; position: relative; z-index: 1; }
+.seal { display: flex; align-items: center; gap: var(--vf-space-3); font-size: var(--vf-text-sm); color: var(--vf-color-on-night-variant); }
+.seal .ico { color: var(--vf-color-night-accent); font-size: 22px; }
+
+/* ---- Planes ------------------------------------------------------------ */
+.section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: var(--vf-space-6); border-bottom: 1px solid var(--vf-color-border-subtle); padding-bottom: var(--vf-space-6); margin-bottom: var(--vf-space-16); }
+.plans { display: grid; gap: var(--vf-space-8); grid-template-columns: 1fr; }
+@media (min-width: 900px) { .plans { grid-template-columns: repeat(3, 1fr); } }
+.plan { display: flex; flex-direction: column; border: 1px solid var(--vf-color-border-subtle); border-radius: var(--vf-radius-xl); padding: var(--vf-space-8); transition: box-shadow var(--vf-duration-base) var(--vf-ease-standard), transform var(--vf-duration-base) var(--vf-ease-standard); }
+.plan:hover { box-shadow: var(--vf-shadow-card); transform: translateY(-3px); }
+.plan .icon { width: 52px; height: 52px; border-radius: var(--vf-radius-full); background: var(--vf-color-primary-container); color: var(--vf-color-primary); display: grid; place-items: center; margin-bottom: var(--vf-space-6); }
+.plan .icon .ico { font-size: 26px; }
+.plan ul { list-style: none; margin: var(--vf-space-6) 0 var(--vf-space-8); padding: 0; display: grid; gap: var(--vf-space-3); font-size: var(--vf-text-sm); }
+.plan li { display: flex; gap: var(--vf-space-3); align-items: start; color: var(--vf-color-on-surface-variant); }
+.plan li .ico { color: var(--vf-color-primary); font-size: 18px; }
+.plan .price { margin-top: auto; padding-top: var(--vf-space-6); border-top: 1px solid var(--vf-color-border-subtle); display: flex; justify-content: space-between; align-items: center; }
+.plan .price b { font-size: var(--vf-text-h3); font-weight: var(--vf-weight-semibold); }
+
+/* ---- Cobertura --------------------------------------------------------- */
+.cover { background: var(--vf-color-feature-tint); border-radius: var(--vf-radius-2xl); padding: var(--vf-space-10); }
+@media (min-width: 768px) { .cover { padding: var(--vf-space-20); } }
+.cover-grid { display: grid; gap: var(--vf-space-12); }
+@media (min-width: 900px) { .cover-grid { grid-template-columns: 1fr 1fr; align-items: center; } }
+.zonebox { background: var(--vf-color-surface); border-radius: var(--vf-radius-xl); padding: var(--vf-space-8); box-shadow: var(--vf-shadow-card); }
+.zonebox form { display: flex; gap: var(--vf-space-3); margin-top: var(--vf-space-4); }
+.zonebox input { flex: 1; font-family: inherit; font-size: var(--vf-text-body); padding: var(--vf-space-3) var(--vf-space-5); border: 1px solid var(--vf-color-border-strong); border-radius: var(--vf-radius-full); background: var(--vf-color-surface); color: var(--vf-color-on-surface); }
+.zonebox input:focus { outline: none; border-color: var(--vf-color-primary); box-shadow: var(--vf-shadow-focus); }
+.zonelist { margin-top: var(--vf-space-6); display: flex; flex-wrap: wrap; gap: var(--vf-space-2); }
+.zonelist span { font-size: var(--vf-text-xs); color: var(--vf-color-on-surface-variant); background: var(--vf-color-surface-variant); border: 1px solid var(--vf-color-border-subtle); padding: 6px var(--vf-space-3); border-radius: var(--vf-radius-full); }
+
+/* ---- FAQ --------------------------------------------------------------- */
+.faq { display: grid; gap: 0; }
+.faq details { border-bottom: 1px solid var(--vf-color-border-subtle); padding: var(--vf-space-6) 0; }
+.faq summary { cursor: pointer; list-style: none; font-size: var(--vf-text-h4); font-weight: var(--vf-weight-medium); display: flex; justify-content: space-between; gap: var(--vf-space-4); }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary .ico { color: var(--vf-color-primary); transition: transform var(--vf-duration-base); }
+.faq details[open] summary .ico { transform: rotate(45deg); }
+.faq p { margin-top: var(--vf-space-4); color: var(--vf-color-on-surface-variant); font-weight: var(--vf-weight-light); line-height: var(--vf-leading-relaxed); max-width: 70ch; }
+
+/* ---- Footer ------------------------------------------------------------ */
+.foot { border-top: 1px solid var(--vf-color-border-subtle); padding-block: var(--vf-space-20) var(--vf-space-10); }
+.foot-grid { display: grid; gap: var(--vf-space-12); grid-template-columns: 1fr; }
+@media (min-width: 900px) { .foot-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+.foot h4 { margin: 0 0 var(--vf-space-4); font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); letter-spacing: var(--vf-tracking-wider); text-transform: uppercase; }
+.foot a { display: block; color: var(--vf-color-on-surface-variant); text-decoration: none; font-weight: var(--vf-weight-light); margin-bottom: var(--vf-space-3); font-size: var(--vf-text-sm); }
+.foot a:hover { color: var(--vf-color-primary); }
+.foot .brand { display: flex; align-items: center; margin-bottom: var(--vf-space-5); }
+.foot .btn { display: inline-flex; width: auto; margin-bottom: 0; }
+.foot .btn-wa { color: #fff; font-size: var(--vf-text-body); font-weight: var(--vf-weight-medium); }
+.foot .brand b, .foot .brand .tag { margin: 0; }
+.foot-bottom { margin-top: var(--vf-space-16); padding-top: var(--vf-space-8); border-top: 1px solid var(--vf-color-border-subtle); display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--vf-space-4); font-size: var(--vf-text-xs); color: var(--vf-color-text-muted); }
+
+/* ---- WhatsApp flotante ------------------------------------------------- */
+.wa-float { position: fixed; right: var(--vf-space-6); bottom: var(--vf-space-6); z-index: var(--vf-z-whatsapp); box-shadow: 0 12px 30px -6px rgb(37 211 102 / 0.45); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3v-5.6A8 8 0 0 1 13 4a8 8 0 0 1 8 8z"/></symbol>
+    <symbol id="i-verified" viewBox="0 0 24 24"><path d="M12 3l2.2 1.9 2.9-.3 1 2.7 2.6 1.3-.9 2.8.9 2.8-2.6 1.3-1 2.7-2.9-.3L12 21l-2.2-1.9-2.9.3-1-2.7-2.6-1.3.9-2.8-.9-2.8 2.6-1.3 1-2.7 2.9.3z"/><path d="M9 12.2l2 2 4-4.2"/></symbol>
+    <symbol id="i-verified_user" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.2-2.9 7.8-7 9-4.1-1.2-7-4.8-7-9V6z"/><path d="M9 12.2l2 2 4-4.2"/></symbol>
+    <symbol id="i-local_shipping" viewBox="0 0 24 24"><path d="M3 7h11v9H3z"/><path d="M14 10h3.5l2.5 3v3h-6"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/></symbol>
+    <symbol id="i-account_balance_wallet" viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H17v3"/><rect x="3" y="7.5" width="18" height="12" rx="2.5"/><circle cx="16.5" cy="13.5" r="1.2"/></symbol>
+    <symbol id="i-factory" viewBox="0 0 24 24"><path d="M3 20V10l5 3.5V10l5 3.5V10l5 3.5V4h3v16z"/><path d="M3 20h18"/></symbol>
+    <symbol id="i-science" viewBox="0 0 24 24"><path d="M10 3v6L4.6 18A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.7-3L14 9V3"/><path d="M9 3h6"/><path d="M7.5 15h9"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 19z"/><path d="M9.5 20.5V14h5v6.5"/></symbol>
+    <symbol id="i-apartment" viewBox="0 0 24 24"><path d="M4 21V4h9v17"/><path d="M13 21V9h7v12"/><path d="M4 21h17"/><path d="M7 8h3M7 12h3M7 16h3M16 13h1M16 17h1"/></symbol>
+    <symbol id="i-engineering" viewBox="0 0 24 24"><path d="M4.5 13a7.5 7.5 0 0 1 15 0"/><path d="M3.5 13h17"/><path d="M12 5.5v-1"/><path d="M6 21v-1.5a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4V21"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+    <symbol id="i-add" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============================ NAV ============================ -->
+<nav class="nav">
+  <div class="container nav-in">
+    <a class="brand" href="#inicio">
+      <img src="./assets/logo-villafresh-fondo-blanco.jpg" alt="Villa Fresh">
+      <span style="display:block">
+        <b style="display:block">Villa Fresh</b>
+        <span class="tag">Pureza que refresca tu vida</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="#inicio" class="is-active">Inicio</a>
+      <a href="#proceso">Proceso</a>
+      <a href="#planes">Planes</a>
+      <a href="#cobertura">Cobertura</a>
+      <a href="#preguntas">Preguntas</a>
+    </div>
+    <a class="btn btn-primary" href="https://wa.me/51994647840" target="_blank" rel="noopener">
+      <svg class="ico" style="font-size:18px"><use href="#i-chat"></use></svg> Pedir ahora
+    </a>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero band" id="inicio">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Planta propia en Lima · Sin intermediarios</span>
+      <h1>Tu bidón de 20&nbsp;litros,<br>hoy mismo en tu puerta.</h1>
+      <p class="lead">Agua purificada por ósmosis inversa, ozonizada y alcalinizada a pH&nbsp;8.3. La producimos nosotros y la entregamos nosotros: por eso llega el mismo día y cuesta lo que cuesta.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--vf-space-4);margin-top:var(--vf-space-2)">
+        <a class="btn btn-wa" href="https://wa.me/51994647840?text=Hola%20Villa%20Fresh%2C%20quiero%20pedir%20un%20bid%C3%B3n%20de%2020L" target="_blank" rel="noopener">
+          <svg class="ico" style="font-size:20px"><use href="#i-chat"></use></svg> Pedir por WhatsApp · 994 647 840
+        </a>
+        <a class="btn btn-ghost" href="#planes">Ver planes para empresas</a>
+      </div>
+      <div class="trust">
+        <span class="pill"><svg class="ico"><use href="#i-verified"></use></svg> Certificación DIGESA</span>
+        <span class="pill"><svg class="ico"><use href="#i-local_shipping"></use></svg> Entrega el mismo día</span>
+        <span class="pill"><svg class="ico"><use href="#i-lock"></use></svg> Sello de seguridad</span>
+      </div>
+    </div>
+
+    <aside class="pricecard">
+      <div class="pricecard-head">
+        <span class="t">Precio directo de planta</span>
+        <span class="t">20 L</span>
+      </div>
+      <div class="pricecard-body">
+        <div class="offer">
+          <div>
+            <div class="qty">1 bidón</div>
+            <div class="amt"><sup>S/</sup>30</div>
+          </div>
+          <div class="hi">
+            <div class="qty">2 bidones</div>
+            <div class="amt"><sup>S/</sup>50</div>
+            <span class="save">Ahorras S/ 10</span>
+          </div>
+        </div>
+        <p class="muted">¿Más de 4 bidones al mes, o consumo de oficina y obra? Tenemos <strong style="color:var(--vf-color-on-surface);font-weight:var(--vf-weight-semibold)">precio por volumen y recarga preferencial</strong>.</p>
+        <a class="btn btn-wa" style="justify-content:center" href="https://wa.me/51994647840?text=Hola%2C%20quiero%20cotizar%20por%20volumen" target="_blank" rel="noopener">
+          <svg class="ico" style="font-size:20px"><use href="#i-chat"></use></svg> Pedir ahora
+        </a>
+        <div class="paylist">
+          <svg class="ico" style="color:var(--vf-color-primary)"><use href="#i-account_balance_wallet"></use></svg>
+          <span>Pago con Yape, efectivo o transferencia al recibir.</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</header>
+
+<!-- ======================= DATOS DUROS ========================= -->
+<section class="stats">
+  <div class="container stats-grid" style="padding-inline:0">
+    <div class="stat" style="padding-left:var(--vf-container-pad)">
+      <div class="n">8.3<em> pH</em></div>
+      <div class="l">Agua alcalina, más suave al paladar que el agua de caño.</div>
+    </div>
+    <div class="stat">
+      <div class="n">8<em> pasos</em></div>
+      <div class="l">Procesos de purificación antes de sellar cada bidón.</div>
+    </div>
+    <div class="stat">
+      <div class="n">20<em> L</em></div>
+      <div class="l">Bidón retornable con sello de seguridad en cada entrega.</div>
+    </div>
+    <div class="stat" style="padding-right:var(--vf-container-pad)">
+      <div class="n">0<em class="blk">intermediarios</em></div>
+      <div class="l">De nuestra planta a tu puerta. Nadie más toca el bidón.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BANDA OSCURA: PROCESO ==================== -->
+<section class="night band" id="proceso">
+  <div class="container">
+    <span class="eyebrow">El proceso</span>
+    <h2 style="margin-top:var(--vf-space-4)">Ocho pasos entre el agua<br>y tu vaso.</h2>
+    <p class="lead" style="margin-top:var(--vf-space-6)">No compramos agua a terceros ni reenvasamos. Tratamos, controlamos y embotellamos en nuestra propia planta, y por eso podemos responder por cada bidón que sale.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="k">01 — 03</div>
+        <div class="h">Filtrado y sedimentación</div>
+        <div class="d">Retención de partículas, cloro y sedimentos antes del tratamiento fino.</div>
+      </div>
+      <div class="step">
+        <div class="k">04</div>
+        <div class="h">Ósmosis inversa</div>
+        <div class="d">Membrana que separa sales y minerales disueltos. El corazón del proceso.</div>
+      </div>
+      <div class="step">
+        <div class="k">05 — 06</div>
+        <div class="h">Alcalinización</div>
+        <div class="d">Se lleva el agua a pH 8.3 para una hidratación más equilibrada.</div>
+      </div>
+      <div class="step">
+        <div class="k">07 — 08</div>
+        <div class="h">Ozonización y sellado</div>
+        <div class="d">Desinfección final sin residuos químicos y sello de seguridad en el envase.</div>
+      </div>
+    </div>
+
+    <div class="seals">
+      <div class="seal"><svg class="ico"><use href="#i-verified_user"></use></svg> Certificación DIGESA</div>
+      <div class="seal"><svg class="ico"><use href="#i-factory"></use></svg> Planta propia</div>
+      <div class="seal"><svg class="ico"><use href="#i-science"></use></svg> Control de calidad permanente</div>
+      <div style="margin-left:auto"><a class="btn btn-on-night" href="#cobertura">Ver cobertura de reparto</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================== PLANES =========================== -->
+<section class="band" id="planes">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Para quién</span>
+        <h2 style="margin-top:var(--vf-space-4)">Tres formas de pedir.</h2>
+      </div>
+      <p class="muted" style="max-width:38ch">El precio baja según el volumen. Escríbenos y armamos el esquema que te conviene.</p>
+    </div>
+
+    <div class="plans">
+      <article class="plan">
+        <div class="icon"><svg class="ico"><use href="#i-home"></use></svg></div>
+        <h3>Hogar</h3>
+        <p class="muted" style="margin-top:var(--vf-space-2)">Para familias que quieren dejar de cargar bidones desde la bodega.</p>
+        <ul>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Bidón de 20 L con sello de seguridad</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Entrega el mismo día en tu domicilio</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Promoción permanente 2 x S/ 50</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Recarga a precio especial con envase propio</li>
+        </ul>
+        <div class="price">
+          <b>S/ 30</b>
+          <a class="btn btn-ghost" href="https://wa.me/51994647840?text=Hola%2C%20quiero%20un%20bid%C3%B3n%20para%20mi%20casa" target="_blank" rel="noopener">Pedir</a>
+        </div>
+      </article>
+
+      <article class="plan">
+        <div class="icon"><svg class="ico"><use href="#i-apartment"></use></svg></div>
+        <h3>Empresa y oficina</h3>
+        <p class="muted" style="margin-top:var(--vf-space-2)">Abastecimiento continuo para que nunca falte agua en el dispensador.</p>
+        <ul>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Entregas programadas y reposición constante</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Precio por volumen según consumo mensual</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Un solo contacto para todo el abastecimiento</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Cobertura en Lima Metropolitana</li>
+        </ul>
+        <div class="price">
+          <b class="muted" style="font-size:var(--vf-text-body);font-weight:var(--vf-weight-medium)">Precio por volumen</b>
+          <a class="btn btn-primary" href="https://wa.me/51994647840?text=Hola%2C%20quiero%20cotizar%20abastecimiento%20para%20mi%20empresa" target="_blank" rel="noopener">Cotizar</a>
+        </div>
+      </article>
+
+      <article class="plan">
+        <div class="icon"><svg class="ico"><use href="#i-engineering"></use></svg></div>
+        <h3>Constructoras y obra</h3>
+        <p class="muted" style="margin-top:var(--vf-space-2)">Hidratación para cuadrillas, con entregas que siguen el cronograma.</p>
+        <ul>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Tarifas especiales por volumen alto</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Entrega el mismo día en el frente de obra</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Abastecimiento sostenido en proyectos largos</li>
+          <li><svg class="ico"><use href="#i-check"></use></svg> Atención directa, sin call center</li>
+        </ul>
+        <div class="price">
+          <b class="muted" style="font-size:var(--vf-text-body);font-weight:var(--vf-weight-medium)">Tarifa por proyecto</b>
+          <a class="btn btn-ghost" href="https://wa.me/51994647840?text=Hola%2C%20necesito%20agua%20para%20una%20obra" target="_blank" rel="noopener">Cotizar</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= COBERTURA ========================= -->
+<section class="band" id="cobertura" style="padding-top:0">
+  <div class="container">
+    <div class="cover">
+      <div class="cover-grid">
+        <div>
+          <span class="eyebrow">Cobertura</span>
+          <h2 style="margin-top:var(--vf-space-4)">Repartimos en Lima<br>Metropolitana.</h2>
+          <p class="lead" style="margin-top:var(--vf-space-6)">Entrega directa el mismo día. Si tu distrito no aparece, escríbenos igual: coordinamos según la ruta del día.</p>
+          <div class="zonelist">
+            <span>Surquillo</span><span>Miraflores</span><span>San Isidro</span><span>Barranco</span>
+            <span>Surco</span><span>La Molina</span><span>San Borja</span><span>Lince</span>
+            <span>Jesús María</span><span>Magdalena</span><span>Pueblo Libre</span><span>San Miguel</span>
+            <span class="muted" style="border:0;background:transparent">+ tu distrito, consúltanos</span>
+          </div>
+        </div>
+        <div class="zonebox">
+          <p style="font-size:var(--vf-text-xs);font-weight:var(--vf-weight-semibold);letter-spacing:var(--vf-tracking-wider);text-transform:uppercase;color:var(--vf-color-text-muted)">Consulta tu zona</p>
+          <p style="font-size:var(--vf-text-h3);font-weight:var(--vf-weight-medium);margin-top:var(--vf-space-2)">¿Llegamos a tu distrito?</p>
+          <form onsubmit="event.preventDefault();window.open('https://wa.me/51994647840?text='+encodeURIComponent('Hola, ¿llegan a '+(this.d.value||'mi distrito')+'?'),'_blank');">
+            <input name="d" type="text" placeholder="Escribe tu distrito" aria-label="Distrito">
+            <button class="btn btn-primary" type="submit">Consultar</button>
+          </form>
+          <div style="margin-top:var(--vf-space-6);padding-top:var(--vf-space-6);border-top:1px solid var(--vf-color-border-subtle);display:flex;justify-content:space-between;align-items:center">
+            <span class="muted">Pedido mínimo</span>
+            <strong style="font-weight:var(--vf-weight-semibold)">1 bidón · S/ 30</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= PREGUNTAS ========================= -->
+<section class="band" id="preguntas" style="padding-top:0">
+  <div class="container" style="max-width:960px">
+    <span class="eyebrow">Preguntas frecuentes</span>
+    <h2 style="margin-top:var(--vf-space-4);margin-bottom:var(--vf-space-12)">Lo que más nos preguntan.</h2>
+    <div class="faq">
+      <details open>
+        <summary>¿Cuánto cuesta el bidón? <svg class="ico"><use href="#i-add"></use></svg></summary>
+        <p>S/ 30 el bidón de 20 litros y S/ 50 llevando dos. Si consumes por volumen —oficina, obra, negocio— el precio baja y lo coordinamos por WhatsApp.</p>
+      </details>
+      <details>
+        <summary>¿Necesito entregar un envase vacío? <svg class="ico"><use href="#i-add"></use></svg></summary>
+        <p>El bidón es retornable. En la primera compra coordinamos el envase y a partir de ahí cambias vacío por lleno con precio de recarga.</p>
+      </details>
+      <details>
+        <summary>¿En cuánto tiempo llega mi pedido? <svg class="ico"><use href="#i-add"></use></svg></summary>
+        <p>El mismo día dentro de Lima Metropolitana. Escríbenos por WhatsApp y te confirmamos la hora según la ruta de reparto de ese día.</p>
+      </details>
+      <details>
+        <summary>¿Qué tipo de agua es? <svg class="ico"><use href="#i-add"></use></svg></summary>
+        <p>Agua de mesa purificada por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada, producida en nuestra propia planta y con certificación DIGESA. No es agua mineral de manantial: es agua tratada, y esa es justamente la razón por la que podemos garantizar el mismo resultado en cada bidón.</p>
+      </details>
+      <details>
+        <summary>¿Cómo pago? <svg class="ico"><use href="#i-add"></use></svg></summary>
+        <p>Yape, efectivo o transferencia al momento de la entrega. Para empresas coordinamos la modalidad que necesite tu área de administración.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER =========================== -->
+<footer class="foot">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#inicio" style="margin-bottom:var(--vf-space-5)">
+          <img src="./assets/logo-villafresh-fondo-blanco.jpg" alt="Villa Fresh">
+          <span style="display:block"><b style="display:block">Villa Fresh</b><span class="tag">Pureza que refresca tu vida</span></span>
+        </a>
+        <p class="muted" style="max-width:34ch;line-height:var(--vf-leading-relaxed)">Agua de mesa purificada, ozonizada y alcalinizada pH 8.3. Planta propia y reparto directo en Lima Metropolitana.</p>
+        <a class="btn btn-wa" style="margin-top:var(--vf-space-6)" href="https://wa.me/51994647840" target="_blank" rel="noopener">
+          <svg class="ico" style="font-size:20px"><use href="#i-chat"></use></svg> 994 647 840
+        </a>
+      </div>
+      <div>
+        <h4>Navegación</h4>
+        <a href="#inicio">Inicio</a>
+        <a href="#proceso">Proceso</a>
+        <a href="#planes">Planes</a>
+        <a href="#cobertura">Cobertura</a>
+      </div>
+      <div>
+        <h4>Empresa</h4>
+        <a href="#proceso">Calidad y certificación</a>
+        <a href="#planes">Abastecimiento corporativo</a>
+        <a href="#planes">Constructoras</a>
+      </div>
+      <div>
+        <h4>Síguenos</h4>
+        <a href="https://www.facebook.com/villafreshlima" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/villafresh.lima/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://wa.me/51994647840" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Villa Fresh. Todos los derechos reservados.</span>
+      <span>Lima, Perú · Libro de Reclamaciones</span>
+    </div>
+  </div>
+</footer>
+
+<a class="btn btn-wa wa-float" href="https://wa.me/51994647840" target="_blank" rel="noopener" aria-label="Pedir por WhatsApp">
+  <svg class="ico" style="font-size:22px"><use href="#i-chat"></use></svg> Pedir
+</a>
+
+</body>
+</html>

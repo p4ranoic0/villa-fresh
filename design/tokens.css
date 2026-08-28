@@ -1,0 +1,324 @@
+/* ==========================================================================
+   VILLA FRESH — Design Tokens
+   Base: variante "villafresh_claridad_editorial_desktop" (Google Stitch)
+   Estilo: Light Editorial — claro, aireado, tipografía ligera, mucho aire.
+   Generado: 2026-08-27
+   --------------------------------------------------------------------------
+   Uso: importar este archivo antes que cualquier otro CSS.
+        Todos los componentes deben consumir SOLO variables semánticas
+        (--vf-color-*, --vf-text-*, --vf-space-*), nunca los primitivos.
+   ========================================================================== */
+
+:root {
+  /* ----------------------------------------------------------------------
+     1. PRIMITIVOS — Color
+     No usar directamente en componentes.
+     ---------------------------------------------------------------------- */
+
+  /* Azul de marca — escala derivada del primary de la variante elegida */
+  --vf-blue-50:  #f0f9ff;
+  --vf-blue-100: #e0f2fe;   /* primary-container (Stitch) */
+  --vf-blue-200: #bae6fd;
+  --vf-blue-300: #7dd3fc;
+  --vf-blue-400: #38bdf8;
+  --vf-blue-500: #0a9de0;   /* PRIMARY (Stitch) */
+  --vf-blue-600: #088bc9;   /* hover (Stitch) */
+  --vf-blue-700: #0369a1;   /* on-primary-container (Stitch) */
+  --vf-blue-800: #075985;
+  --vf-blue-900: #0c4a6e;
+
+  /* Azules literales del logotipo (muestreados del PNG oficial).
+     Reservados para el isotipo, sellos y degradados de marca. */
+  --vf-brand-deep:   #0157b4;  /* aro exterior del logo */
+  --vf-brand-bright: #02b5ff;  /* centro de la gota */
+
+  /* Neutros (slate) */
+  --vf-neutral-0:   #ffffff;
+  --vf-neutral-50:  #f8fafc;   /* surface-variant (Stitch) */
+  --vf-neutral-100: #f1f5f9;
+  --vf-neutral-200: #e2e8f0;   /* border-subtle (Stitch) */
+  --vf-neutral-300: #cbd5e1;
+  --vf-neutral-400: #94a3b8;
+  --vf-neutral-500: #64748b;   /* text-muted (Stitch) */
+  --vf-neutral-600: #475569;   /* on-surface-variant (Stitch) */
+  --vf-neutral-700: #334155;
+  --vf-neutral-800: #1e293b;
+  --vf-neutral-900: #0f172a;   /* on-surface (Stitch) */
+
+  /* Estado */
+  --vf-green-100: #d1fae5;
+  --vf-green-600: #059669;     /* success-vibrant (Stitch) */
+  --vf-amber-100: #fef3c7;
+  --vf-amber-600: #d97706;
+  --vf-red-100:   #fee2e2;
+  --vf-red-600:   #dc2626;
+  --vf-whatsapp:  #25d366;     /* canal principal de pedido */
+
+  /* ----------------------------------------------------------------------
+     2. SEMÁNTICOS — Color (modo claro, el modo por defecto de la marca)
+     ---------------------------------------------------------------------- */
+  --vf-color-primary:               var(--vf-blue-500);
+  --vf-color-primary-hover:         var(--vf-blue-600);
+  --vf-color-primary-active:        var(--vf-blue-700);
+  --vf-color-on-primary:            var(--vf-neutral-0);
+  --vf-color-primary-container:     var(--vf-blue-100);
+  --vf-color-on-primary-container:  var(--vf-blue-700);
+
+  --vf-color-background:            var(--vf-neutral-0);
+  --vf-color-surface:               var(--vf-neutral-0);
+  --vf-color-surface-variant:       var(--vf-neutral-50);
+  --vf-color-surface-raised:        var(--vf-neutral-0);
+
+  --vf-color-on-surface:            var(--vf-neutral-900);  /* titulares */
+  --vf-color-on-surface-variant:    var(--vf-neutral-600);  /* párrafos */
+  --vf-color-text-muted:            var(--vf-neutral-500);  /* labels, meta */
+  --vf-color-on-surface-inverse:    var(--vf-neutral-0);
+
+  --vf-color-border-subtle:         var(--vf-neutral-200);
+  --vf-color-border-strong:         var(--vf-neutral-300);
+  --vf-color-border-focus:          var(--vf-blue-500);
+
+  --vf-color-success:               var(--vf-green-600);
+  --vf-color-success-container:     var(--vf-green-100);
+  --vf-color-warning:               var(--vf-amber-600);
+  --vf-color-warning-container:     var(--vf-amber-100);
+  --vf-color-danger:                var(--vf-red-600);
+  --vf-color-danger-container:      var(--vf-red-100);
+  --vf-color-whatsapp:              var(--vf-whatsapp);
+
+  /* Superficies translúcidas usadas por la variante editorial */
+  --vf-color-nav-glass:             rgb(255 255 255 / 0.90);
+  --vf-color-badge-glass:           rgb(255 255 255 / 0.80);
+  --vf-color-feature-tint:          rgb(224 242 254 / 0.30); /* primary-container/30 */
+  --vf-color-selection-bg:          rgb(10 157 224 / 0.20);
+
+  /* ----------------------------------------------------------------------
+     3. TIPOGRAFÍA
+     Una sola familia (Manrope) en dos roles: display ligero + body.
+     ---------------------------------------------------------------------- */
+  --vf-font-body:    "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --vf-font-display: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --vf-font-icons:   "Material Symbols Outlined";
+
+  --vf-weight-light:     300;   /* titulares editoriales */
+  --vf-weight-regular:   400;
+  --vf-weight-medium:    500;   /* botones, nav, h3 */
+  --vf-weight-semibold:  600;   /* precios, labels */
+  --vf-weight-bold:      700;   /* wordmark */
+
+  /* Escala tipográfica (desktop / mobile entre paréntesis) */
+  --vf-text-hero:      4.5rem;  /* 72px — h1 desktop */
+  --vf-text-hero-sm:   3rem;    /* 48px — h1 mobile */
+  --vf-text-h2:        3.75rem; /* 60px — feature */
+  --vf-text-h2-alt:    3rem;    /* 48px — sección */
+  --vf-text-h2-sm:     2.25rem; /* 36px — mobile */
+  --vf-text-h3:        1.5rem;  /* 24px */
+  --vf-text-h4:        1.25rem; /* 20px — nombre de producto */
+  --vf-text-lead:      1.25rem; /* 20px — bajada de hero */
+  --vf-text-body-lg:   1.125rem;/* 18px */
+  --vf-text-body:      1rem;    /* 16px */
+  --vf-text-sm:        0.875rem;/* 14px — descripciones, nav */
+  --vf-text-xs:        0.75rem; /* 12px — badges, headers de footer */
+
+  --vf-leading-tight:   1.1;    /* titulares */
+  --vf-leading-snug:    1.35;
+  --vf-leading-normal:  1.5;
+  --vf-leading-relaxed: 1.7;    /* párrafos largos */
+
+  --vf-tracking-tight:   -0.02em; /* wordmark */
+  --vf-tracking-normal:  0;
+  --vf-tracking-wide:    0.025em; /* nav, botones */
+  --vf-tracking-wider:   0.05em;  /* badges */
+  --vf-tracking-widest:  0.1em;   /* eyebrow del hero */
+
+  /* ----------------------------------------------------------------------
+     4. ESPACIADO — base 4px
+     ---------------------------------------------------------------------- */
+  --vf-space-1:  0.25rem;  /*  4px */
+  --vf-space-2:  0.5rem;   /*  8px */
+  --vf-space-3:  0.75rem;  /* 12px */
+  --vf-space-4:  1rem;     /* 16px */
+  --vf-space-5:  1.25rem;  /* 20px */
+  --vf-space-6:  1.5rem;   /* 24px — gutter del grid / padding mobile */
+  --vf-space-8:  2rem;     /* 32px */
+  --vf-space-10: 2.5rem;   /* 40px */
+  --vf-space-12: 3rem;     /* 48px — padding lateral desktop */
+  --vf-space-16: 4rem;     /* 64px */
+  --vf-space-20: 5rem;     /* 80px — padding interior de feature */
+  --vf-space-24: 6rem;     /* 96px — alto de la barra superior */
+  --vf-space-32: 8rem;     /* 128px — separación entre secciones */
+
+  /* ----------------------------------------------------------------------
+     5. LAYOUT
+     ---------------------------------------------------------------------- */
+  --vf-container-max:    1440px;
+  --vf-container-pad:    var(--vf-space-6);   /* < 768px */
+  --vf-container-pad-md: var(--vf-space-12);  /* >= 768px */
+  --vf-grid-columns:     12;
+  --vf-grid-gap:         var(--vf-space-6);   /* 24px */
+  --vf-navbar-height:    var(--vf-space-24);  /* 96px */
+  --vf-section-gap:      var(--vf-space-32);  /* 128px */
+
+  /* Proporciones de imagen usadas por la variante */
+  --vf-aspect-hero:    4 / 3;
+  --vf-aspect-product: 3 / 4;
+
+  /* ----------------------------------------------------------------------
+     6. RADIOS
+     ---------------------------------------------------------------------- */
+  --vf-radius-sm:   0.375rem;  /*  6px */
+  --vf-radius-md:   0.5rem;    /*  8px */
+  --vf-radius-lg:   0.75rem;   /* 12px — tarjeta de producto */
+  --vf-radius-xl:   1rem;      /* 16px — imagen de hero, tarjeta flotante */
+  --vf-radius-2xl:  1.5rem;    /* 24px — bloque de suscripción */
+  --vf-radius-full: 9999px;    /* botones y chips (firma de la marca) */
+
+  /* ----------------------------------------------------------------------
+     7. SOMBRAS — suaves y teñidas de azul, nunca grises duras
+     ---------------------------------------------------------------------- */
+  --vf-shadow-sm:      0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --vf-shadow-md:      0 4px 12px -2px rgb(15 23 42 / 0.08);
+  --vf-shadow-primary: 0 10px 25px -5px rgb(10 157 224 / 0.20);  /* CTA principal */
+  --vf-shadow-card:    0 20px 40px -12px rgb(10 157 224 / 0.05); /* tarjeta flotante */
+  --vf-shadow-focus:   0 0 0 3px rgb(10 157 224 / 0.35);
+
+  /* ----------------------------------------------------------------------
+     8. MOVIMIENTO — discreto; el agua se mueve, la interfaz no compite
+     ---------------------------------------------------------------------- */
+  --vf-duration-fast:   150ms;
+  --vf-duration-base:   300ms;
+  --vf-duration-slow:   500ms;  /* zoom de imagen de producto en hover */
+  --vf-ease-standard:   cubic-bezier(0.4, 0, 0.2, 1);
+  --vf-ease-out:        cubic-bezier(0, 0, 0.2, 1);
+  --vf-hover-scale:     1.05;
+
+  /* ----------------------------------------------------------------------
+     9. CAPAS
+     ---------------------------------------------------------------------- */
+  --vf-z-base:     0;
+  --vf-z-raised:   10;
+  --vf-z-sticky:   30;
+  --vf-z-navbar:   50;
+  --vf-z-overlay:  80;
+  --vf-z-modal:    100;
+  --vf-z-toast:    120;
+  --vf-z-whatsapp: 90;   /* botón flotante de pedido */
+}
+
+/* ==========================================================================
+   MODO OSCURO — propuesta, no venía en la variante de Stitch.
+   Activar con class="dark" en <html> (darkMode: "class").
+   ========================================================================== */
+.dark {
+  --vf-color-primary:              var(--vf-blue-400);
+  --vf-color-primary-hover:        var(--vf-blue-300);
+  --vf-color-primary-active:       var(--vf-blue-200);
+  --vf-color-on-primary:           var(--vf-neutral-900);
+  --vf-color-primary-container:    var(--vf-blue-900);
+  --vf-color-on-primary-container: var(--vf-blue-200);
+
+  --vf-color-background:           var(--vf-neutral-900);
+  --vf-color-surface:              var(--vf-neutral-900);
+  --vf-color-surface-variant:      var(--vf-neutral-800);
+  --vf-color-surface-raised:       var(--vf-neutral-800);
+
+  --vf-color-on-surface:           var(--vf-neutral-50);
+  --vf-color-on-surface-variant:   var(--vf-neutral-300);
+  --vf-color-text-muted:           var(--vf-neutral-400);
+  --vf-color-on-surface-inverse:   var(--vf-neutral-900);
+
+  --vf-color-border-subtle:        var(--vf-neutral-700);
+  --vf-color-border-strong:        var(--vf-neutral-600);
+
+  --vf-color-nav-glass:            rgb(15 23 42 / 0.90);
+  --vf-color-badge-glass:          rgb(30 41 59 / 0.80);
+  --vf-color-feature-tint:         rgb(12 74 110 / 0.30);
+  --vf-color-selection-bg:         rgb(56 189 248 / 0.25);
+
+  --vf-shadow-primary: 0 10px 25px -5px rgb(0 0 0 / 0.50);
+  --vf-shadow-card:    0 20px 40px -12px rgb(0 0 0 / 0.45);
+}
+
+/* ==========================================================================
+   BASE — lo mínimo para que los tokens se vean aplicados
+   ========================================================================== */
+html { color-scheme: light; }
+.dark { color-scheme: dark; }
+
+body {
+  background-color: var(--vf-color-background);
+  color: var(--vf-color-on-surface);
+  font-family: var(--vf-font-body);
+  font-weight: var(--vf-weight-regular);
+  line-height: var(--vf-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--vf-color-selection-bg);
+  color: var(--vf-color-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--vf-color-border-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Contenedor y grilla editorial de la variante elegida */
+.vf-container {
+  max-width: var(--vf-container-max);
+  margin-inline: auto;
+  padding-inline: var(--vf-container-pad);
+}
+@media (min-width: 768px) {
+  .vf-container { padding-inline: var(--vf-container-pad-md); }
+}
+
+.vf-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--vf-grid-columns), 1fr);
+  gap: var(--vf-grid-gap);
+}
+
+/* ==========================================================================
+   EXTENSIÓN v2 — "Ritmo editorial + bloque oscuro"
+   Añadida el 2026-08-27 para sacar a la página del look de plantilla.
+   Tres recursos propios: (1) azul anclado al logotipo, (2) banda oscura de
+   proceso, (3) motivo gota+montaña como firma gráfica.
+   ========================================================================== */
+:root {
+  /* Banda oscura — el "momento planta" de la página */
+  --vf-color-night:            #041e3d;  /* fondo de la sección de proceso */
+  --vf-color-night-raised:     #0a2f5c;  /* tarjetas dentro de la banda */
+  --vf-color-on-night:         #eaf6ff;
+  --vf-color-on-night-variant: #92bfe6;
+  --vf-color-night-border:     rgb(146 191 230 / 0.20);
+  --vf-color-night-accent:     var(--vf-brand-bright);
+
+  /* Números editoriales (pH 8.3, 20 L, 8 procesos, 0 intermediarios) */
+  --vf-text-stat:      clamp(3rem, 7vw, 6rem);
+  --vf-weight-stat:    var(--vf-weight-light);
+  --vf-tracking-stat:  -0.04em;
+
+  /* Motivo de marca: gota conteniendo una montaña, tomado del isotipo */
+  --vf-motif-drop: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50 4 C50 4 8 52 8 78 a42 42 0 0 0 84 0 C92 52 50 4 50 4z' fill='none' stroke='%230a9de0' stroke-width='4'/%3E%3Cpath d='M22 92 L44 62 L58 80 L68 68 L84 90' fill='none' stroke='%230a9de0' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --vf-motif-opacity: 0.06;
+
+  /* Degradado de marca para sellos y detalles */
+  --vf-gradient-brand: linear-gradient(140deg, var(--vf-brand-bright) 0%, var(--vf-brand-deep) 100%);
+  --vf-gradient-night: linear-gradient(180deg, var(--vf-color-night) 0%, #062a52 100%);
+
+  /* Regla de ritmo: alternar claro / claro / OSCURO / claro evita
+     la monotonía de bandas blancas idénticas cada 128px. */
+  --vf-band-pad:    var(--vf-space-32);
+  --vf-band-pad-sm: var(--vf-space-20);
+}

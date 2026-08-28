@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Villa Fresh — Hoja de tokens</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="./tokens.css">
+<style>
+  .wrap { max-width: var(--vf-container-max); margin-inline: auto; padding: var(--vf-space-12) var(--vf-container-pad) var(--vf-space-32); }
+  @media (min-width:768px){ .wrap { padding-inline: var(--vf-container-pad-md); } }
+  h1 { font-size: var(--vf-text-heroSm, 3rem); font-size: clamp(2.25rem, 5vw, 4.5rem); font-weight: var(--vf-weight-light); line-height: var(--vf-leading-tight); letter-spacing: var(--vf-tracking-tight); margin: 0 0 var(--vf-space-4); }
+  .eyebrow { color: var(--vf-color-primary); font-size: var(--vf-text-sm); font-weight: var(--vf-weight-medium); letter-spacing: var(--vf-tracking-widest); text-transform: uppercase; }
+  h2 { font-size: clamp(1.75rem, 3vw, 3rem); font-weight: var(--vf-weight-light); line-height: var(--vf-leading-tight); margin: var(--vf-space-32) 0 var(--vf-space-8); padding-bottom: var(--vf-space-6); border-bottom: 1px solid var(--vf-color-border-subtle); }
+  .lead { font-size: var(--vf-text-lead); font-weight: var(--vf-weight-light); color: var(--vf-color-on-surface-variant); line-height: var(--vf-leading-relaxed); max-width: 46ch; }
+  .grid { display: grid; gap: var(--vf-space-6); grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+  .sw { border: 1px solid var(--vf-color-border-subtle); border-radius: var(--vf-radius-lg); overflow: hidden; background: var(--vf-color-surface); }
+  .sw .chip { height: 84px; }
+  .sw .meta { padding: var(--vf-space-3) var(--vf-space-4); }
+  .sw .name { font-size: var(--vf-text-sm); font-weight: var(--vf-weight-medium); }
+  .sw .val { font-size: var(--vf-text-xs); color: var(--vf-color-text-muted); font-family: ui-monospace, monospace; }
+  table { width: 100%; border-collapse: collapse; font-size: var(--vf-text-sm); }
+  th, td { text-align: left; padding: var(--vf-space-3) var(--vf-space-4); border-bottom: 1px solid var(--vf-color-border-subtle); vertical-align: middle; }
+  th { font-size: var(--vf-text-xs); text-transform: uppercase; letter-spacing: var(--vf-tracking-wider); color: var(--vf-color-text-muted); font-weight: var(--vf-weight-semibold); }
+  code { font-family: ui-monospace, monospace; font-size: var(--vf-text-xs); color: var(--vf-color-on-primary-container); background: var(--vf-color-primary-container); padding: 2px 6px; border-radius: var(--vf-radius-sm); }
+  .btn { border: 0; cursor: pointer; font-family: inherit; font-weight: var(--vf-weight-medium); border-radius: var(--vf-radius-full); transition: all var(--vf-duration-base) var(--vf-ease-standard); }
+  .btn-primary { background: var(--vf-color-primary); color: var(--vf-color-on-primary); padding: var(--vf-space-4) var(--vf-space-10); font-size: var(--vf-text-body); box-shadow: var(--vf-shadow-primary); }
+  .btn-primary:hover { background: var(--vf-color-primary-hover); }
+  .btn-ghost { background: var(--vf-color-surface); color: var(--vf-color-primary); border: 1px solid var(--vf-color-border-subtle); padding: var(--vf-space-3) var(--vf-space-8); box-shadow: var(--vf-shadow-sm); }
+  .btn-outline { background: transparent; color: var(--vf-color-primary); border: 1px solid var(--vf-color-primary); padding: 6px var(--vf-space-4); font-size: var(--vf-text-sm); }
+  .btn-outline:hover { background: var(--vf-color-primary); color: var(--vf-color-on-primary); }
+  .btn-wa { background: var(--vf-color-whatsapp); color: #fff; padding: var(--vf-space-3) var(--vf-space-8); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--vf-space-4); align-items: center; }
+  .card { background: var(--vf-color-surface); border-radius: var(--vf-radius-xl); padding: var(--vf-space-8); box-shadow: var(--vf-shadow-card); border: 1px solid var(--vf-color-border-subtle); }
+  .pbox { background: var(--vf-color-surface-variant); border-radius: var(--vf-radius-lg); aspect-ratio: var(--vf-aspect-product); display: grid; place-items: center; position: relative; margin-bottom: var(--vf-space-6); }
+  .badge { position: absolute; top: var(--vf-space-4); left: var(--vf-space-4); background: var(--vf-color-badge-glass); backdrop-filter: blur(6px); color: var(--vf-color-primary); font-size: var(--vf-text-xs); font-weight: var(--vf-weight-semibold); text-transform: uppercase; letter-spacing: var(--vf-tracking-wider); padding: var(--vf-space-1) var(--vf-space-3); border-radius: var(--vf-radius-full); }
+  .feature { background: var(--vf-color-feature-tint); border-radius: var(--vf-radius-2xl); padding: var(--vf-space-10); }
+  .bar { height: 28px; background: var(--vf-color-primary-container); border-radius: var(--vf-radius-sm); }
+  .toggle { position: fixed; top: var(--vf-space-6); right: var(--vf-space-6); z-index: var(--vf-z-navbar); }
+  .note { border-left: 3px solid var(--vf-color-warning); background: var(--vf-color-warning-container); color: var(--vf-neutral-800); padding: var(--vf-space-4) var(--vf-space-6); border-radius: var(--vf-radius-md); font-size: var(--vf-text-sm); line-height: var(--vf-leading-relaxed); }
+</style>
+</head>
+<body>
+<button class="btn btn-ghost toggle" onclick="document.documentElement.classList.toggle('dark')">Modo oscuro</button>
+
+<div class="wrap">
+  <span class="eyebrow">Sistema de diseño · Light Editorial</span>
+  <h1>Variables de<br>Villa&nbsp;Fresh.</h1>
+  <p class="lead">Hoja viva de tokens derivada de la variante <code>villafresh_claridad_editorial_desktop</code>. Todo lo que se ve aquí se dibuja con las variables de <code>tokens.css</code>: si cambias el archivo, cambia esta página.</p>
+
+  <h2>Color — semántico</h2>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:var(--vf-color-primary)"></div><div class="meta"><div class="name">Primary</div><div class="val">--vf-color-primary</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-primary-hover)"></div><div class="meta"><div class="name">Primary hover</div><div class="val">--vf-color-primary-hover</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-primary-container)"></div><div class="meta"><div class="name">Primary container</div><div class="val">--vf-color-primary-container</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-surface-variant)"></div><div class="meta"><div class="name">Surface variant</div><div class="val">--vf-color-surface-variant</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-on-surface)"></div><div class="meta"><div class="name">On surface</div><div class="val">--vf-color-on-surface</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-on-surface-variant)"></div><div class="meta"><div class="name">On surface variant</div><div class="val">--vf-color-on-surface-variant</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-border-subtle)"></div><div class="meta"><div class="name">Border subtle</div><div class="val">--vf-color-border-subtle</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-success)"></div><div class="meta"><div class="name">Success</div><div class="val">--vf-color-success</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-warning)"></div><div class="meta"><div class="name">Warning</div><div class="val">--vf-color-warning</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-danger)"></div><div class="meta"><div class="name">Danger</div><div class="val">--vf-color-danger</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-whatsapp)"></div><div class="meta"><div class="name">WhatsApp</div><div class="val">--vf-color-whatsapp</div></div></div>
+  </div>
+
+  <h2>Color — marca</h2>
+  <p class="lead" style="margin-bottom:var(--vf-space-8)">Muestreados del logotipo oficial. Solo para isotipo, sellos y degradados de marca — no para interfaz.</p>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:var(--vf-brand-deep)"></div><div class="meta"><div class="name">Brand deep</div><div class="val">#0157b4</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-brand-bright)"></div><div class="meta"><div class="name">Brand bright</div><div class="val">#02b5ff</div></div></div>
+    <div class="sw"><div class="chip" style="background:linear-gradient(140deg,var(--vf-brand-bright),var(--vf-brand-deep))"></div><div class="meta"><div class="name">Degradado logo</div><div class="val">140deg bright → deep</div></div></div>
+  </div>
+
+  <h2>Escala azul</h2>
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-50)"></div><div class="meta"><div class="val">50</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-100)"></div><div class="meta"><div class="val">100</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-200)"></div><div class="meta"><div class="val">200</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-300)"></div><div class="meta"><div class="val">300</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-400)"></div><div class="meta"><div class="val">400</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-500)"></div><div class="meta"><div class="val">500 ★</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-600)"></div><div class="meta"><div class="val">600</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-700)"></div><div class="meta"><div class="val">700</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-800)"></div><div class="meta"><div class="val">800</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-blue-900)"></div><div class="meta"><div class="val">900</div></div></div>
+  </div>
+
+  <h2>Tipografía</h2>
+  <table>
+    <tr><th>Rol</th><th>Muestra</th><th>Token</th></tr>
+    <tr><td>Hero</td><td style="font-size:var(--vf-text-hero);font-weight:var(--vf-weight-light);line-height:var(--vf-leading-tight)">Del bidón a tu mesa</td><td><code>--vf-text-hero</code> · 300</td></tr>
+    <tr><td>H2</td><td style="font-size:var(--vf-text-h2-alt);font-weight:var(--vf-weight-light);line-height:var(--vf-leading-tight)">Selección Premium</td><td><code>--vf-text-h2-alt</code> · 300</td></tr>
+    <tr><td>H4 / producto</td><td style="font-size:var(--vf-text-h4);font-weight:var(--vf-weight-medium)">Bidón 20L Retornable</td><td><code>--vf-text-h4</code> · 500</td></tr>
+    <tr><td>Lead</td><td style="font-size:var(--vf-text-lead);font-weight:var(--vf-weight-light);color:var(--vf-color-on-surface-variant)">Pureza que refresca tu vida.</td><td><code>--vf-text-lead</code> · 300</td></tr>
+    <tr><td>Body</td><td style="font-size:var(--vf-text-body)">Agua purificada, ozonizada y alcalinizada con pH 8.3.</td><td><code>--vf-text-body</code> · 400</td></tr>
+    <tr><td>Small</td><td style="font-size:var(--vf-text-sm);color:var(--vf-color-on-surface-variant)">Requiere envase vacío.</td><td><code>--vf-text-sm</code> · 400</td></tr>
+    <tr><td>Eyebrow</td><td><span class="eyebrow">Agua purificada · Lima</span></td><td><code>--vf-text-sm</code> · 500 · widest</td></tr>
+    <tr><td>Precio</td><td style="font-size:var(--vf-text-body-lg);font-weight:var(--vf-weight-semibold)">S/ 30.00</td><td><code>--vf-text-body-lg</code> · 600</td></tr>
+  </table>
+
+  <h2>Espaciado</h2>
+  <table>
+    <tr><th>Token</th><th>Valor</th><th></th></tr>
+    <tr><td><code>--vf-space-2</code></td><td>8px</td><td><div class="bar" style="width:8px"></div></td></tr>
+    <tr><td><code>--vf-space-4</code></td><td>16px</td><td><div class="bar" style="width:16px"></div></td></tr>
+    <tr><td><code>--vf-space-6</code></td><td>24px · gutter</td><td><div class="bar" style="width:24px"></div></td></tr>
+    <tr><td><code>--vf-space-12</code></td><td>48px · padding desktop</td><td><div class="bar" style="width:48px"></div></td></tr>
+    <tr><td><code>--vf-space-24</code></td><td>96px · alto de navbar</td><td><div class="bar" style="width:96px"></div></td></tr>
+    <tr><td><code>--vf-space-32</code></td><td>128px · entre secciones</td><td><div class="bar" style="width:128px"></div></td></tr>
+  </table>
+
+  <h2>Radios y sombras</h2>
+  <div class="grid">
+    <div class="sw"><div class="chip" style="background:var(--vf-color-surface-variant);border-radius:var(--vf-radius-lg)"></div><div class="meta"><div class="name">lg · 12px</div><div class="val">tarjeta de producto</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-surface-variant);border-radius:var(--vf-radius-xl)"></div><div class="meta"><div class="name">xl · 16px</div><div class="val">imagen de hero</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-surface-variant);border-radius:var(--vf-radius-2xl)"></div><div class="meta"><div class="name">2xl · 24px</div><div class="val">bloque destacado</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-surface);box-shadow:var(--vf-shadow-primary);margin:12px;height:60px;border-radius:var(--vf-radius-lg)"></div><div class="meta"><div class="name">shadow-primary</div><div class="val">CTA</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--vf-color-surface);box-shadow:var(--vf-shadow-card);margin:12px;height:60px;border-radius:var(--vf-radius-lg)"></div><div class="meta"><div class="name">shadow-card</div><div class="val">tarjeta flotante</div></div></div>
+  </div>
+
+  <h2>Componentes</h2>
+  <div class="row" style="margin-bottom:var(--vf-space-12)">
+    <button class="btn btn-primary">Pedir ahora <span class="material-symbols-outlined" style="font-size:14px;vertical-align:middle">arrow_forward</span></button>
+    <button class="btn btn-ghost">Ver planes</button>
+    <button class="btn btn-outline">Agregar</button>
+    <button class="btn btn-wa"><span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle">chat</span> WhatsApp 994 647 840</button>
+  </div>
+
+  <div style="display:grid;gap:var(--vf-space-8);grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+    <div>
+      <div class="pbox"><span class="badge">Más vendido</span><span class="material-symbols-outlined" style="font-size:64px;color:var(--vf-color-primary)">water_drop</span></div>
+      <h3 style="font-size:var(--vf-text-h4);font-weight:var(--vf-weight-medium);margin:0 0 var(--vf-space-2)">Bidón 20L Retornable</h3>
+      <p style="font-size:var(--vf-text-sm);font-weight:300;color:var(--vf-color-on-surface-variant);margin:0 0 var(--vf-space-4)">Ósmosis inversa, ozonizada y alcalinizada pH 8.3.</p>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:var(--vf-text-body-lg);font-weight:var(--vf-weight-semibold)">S/ 30.00</span>
+        <button class="btn btn-outline">Agregar</button>
+      </div>
+    </div>
+    <div class="feature">
+      <h3 style="font-size:var(--vf-text-h3);font-weight:var(--vf-weight-light);margin:0 0 var(--vf-space-4);line-height:var(--vf-leading-tight)">Hidratación continua,<br>sin interrupciones.</h3>
+      <ul style="list-style:none;padding:0;margin:0 0 var(--vf-space-6);display:grid;gap:var(--vf-space-3);font-weight:var(--vf-weight-medium);font-size:var(--vf-text-sm)">
+        <li><span class="material-symbols-outlined" style="color:var(--vf-color-primary);font-size:18px;vertical-align:middle">check</span> Entregas programadas</li>
+        <li><span class="material-symbols-outlined" style="color:var(--vf-color-primary);font-size:18px;vertical-align:middle">check</span> Precios por volumen</li>
+        <li><span class="material-symbols-outlined" style="color:var(--vf-color-primary);font-size:18px;vertical-align:middle">check</span> Cobertura Lima Metropolitana</li>
+      </ul>
+      <button class="btn btn-ghost">Ver planes corporativos</button>
+    </div>
+    <div class="card">
+      <p style="font-size:var(--vf-text-xs);text-transform:uppercase;letter-spacing:var(--vf-tracking-wider);color:var(--vf-color-text-muted);font-weight:var(--vf-weight-semibold);margin:0 0 var(--vf-space-2)">Próxima entrega programada</p>
+      <p style="font-size:var(--vf-text-h3);font-weight:var(--vf-weight-medium);margin:0 0 var(--vf-space-6)">Jueves, 3 de setiembre</p>
+      <div style="display:flex;justify-content:space-between;border-top:1px solid var(--vf-color-border-subtle);padding-top:var(--vf-space-4)">
+        <span style="color:var(--vf-color-on-surface-variant);font-size:var(--vf-text-sm)">2x Bidón 20L</span>
+        <span style="font-weight:var(--vf-weight-semibold)">S/ 50.00</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Antes de maquetar</h2>
+  <div class="note">
+    <strong>El contenido del mockup de Stitch es ficticio.</strong> Habla de "agua mineral de manantial" y pone el bidón a S/&nbsp;15. Villa Fresh vende agua <em>purificada en planta propia</em> a S/&nbsp;30 el bidón y S/&nbsp;50 los dos. El layout se conserva; los textos y precios se reemplazan por los de <code>contenido/redes-sociales-villafresh.md</code>.
+  </div>
+</div>
+</body>
+</html>
