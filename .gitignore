@@ -4,3 +4,4 @@ dist/
 dist-ssr/
 .bun/
 *.log
+.playwright-mcp/
