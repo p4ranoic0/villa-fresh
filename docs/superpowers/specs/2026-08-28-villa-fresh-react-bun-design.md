@@ -11,7 +11,7 @@
 
 ## 1. Objetivo
 
-Migrar el sitio de Villa Fresh de HTML/CSS/JS sin build a **React 19 + TypeScript sobre
+Migrar el sitio de Villa Fresh de HTML/CSS/JS sin build a **React + TypeScript sobre
 Bun**, conservando el diseño y el comportamiento actuales, y publicando **HTML
 pre-renderizado** para no perder el posicionamiento local que hoy sostiene el negocio.
 
@@ -50,7 +50,7 @@ Todo lo demás en este documento se deriva de esa restricción.
 | Decisión | Elegido | Por qué |
 |---|---|---|
 | Runtime y gestor de paquetes | **Bun** | Pedido explícito. Además ejecuta TypeScript directo, así el script de pre-render no necesita compilarse aparte. |
-| Framework de build | **Vite 7 + React 19** | Estándar, sin sorpresas. |
+| Framework de build | **Vite + React** | Estándar, sin sorpresas. Las versiones exactas se fijan y se anotan al instalar, no se dan por sabidas. |
 | Lenguaje | **TypeScript** | El catálogo tipado convierte un precio o una categoría mal escritos en un error de build, no en una página rota en producción. |
 | Pre-renderizado | **Script propio con `react-dom/server`** | Dos rutas. `renderToString` ya viene con React: resolver esto con una dependencia externa sería atarse a un mantenedor para ahorrar 40 líneas. |
 | Enrutado | **React Router (modo declarativo)** | Dos rutas, sin loaders ni convenciones de archivos. |
