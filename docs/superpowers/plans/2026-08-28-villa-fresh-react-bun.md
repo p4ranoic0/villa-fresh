@@ -55,6 +55,20 @@ Aplican a **todas** las tareas. Valores copiados literalmente de la spec.
 8. **Idioma del código:** nombres de variables, funciones y comentarios en español, como
    el código actual. Commits en español, en imperativo.
 
+### Versiones fijadas (instaladas el 28/08/2026)
+
+La spec pedía anotarlas al instalar en vez de darlas por sabidas. Resultaron ser:
+
+| Paquete | Versión |
+|---|---|
+| bun | 1.4.0 |
+| react · react-dom | 19.2.8 |
+| **react-router** | **8.3.1** — v8, no v7. Verificado en `node_modules`: `StaticRouter`, `BrowserRouter`, `Routes`, `Route`, `Link` y `useLocation` se exportan todos desde la raíz del paquete, como asume el plan |
+| vite | 8.2.2 |
+| @vitejs/plugin-react | 6.1.1 |
+| typescript | 7.0.2 |
+| @types/react · @types/react-dom · @types/bun | 19.2.18 · 19.2.5 · 1.4.0 |
+
 ---
 
 ## Estructura de archivos
