@@ -46,6 +46,12 @@ test('limpiar deja el pedido vacío', () => {
   expect(reducirPedido(estado, { tipo: 'limpiar' })).toEqual([])
 })
 
+test('restaurar sustituye el estado completo', () => {
+  const estado: LineaPedido[] = [{ sku: 'VF-B20', cantidad: 3 }]
+  const restaurado: LineaPedido[] = [{ sku: 'VF-R20', cantidad: 2 }]
+  expect(reducirPedido(estado, { tipo: 'restaurar', lineas: restaurado })).toEqual(restaurado)
+})
+
 test('el total suma sólo lo que tiene precio', () => {
   const estado: LineaPedido[] = [
     { sku: 'VF-B20', cantidad: 2 },

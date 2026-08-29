@@ -6,6 +6,7 @@ export type AccionPedido =
   | { tipo: 'decrementar'; sku: string }
   | { tipo: 'quitar'; sku: string }
   | { tipo: 'limpiar' }
+  | { tipo: 'restaurar'; lineas: LineaPedido[] }
 
 export function reducirPedido(estado: LineaPedido[], accion: AccionPedido): LineaPedido[] {
   switch (accion.tipo) {
@@ -24,6 +25,8 @@ export function reducirPedido(estado: LineaPedido[], accion: AccionPedido): Line
       return estado.filter((l) => l.sku !== accion.sku)
     case 'limpiar':
       return []
+    case 'restaurar':
+      return accion.lineas
   }
 }
 
