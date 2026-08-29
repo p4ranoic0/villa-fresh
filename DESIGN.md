@@ -278,6 +278,7 @@ Todos los tamaños grandes son fluidos con `clamp()`; no hay saltos por breakpoi
 | SKU | 10 px mono | 400 | .18em | 1 |
 | Precio en tarjeta | 20 px mono | 600 | −.01em | 1.25 |
 | Precio grande | `clamp(64px, 8vw, 104px)` | 800 | −.05em | .86 |
+| Precio sin cifra | `clamp(26px, 3.2vw, 42px)` mono | 600 | −.02em | 1 |
 | Cifra de cierre | `clamp(2.4rem, 6.5vw, 5.5rem)` mono | 600 | −.03em | 1 |
 
 ### Reglas de titular
@@ -288,6 +289,18 @@ Todos los tamaños grandes son fluidos con `clamp()`; no hay saltos por breakpoi
   sección. No se deja al navegador partir "No revendemos / agua. / La fabricamos."
 - Nunca más de **cuatro palabras por línea** en `h1`.
 - Los titulares terminan en **punto**. Es una decisión de voz: afirman, no invitan.
+
+### La celda sin cifra
+
+La banda de precio tiene tres celdas y sólo dos precios confirmados. El tercero **no se
+inventa**, pero la celda tiene que pesar lo mismo o la fila deja de ser una serie.
+
+La solución es tipográfica: la celda ocupa el mismo alto que la caja de la cifra y se
+apoya en la misma línea, pero en mono y en `--inv-dim`. Así comparte el ritmo sin
+fingir que es un precio, y el párrafo de las tres arranca a la misma altura.
+
+Dice **«A cotizar»**, que es exactamente lo que muestra el catálogo cuando `precio` es
+`null`. Una sola forma de decirlo en todo el sitio.
 
 ### Etiquetas mono
 

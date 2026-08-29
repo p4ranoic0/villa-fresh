@@ -423,6 +423,15 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     .precios .amt{display:flex;align-items:flex-start;gap:6px;margin-top:16px}
     .precios .amt sup{font-family:var(--mono);font-size:clamp(18px,2vw,26px);font-weight:500;padding-top:.5em}
     .precios .amt b{font-size:clamp(64px,8vw,104px);font-weight:800;letter-spacing:-.05em;line-height:.86}
+    .precios .amt-txt{align-items:flex-end}
+    /* Sólo cuando las tres celdas van una al lado de otra: entonces hay una
+       línea de apoyo que compartir y el párrafo tiene que arrancar a la misma
+       altura en las tres. Apiladas, ese alto mínimo es hueco muerto. */
+    @media(min-width:820px){
+      .precios .amt-txt{min-height:calc(clamp(64px,8vw,104px) * .86)}
+    }
+    .precios .amt-txt span{font-family:var(--mono);font-size:clamp(26px,3.2vw,42px);font-weight:600;
+      letter-spacing:-.02em;line-height:1;text-transform:uppercase;color:var(--inv-dim)}
     .pasos{border-top:1px solid var(--line-2)}
     .paso{display:grid;gap:10px 36px;padding:26px 0;border-bottom:1px solid var(--line)}
     @media(min-width:900px){.paso{grid-template-columns:110px 1fr 1.15fr;align-items:start}}

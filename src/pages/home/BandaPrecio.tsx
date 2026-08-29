@@ -30,7 +30,12 @@ export default function BandaPrecio() {
           </div>
           <div>
             <span className="lbl">03 · Volumen y recarga</span>
-            <div style={{ fontSize: 'clamp(28px,3.4vw,40px)', fontWeight: 800, letterSpacing: '-.03em', lineHeight: 1.05, marginTop: 20 }}>Precio<br />preferencial</div>
+            {/* No hay un tercer precio confirmado y no se inventa. Pero la
+                celda tiene que pesar lo mismo que las otras dos o la fila se
+                rompe, así que ocupa el mismo alto y se apoya en la misma
+                línea. "A cotizar" es lo que ya dice el catálogo cuando
+                precio es null: una sola forma de decirlo en todo el sitio. */}
+            <div className="amt amt-txt"><span>A cotizar</span></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Oficina, negocio u obra: el precio baja según el consumo mensual. Se cotiza en el momento.</p>
           </div>
         </div>

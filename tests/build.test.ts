@@ -267,3 +267,13 @@ test('el texto secundario se aleja del titular lo mismo en los dos temas', async
       .toEqual({ token, desajuste, tolerable: true })
   }
 })
+
+test('la banda de precio no inventa un tercer precio', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const banda = html.slice(html.indexOf('id="precio"'), html.indexOf('id="proceso"'))
+  // Los dos precios confirmados con las redes, y nada más. La tercera celda
+  // dice lo mismo que dice el catálogo cuando precio es null.
+  const cifras = [...banda.matchAll(/<b>(\d+)<\/b>/g)].map((m) => m[1])
+  expect(cifras).toEqual(['30', '50'])
+  expect(banda).toContain('A cotizar')
+})
