@@ -22,23 +22,27 @@
   color-scheme:light;
 
   --ground:#f2f1ec;        /* el papel manda */
-  --panel:#e8e6df;         /* bandas y tarjetas */
+  --panel:#e3e1db;         /* bandas y tarjetas */
   --panel-2:#dedbd2;       /* tarjeta elevada */
   --ink:#0a1622;           /* titulares */
-  --ink-2:#3d4c5a;         /* parrafos */
-  --ink-3:#4a5865;         /* bajadas */
-  --dim:#55636f;           /* etiquetas mono, metadatos */
+  /* Medidos en L*, no a ojo. Con los valores anteriores la bajada se alejaba
+     29.9 del titular en claro y sólo 12.6 en oscuro: el texto que explica la
+     página se caía justo en el tema por defecto. Ahora los dos temas alejan
+     lo mismo. */
+  --ink-2:#32414e;         /* parrafos */
+  --ink-3:#24303d;         /* bajadas */
+  --dim:#485662;           /* etiquetas mono, metadatos */
   --line:rgba(10,22,34,.16);
   --line-2:rgba(10,22,34,.34);--line2:rgba(10,22,34,.34);
 
   --acento:#0157b4;        /* acento unico: el azul literal del logotipo */
   --acento-alto:#013f80;   /* estado hover: sobre papel, el enlace se oscurece */
-  --acento-suave:rgba(1,87,180,.08);
+  --acento-suave:rgba(1,87,180,.14);
   --sobre-acento:#f2f1ec;  /* texto sobre el acento */
   --sobre-acento-2:rgba(242,241,236,.86);
   --sobre-acento-3:rgba(242,241,236,.88);
 
-  --nav-fondo:rgba(242,241,236,.92);
+  --nav-fondo:rgba(242,241,236,.97);
   --ficha-fondo:rgba(214,210,199,.55);
   --velo:rgba(10,22,34,.55);
   --inv-realce:rgba(62,193,255,.12);
@@ -59,7 +63,8 @@
   --wa-alto:#43e07d;
   --wa-sombra:rgba(10,22,34,.20);
   --sobre-wa:#04101d;
-  --visor-fondo:#04101d;   /* el encuadre del video: el material es oscuro en los dos temas */
+  --visor-fondo:#04101d;   /* el encuadre del video */
+  --visor-mezcla:normal;
   --brand-deep:#0157b4;    /* azules literales del logotipo, para piezas graficas */
   --brand-bright:#02b5ff;
 
@@ -101,6 +106,10 @@
   --velo:rgba(2,8,15,.72);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
+  /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
+     el rectangulo: queda el agua sola sobre la pagina. */
+  --visor-fondo:transparent;
+  --visor-mezcla:screen;
   --peligro:#ff7a7a;
   --inv:#f2f1ec;
   --inv-ink:#0a1622;
@@ -135,6 +144,10 @@
   --velo:rgba(2,8,15,.72);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
+  /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
+     el rectangulo: queda el agua sola sobre la pagina. */
+  --visor-fondo:transparent;
+  --visor-mezcla:screen;
   --peligro:#ff7a7a;
   --inv:#f2f1ec;
   --inv-ink:#0a1622;
@@ -366,7 +379,10 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .total .v{font-size:26px;font-weight:600}
 .note{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;line-height:1.7;color:var(--dim)}
 
-.wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px var(--wa-sombra)}
+/* Más pequeño que un botón de página: flota sobre el contenido y cada píxel
+   suyo es texto que alguien no puede leer. */
+.wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px var(--wa-sombra);
+  padding:12px 18px;min-height:44px;font-size:11.5px;letter-spacing:.1em}
 @media(min-width:960px){.wa-float{right:28px;bottom:28px}}
 
 
@@ -377,11 +393,12 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
    imagen, no una sección invertida. La banda de precio sigue siendo la única
    inversión de la página.
    -------------------------------------------------------------------------- */
-.visor{margin:0 0 clamp(30px,4vw,48px);position:relative;border:1px solid var(--line-2)}
+/* Sin marco y sin barra de pie. Con ellos se leía como una figura pegada en
+   un documento; sin ellos es una placa fotográfica, que es lo que es. */
+.visor{margin:0 0 clamp(30px,4vw,48px);position:relative}
 .visor-video{display:block;width:100%;height:clamp(240px,38vh,420px);object-fit:cover;
-  object-position:center 14%;background:var(--visor-fondo)}
-.visor-pie{display:block;padding:12px 14px;border-top:1px solid var(--line);
-  font-size:10px;letter-spacing:.18em}
+  object-position:center 14%;background:var(--visor-fondo);mix-blend-mode:var(--visor-mezcla)}
+.visor-pie{display:block;padding:11px 0 0;font-size:10px;letter-spacing:.18em}
 
 /* ==========================================================================
    PATRONES DE PÁGINA (home)
@@ -444,7 +461,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     gap:clamp(32px,4vw,64px);align-items:start}
   .visor{position:sticky;top:96px;margin:0}
   /* Alto suficiente para que sostenga la columna mientras pasan los pasos. */
-  .visor-video{height:clamp(380px,66vh,600px);object-position:center 22%}
+  .visor-video{height:clamp(300px,50vh,460px);object-position:center 18%}
   /* En la columna estrecha el paso ya no cabe en tres columnas, y el titular
      tampoco a tamaño de sección: partido en tres líneas deja de ser un titular. */
   .paso{grid-template-columns:52px 1fr;gap:8px 22px}

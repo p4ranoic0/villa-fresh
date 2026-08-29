@@ -238,3 +238,32 @@ test('la entrada de la portada nunca es lo que hace visible el hero', async () =
   expect(entrada).toContain('@media (prefers-reduced-motion:no-preference)')
   expect(entrada.indexOf('@media (prefers-reduced-motion:no-preference)')).toBeLessThan(entrada.indexOf('.hero-grid'))
 })
+
+test('el texto secundario se aleja del titular lo mismo en los dos temas', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
+  const lin = (v: number) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+  /** L* de CIELAB: escala perceptual. Dos colores con el mismo ΔL* se separan
+   *  igual para el ojo, cosa que el ratio de contraste no dice. */
+  const Lestrella = (h: string) => {
+    const [r, g, b] = hex(h)
+    const Y = 0.2126 * lin(r!) + 0.7152 * lin(g!) + 0.0722 * lin(b!)
+    return Y > 0.008856 ? 116 * Math.cbrt(Y) - 16 : 903.3 * Y
+  }
+  const valor = (bloque: string, token: string) =>
+    bloque.match(new RegExp(`${token}:(#[0-9a-f]{6})`))![1]!
+
+  const claro = css.slice(css.indexOf(':root{'), css.indexOf('/* El tema oscuro'))
+  const oscuro = css.slice(css.indexOf(':root[data-tema="oscuro"]{'))
+
+  for (const token of ['--ink-2', '--ink-3', '--dim']) {
+    const enClaro = Math.abs(Lestrella(valor(claro, token)) - Lestrella(valor(claro, '--ink')))
+    const enOscuro = Math.abs(Lestrella(valor(oscuro, token)) - Lestrella(valor(oscuro, '--ink')))
+    // Con los valores originales la bajada se alejaba 29.9 en claro y 12.6 en
+    // oscuro: el texto que explica la página se caía en el tema por defecto.
+    // Dos puntos de holgura para poder retocar un tono sin romper la prueba.
+    const desajuste = +Math.abs(enClaro - enOscuro).toFixed(1)
+    expect({ token, desajuste, tolerable: desajuste <= 2 })
+      .toEqual({ token, desajuste, tolerable: true })
+  }
+})
