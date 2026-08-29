@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { IconoWhatsApp } from '../../components/Icono'
 import { PRODUCTOS } from '../../data/productos'
 import { urlWhatsApp } from '../../data/negocio'
@@ -12,6 +12,8 @@ interface Props {
 }
 
 export default function CajonPedido({ abierto, onCerrar, pedido }: Props) {
+  const botonCerrar = useRef<HTMLButtonElement>(null)
+
   useEffect(() => {
     if (!abierto) return
     const alPulsar = (e: KeyboardEvent) => {
@@ -19,6 +21,7 @@ export default function CajonPedido({ abierto, onCerrar, pedido }: Props) {
     }
     document.addEventListener('keydown', alPulsar)
     document.body.style.overflow = 'hidden'
+    botonCerrar.current?.focus()
     return () => {
       document.removeEventListener('keydown', alPulsar)
       document.body.style.overflow = ''
@@ -47,7 +50,7 @@ export default function CajonPedido({ abierto, onCerrar, pedido }: Props) {
       <div className="panel">
         <div className="head">
           <span className="lbl" style={{ color: 'var(--ink)' }}>Tu pedido</span>
-          <button className="btn btn-ghost btn-sm" id="vf-cerrar" type="button" onClick={onCerrar}>Cerrar</button>
+          <button className="btn btn-ghost btn-sm" id="vf-cerrar" type="button" onClick={onCerrar} ref={botonCerrar}>Cerrar</button>
         </div>
         <div className="body" id="vf-lineas">
           {pedido.lineas.length === 0 ? (

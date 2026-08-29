@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import Footer from '../components/Footer'
 import Nav from '../components/Nav'
 import WaFlotante from '../components/WaFlotante'
@@ -16,12 +16,14 @@ export default function Catalogo() {
   const [abierto, setAbierto] = useState(false)
   const visibles = filtrarPorCategorias(PRODUCTOS, activas)
   const pedido = usePedido()
+  const abrirCajon = useCallback(() => setAbierto(true), [])
+  const cerrarCajon = useCallback(() => setAbierto(false), [])
 
   return (
     <>
       <Nav
         enCatalogo
-        accion={<BotonCarrito unidades={pedido.unidades} onAbrir={() => setAbierto(true)} />}
+        accion={<BotonCarrito unidades={pedido.unidades} onAbrir={abrirCajon} />}
       />
 
       <section className="band" style={{ paddingBottom: 'clamp(28px,4vw,44px)' }}>
@@ -58,7 +60,7 @@ export default function Catalogo() {
         </div>
       </section>
 
-      <CajonPedido abierto={abierto} onCerrar={() => setAbierto(false)} pedido={pedido} />
+      <CajonPedido abierto={abierto} onCerrar={cerrarCajon} pedido={pedido} />
       <Footer />
       <WaFlotante />
     </>

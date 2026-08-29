@@ -184,6 +184,11 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
   text-transform:uppercase;cursor:pointer;padding:0;justify-self:end;align-self:center}
 .line .rm:hover{color:#ff7a7a}
 
+@media(max-width:639px){
+  .btn-sm,.cart-btn,.chk,.line .rm{min-height:44px}
+  .line .qty button{width:44px;height:44px}
+}
+
 .total{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono)}
 .total .t{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 .total .v{font-size:26px;font-weight:600}
