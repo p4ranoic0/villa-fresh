@@ -17,3 +17,21 @@ test('el catálogo se publica en su propia carpeta, con su título', async () =>
   expect(html).toContain('<title>Catálogo — Villa Fresh | Bidones, recarga y accesorios en Lima</title>')
   expect(html).not.toContain('<div id="root"></div>')
 })
+
+test('el titular del hero viaja dentro del HTML publicado', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html).toContain('No revendemos')
+  expect(html).toContain('La fabricamos.')
+})
+
+test('la ficha técnica y el precio viajan dentro del HTML publicado', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html).toContain('8.3')
+  expect(html).toContain('Ósmosis inversa')
+})
+
+test('los marcadores pendientes se publican a propósito', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html).toContain('RAZÓN SOCIAL Y RUC')
+  expect(html).toContain('Distritos referenciales')
+})
