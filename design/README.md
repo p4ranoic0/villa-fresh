@@ -1,3 +1,5 @@
+> Este documento describe la variante *Light Editorial* descartada; la dirección vigente es la de `DESIGN.md`.
+
 # Villa Fresh — Sistema de variables (Design Tokens)
 
 Base visual: **`villafresh_claridad_editorial_desktop`** — la variante *Light Editorial*

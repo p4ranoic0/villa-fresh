@@ -1,21 +1,25 @@
 # Villa Fresh — sitio web
 
-Sitio estático de **Villa Fresh**, agua de mesa purificada con reparto a domicilio en
-Lima Metropolitana. Sin build, sin dependencias: se abre con doble clic y se publica
-subiendo la carpeta.
+Sitio de **Villa Fresh**, agua de mesa purificada con reparto a domicilio en Lima
+Metropolitana. Está construido con React y TypeScript sobre Bun, y Vite lo
+pre-renderiza como HTML estático listo para publicar.
 
 ---
 
 ## Cómo se usa
 
 ```bash
-# ver el sitio en local (cualquiera de las dos)
-open index.html
-python3 -m http.server 8000     # http://localhost:8000
+bun install
+bun run dev          # desarrollo: http://localhost:5173
+bun run build        # genera el sitio estático en dist/
+bun run preview      # comprueba dist/ en http://localhost:4173
+bun test
+bun run typecheck
 ```
 
-Para publicarlo: sube la carpeta tal cual a Netlify, Vercel, GitHub Pages o cualquier
-hosting. No hay paso de compilación.
+Para publicar, ejecuta `bun run build` y sube **el contenido de `dist/`** a Netlify,
+Vercel, GitHub Pages o cualquier hosting estático. El servidor no necesita Bun, Node,
+React ni un backend.
 
 ---
 
@@ -23,60 +27,65 @@ hosting. No hay paso de compilación.
 
 ```
 villa-fresh/
-├─ index.html                  Home
-├─ catalogo.html               Catálogo con filtros y pedido por WhatsApp
-├─ assets/
-│  ├─ site.css                 Todos los estilos del sitio
-│  ├─ site.js                  Filtros + carrito + armado del mensaje de WhatsApp
-│  ├─ productos.js             ← PRODUCTOS Y PRECIOS. Es el único archivo a editar.
-│  ├─ bidon-20l.svg            Ilustraciones de producto (vectoriales)
-│  ├─ bidon-vacio.svg
-│  ├─ botella-600.svg
-│  ├─ dispensador.svg
-│  └─ logo-villafresh-*.jpg/png
-├─ design/                     Sistema de diseño (tokens, hoja visual, notas)
-│  ├─ tokens.css               Variables --vf-*
-│  ├─ tokens.json              Los mismos valores para herramientas
-│  ├─ tailwind.config.js       Por si algún día se usa Tailwind
-│  ├─ preview.html             Hoja visual de tokens
-│  ├─ README.md                Decisiones de diseño y por qué
-│  └─ alternativas/            La versión "editorial claro" descartada
-└─ contenido/
-   └─ redes-sociales-villafresh.md   Copy real extraído de Facebook e Instagram
+├─ index.html                         Plantilla de Vite para el pre-render
+├─ package.json · bun.lock            Scripts y versiones fijadas
+├─ vite.config.ts · tsconfig.json     Configuración de Vite y TypeScript
+├─ scripts/
+│  └─ prerender.ts                    Escribe dist/index.html y dist/catalogo.html
+├─ src/
+│  ├─ main.tsx · entry-server.tsx     Hidratación y renderizado de servidor
+│  ├─ App.tsx · rutas.ts              Rutas, títulos y metaetiquetas por página
+│  ├─ components/                     Navegación, pie, isotipo e iconos compartidos
+│  ├─ pages/                          Portada y catálogo
+│  ├─ features/catalogo/              Filtros, grilla y tarjetas
+│  ├─ features/pedido/                Estado, persistencia y mensaje de WhatsApp
+│  ├─ data/productos.ts               ← PRODUCTOS Y PRECIOS; único archivo a editar
+│  ├─ data/negocio.ts                 Teléfono, redes y datos del negocio
+│  └─ styles/site.css                 Implementación del sistema visual
+├─ public/                             Archivos copiados al artefacto publicado
+│  ├─ og-villafresh.jpg               Imagen de compartir en WhatsApp y Facebook
+│  └─ *.svg · logos                    Ilustraciones y logotipos
+├─ tests/                              Pruebas puras y del HTML publicado
+├─ marca/                              Piezas de marca y su código fuente HTML
+├─ design/                             Tokens y variante Light Editorial descartada
+├─ contenido/                          Copy real extraído de las redes
+└─ dist/                               Sitio generado; se publica esta carpeta
 ```
 
 ---
 
 ## Editar productos y precios
 
-Todo vive en `assets/productos.js`. Cada producto es un objeto:
+Todo vive en `src/data/productos.ts`. Cada producto es un objeto tipado:
 
-```js
+```ts
 {
   sku: 'VF-B20',
   nombre: 'Bidón 20 L',
-  categoria: 'bidones',        // debe existir en VF_CATEGORIAS
+  categoria: 'bidones',        // debe existir en CATEGORIAS
   precio: 30,                  // null → la web muestra "A cotizar"
   unidad: 'con envase',
   etiqueta: 'Más vendido',     // opcional, aparece como chip sobre la imagen
-  imagen: 'assets/bidon-20l.svg',
+  imagen: '/bidon-20l.svg',
   desc: '...'
 }
 ```
 
-Guardas el archivo, recargas el navegador y ya está. No hay build.
+Es el único archivo que se edita para cambiar productos o precios. Una categoría o un
+tipo inválido falla durante `bun run typecheck` en vez de dejar silenciosamente un
+producto fuera del catálogo. Después de editarlo, vuelve a ejecutar `bun run build`.
 
 ---
 
 ## Cómo funciona el pedido
 
 No hay backend ni pasarela de pago. El catálogo arma el pedido en el navegador
-(en memoria: se pierde al recargar, y está bien mientras se cierre por WhatsApp) y
-el botón **Enviar pedido** abre `wa.me/51994647840` con el mensaje ya escrito:
-productos, cantidades, subtotales, total y dos líneas en blanco para la dirección y
-el distrito.
+(persistido en `localStorage`) y el botón **Enviar pedido** abre `wa.me/51994647840`
+con el mensaje ya escrito: productos, cantidades, subtotales, total y dos líneas para
+la dirección y el distrito.
 
-Los productos con `precio: null` viajan en el mensaje como *"a cotizar"*.
+Los productos con `precio: null` viajan en el mensaje como *"a cotizar"*. Al restaurar
+un pedido se descartan datos inválidos y SKU que ya no existan en el catálogo.
 
 ---
 
@@ -131,20 +140,30 @@ noche, tipografía de datos en monoespaciada, una sola banda de papel crudo para
 precio, y el motivo gota+montaña del isotipo como firma gráfica.
 
 - Tipografías: **Archivo** (titulares, 800) e **IBM Plex Mono** (datos y etiquetas).
-- El sistema completo y el porqué de cada decisión están en `design/README.md`.
-- La versión anterior, más luminosa y convencional, quedó archivada en
-  `design/alternativas/` por si alguna vez hace falta compararlas.
+- El sistema vigente y el porqué de cada decisión están en `DESIGN.md`.
+- `design/README.md` y sus tokens documentan la variante *Light Editorial* descartada.
+- Las piezas exportadas y su código fuente viven en `marca/`; la imagen que consume la
+  web para compartir enlaces es `public/og-villafresh.jpg`.
 
 ---
 
-## Por qué HTML y no React
+## Por qué React pre-renderizado
 
-Con siete SKUs, sin login, sin pagos en línea y con el cierre de pedido por WhatsApp,
-React sólo agregaría un paso de build, un bundle de JavaScript y peor SEO local — que
-es exactamente lo que este negocio necesita bien (búsquedas tipo *"agua a domicilio
-Lima"*). El catálogo entero son ~200 líneas de JavaScript sin dependencias.
+React permite dividir la portada, el catálogo y el pedido en componentes tipados y
+probados sin convertir el sitio publicado en una aplicación vacía que dependa de
+JavaScript para mostrar contenido. Vite genera el bundle del navegador y otro de
+servidor; después `scripts/prerender.ts` renderiza cada ruta y escribe HTML completo en
+`dist/index.html` y `dist/catalogo.html`. En el navegador, React hidrata ese HTML para
+devolverle filtros, carrito y persistencia.
 
-**Migrar cuando aparezca alguna de estas:** stock real que cambia, pagos en línea,
-panel de administración de pedidos, cuentas de cliente, o más de una persona editando
-contenido a la vez. En ese momento **Astro** es el salto natural (componentes, cero JS
-por defecto, mismo SEO); React con Vite solo si además hay una aplicación detrás.
+El pre-render **no es opcional**. Los previsualizadores de WhatsApp y Facebook no
+ejecutan JavaScript, y WhatsApp es el canal de venta del negocio. Sin texto, título y
+metaetiquetas dentro del HTML publicado, un enlace compartido perdería precisamente la
+información que debe convencer al cliente antes de abrir la página. El build falla si
+una ruta renderiza vacía, y `tests/build.test.ts` comprueba el artefacto final.
+
+El catálogo se publica como **`/catalogo.html`**, no como una carpeta. Es la URL del
+sitio anterior, por lo que conserva los enlaces existentes, y se comporta igual en
+hosting estático y en `vite preview`. La forma `/catalogo/index.html` hacía que algunas
+peticiones a `/catalogo` cayeran en el fallback de la Home: el servidor entregaba una
+página y React intentaba hidratar otra, provocando el error de hidratación #418.

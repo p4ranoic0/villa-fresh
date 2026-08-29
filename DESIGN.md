@@ -8,12 +8,14 @@ documento existe hoy en `assets/site.css`. Si algo cambia en el código, se camb
 |---|---|
 | **Versión** | 3 — dirección "ficha técnica" |
 | **Fecha** | 27 de agosto de 2026 |
-| **Implementación** | `assets/site.css` · `index.html` · `catalogo.html` |
+| **Implementación** | `src/styles/site.css` · `src/components/` · `src/pages/` |
 | **Sustituye a** | `stitch_boutique_de_agua_premium/design.md` (dirección clara/premium, descartada) |
 
 ---
 
 ## 1. Marca
+
+Los componentes React son ahora la implementación de referencia de este sistema visual.
 
 | Campo | Valor |
 |---|---|
