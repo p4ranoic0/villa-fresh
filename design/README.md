@@ -121,3 +121,26 @@ claro por si hace falta compararlas.
 
 Si tocas colores o tipografía, hazlo en `src/styles/site.css`. `tokens.css` queda como
 referencia del sistema, no como archivo servido.
+
+---
+
+## v4 — Dos temas (29/08/2026)
+
+`src/styles/site.css` pasa de una paleta a un sistema de roles: cada token tiene dos
+valores y el tema decide cuál se usa. Claro por defecto, oscuro cuando lo pide el
+sistema, y la elección manual por encima de los dos.
+
+La ironía es que este directorio guardaba una variante clara (*Light Editorial*) que se
+descartó por parecer una plantilla del rubro. El tema claro de v4 **no la recupera**:
+no es un fondo blanco con azul cielo, sino la misma dirección "ficha técnica" impresa
+sobre papel crudo, con la banda de precio invertida a azul noche. La variante de
+`alternativas/` sigue descartada.
+
+Lo verificado, no lo prometido:
+
+- El tema oscuro es **idéntico píxel a píxel** al que ya estaba publicado, salvo dos
+  cambios deliberados que se anotan en `DESIGN.md`.
+- Los dos temas pasan **WCAG AA** completos, medidos sobre los 210 nodos de texto de
+  las páginas publicadas.
+- Ningún color se escribe a mano fuera del bloque de tokens, y hay una prueba que
+  falla si alguien lo hace.

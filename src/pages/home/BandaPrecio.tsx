@@ -2,7 +2,7 @@ import { Link } from 'react-router'
 
 export default function BandaPrecio() {
   return (
-    <section className="paper band" id="precio">
+    <section className="inv band" id="precio">
       <div className="wrap">
         <div className="split">
           <div>
@@ -20,10 +20,10 @@ export default function BandaPrecio() {
             <div className="amt"><sup>S/</sup><b>30</b></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Bidón de 20 L sellado, entregado en tu puerta el mismo día.</p>
           </div>
-          <div style={{ background: 'rgba(62,193,255,.10)' }}>
+          <div style={{ background: 'var(--inv-realce)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span className="lbl" style={{ color: 'var(--paper-ink)' }}>02 · Dos bidones</span>
-              <span className="mono" style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '.14em', background: 'var(--paper-ink)', color: 'var(--paper)', padding: '4px 8px' }}>AHORRAS S/10</span>
+              <span className="lbl" style={{ color: 'var(--inv-ink)' }}>02 · Dos bidones</span>
+              <span className="mono" style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '.14em', background: 'var(--inv-ink)', color: 'var(--inv)', padding: '4px 8px' }}>AHORRAS S/10</span>
             </div>
             <div className="amt"><sup>S/</sup><b>50</b></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Dos bidones en una sola entrega, al precio de promoción permanente.</p>
@@ -35,9 +35,9 @@ export default function BandaPrecio() {
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', borderTop: '1px solid rgba(10,22,34,.18)', paddingTop: 30 }}>
-          <span className="mono" style={{ fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--paper-dim)' }}>Pago con Yape, efectivo o transferencia al recibir</span>
-          <Link className="btn btn-dark" to="/catalogo.html">Ver catálogo completo</Link>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', borderTop: '1px solid var(--inv-line)', paddingTop: 30 }}>
+          <span className="mono" style={{ fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--inv-dim)' }}>Pago con Yape, efectivo o transferencia al recibir</span>
+          <Link className="btn btn-inv" to="/catalogo.html">Ver catálogo completo</Link>
         </div>
       </div>
     </section>

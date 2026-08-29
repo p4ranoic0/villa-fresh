@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <title>Villa Fresh</title>
+  <circle cx="50" cy="50" r="50" fill="#0157b4"/>
+  <g transform="translate(21.95 15.2) scale(.561)">
+    <path d="M50 5C50 5 9 52 9 78a41 41 0 0 0 82 0C91 52 50 5 50 5z" fill="#f2f1ec"/>
+    <path d="M23 91L45 62l13 17 10-11 16 21" fill="none" stroke="#0157b4" stroke-width="9"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

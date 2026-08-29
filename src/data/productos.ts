@@ -23,7 +23,8 @@ export const PRODUCTOS: Producto[] = [
     precio: 30,
     unidad: 'con envase',
     etiqueta: 'Más vendido',
-    imagen: '/bidon-20l.svg',
+    imagen: '/producto-bidon-20l.webp',
+    nota: 'Sellado en planta',
     desc: 'Agua purificada por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada. Envase sellado, entrega el mismo día.',
   },
   {
@@ -33,7 +34,8 @@ export const PRODUCTOS: Producto[] = [
     precio: 50,
     unidad: 'ahorras S/ 10',
     etiqueta: 'Promoción',
-    imagen: '/bidon-20l.svg',
+    imagen: '/producto-bidones.webp',
+    nota: 'Sellado en planta',
     desc: 'Dos bidones en una sola entrega, al precio de promoción permanente. La forma más conveniente de pedir.',
   },
   {
@@ -42,7 +44,8 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'bidones',
     precio: null,
     unidad: 'con tu envase',
-    imagen: '/bidon-20l.svg',
+    imagen: '/producto-bidon-20l.webp',
+    nota: 'Cambias envase por envase',
     desc: 'Cambias tu bidón vacío por uno lleno y sellado. Precio preferencial de recarga.',
   },
   {
@@ -51,7 +54,8 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'envases',
     precio: null,
     unidad: 'compra única',
-    imagen: '/bidon-vacio.svg',
+    imagen: '/producto-bidon-20l.webp',
+    nota: 'Envase vacío, sin agua',
     desc: 'Para quien empieza sin bidón. Se compra una sola vez y después solo pagas la recarga.',
   },
   {
@@ -60,7 +64,7 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'botellas',
     precio: null,
     unidad: 'presentación por confirmar',
-    imagen: '/botella-600.svg',
+    imagen: '/producto-botella.webp',
     desc: 'La misma agua purificada en presentación individual, para llevar. Consulta presentaciones disponibles.',
   },
   {
@@ -69,7 +73,7 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'accesorios',
     precio: null,
     unidad: 'consultar stock',
-    imagen: '/dispensador.svg',
+    imagen: '/producto-dispensador.webp',
     desc: 'Bomba o dispensador para servir del bidón de 20 L sin cargarlo. Consulta modelos y disponibilidad.',
   },
   {
@@ -79,7 +83,8 @@ export const PRODUCTOS: Producto[] = [
     precio: null,
     unidad: 'precio por volumen',
     etiqueta: 'A cotizar',
-    imagen: '/bidon-20l.svg',
+    imagen: '/producto-bidones.webp',
+    nota: 'Entregas programadas',
     desc: 'Oficina, negocio u obra: entregas programadas, reposición constante y precio según consumo mensual.',
   },
 ]

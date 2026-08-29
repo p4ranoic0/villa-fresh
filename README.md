@@ -46,7 +46,8 @@ villa-fresh/
 │  └─ styles/site.css                 Implementación del sistema visual
 ├─ public/                             Archivos copiados al artefacto publicado
 │  ├─ og-villafresh.jpg               Imagen de compartir en WhatsApp y Facebook
-│  └─ *.svg · logos                    Ilustraciones y logotipos
+│  ├─ producto-*.webp · portada-*.webp Fotografía con licencia (ver marca/LICENCIAS.md)
+│  └─ favicon.svg · logos              Isotipo y logotipos
 ├─ tests/                              Pruebas puras y del HTML publicado
 ├─ marca/                              Piezas de marca y su código fuente HTML
 ├─ design/                             Tokens y variante Light Editorial descartada
@@ -68,9 +69,17 @@ Todo vive en `src/data/productos.ts`. Cada producto es un objeto tipado:
   precio: 30,                  // null → la web muestra "A cotizar"
   unidad: 'con envase',
   etiqueta: 'Más vendido',     // opcional, aparece como chip sobre la imagen
-  imagen: '/bidon-20l.svg',
+  imagen: '/producto-bidon-20l.webp',
+  nota: 'Sellado en planta',   // opcional, al pie del encuadre; ver abajo
   desc: '...'
 }
+```
+
+`nota` existe porque la fotografía tiene un límite: **un bidón lleno y uno vacío son
+la misma foto**. El plástico es transparente y no hay línea de agua. Sin esa etiqueta,
+`VF-EV20` y `VF-B20` serían la misma tarjeta. Es información, no adorno.
+
+```
 ```
 
 Es el único archivo que se edita para cambiar productos o precios. Una categoría o un
@@ -128,7 +137,9 @@ tratado en planta es falso y expone frente a Indecopi y a la etiqueta sanitaria.
 - [ ] Desglose real de los **8 pasos** de purificación (hoy se muestran las 4 etapas documentadas)
 - [ ] Correo corporativo y dominio
 - [ ] Libro de Reclamaciones (obligatorio en Perú para venta al consumidor)
-- [ ] Fotos reales del producto y de la planta para reemplazar las ilustraciones vectoriales
+- [ ] Fotos reales del producto y de la planta. Hoy hay fotografía **genérica con
+      licencia**, que no puede presentarse como la planta ni el producto de Villa
+      Fresh; el detalle está en `marca/LICENCIAS.md`
 
 Los pendientes aparecen en la web entre corchetes, a propósito, para que se vean y
 no se olviden.
@@ -137,9 +148,18 @@ no se olviden.
 
 ## Diseño
 
-Dirección visual: **ficha técnica** — el agua tratada como producto técnico. Fondo azul
-noche, tipografía de datos en monoespaciada, una sola banda de papel crudo para el
-precio, y el motivo gota+montaña del isotipo como firma gráfica.
+Dirección visual: **ficha técnica** — el agua tratada como producto técnico. Un fondo
+dominante sin ruido, tipografía de datos en monoespaciada, una sola banda invertida
+para el precio, y el motivo gota+montaña del isotipo como firma gráfica.
+
+**Dos temas.** Claro por defecto, oscuro cuando lo pide el sistema
+(`prefers-color-scheme`) y claro u oscuro cuando lo elige el visitante con el
+conmutador de la barra superior, que se recuerda. La dirección visual es la misma en
+los dos: lo que se invierte es el material, no la idea. La banda de precio sigue siendo
+la única ruptura, papel sobre azul en el oscuro y azul sobre papel en el claro.
+
+El tema se resuelve en un script en línea de `index.html`, antes del primer pintado,
+para que no haya parpadeo y para que el conmutador responda sin esperar al bundle.
 
 - Tipografías: **Archivo** (titulares, 800) e **IBM Plex Mono** (datos y etiquetas).
 - El sistema vigente y el porqué de cada decisión están en `DESIGN.md`.

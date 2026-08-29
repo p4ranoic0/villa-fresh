@@ -12,7 +12,7 @@ export default function Isotipo({ ancho, alto }: Props) {
         height: `${alto}px`,
         flex: 'none',
         fill: 'none',
-        stroke: '#3ec1ff',
+        stroke: 'var(--acento)',
         strokeWidth: 6,
         strokeLinejoin: 'round',
       }}

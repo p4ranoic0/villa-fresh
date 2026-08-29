@@ -3,8 +3,8 @@ import { mensajeWhatsApp, soles } from '../src/features/pedido/mensajeWhatsApp'
 import type { Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
-  { sku: 'VF-B20', nombre: 'Bidón 20 L', categoria: 'bidones', precio: 30, unidad: 'con envase', imagen: '/bidon-20l.svg', desc: '' },
-  { sku: 'VF-R20', nombre: 'Recarga 20 L', categoria: 'bidones', precio: null, unidad: 'con tu envase', imagen: '/bidon-20l.svg', desc: '' },
+  { sku: 'VF-B20', nombre: 'Bidón 20 L', categoria: 'bidones', precio: 30, unidad: 'con envase', imagen: '/producto-bidon-20l.webp', desc: '' },
+  { sku: 'VF-R20', nombre: 'Recarga 20 L', categoria: 'bidones', precio: null, unidad: 'con tu envase', imagen: '/producto-bidon-20l.webp', desc: '' },
 ]
 
 test('soles siempre lleva dos decimales', () => {

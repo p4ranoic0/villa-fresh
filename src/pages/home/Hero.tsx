@@ -50,7 +50,7 @@ export default function Hero() {
           </div>
           <div className="spec" style={{ borderTop: 0 }}><span>Producto</span><b>Agua de mesa</b></div>
           <div className="spec"><span>Tratamiento</span><b>Ósmosis inversa</b></div>
-          <div className="spec"><span>pH</span><b style={{ color: 'var(--cyan)', fontSize: '15px' }}>8.3</b></div>
+          <div className="spec"><span>pH</span><b style={{ color: 'var(--acento)', fontSize: '15px' }}>8.3</b></div>
           <div className="spec"><span>Ozonizada</span><b>Sí</b></div>
           <div className="spec"><span>Pasos de purificación</span><b>08</b></div>
           <div className="spec"><span>Contenido neto</span><b>20 L</b></div>

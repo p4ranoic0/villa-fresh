@@ -12,6 +12,7 @@ export default function TarjetaProducto({ producto, onAgregar }: Props) {
       <div className="shot">
         {producto.etiqueta && <span className="tag">{producto.etiqueta}</span>}
         <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
+        {producto.nota && <span className="nota">{producto.nota}</span>}
       </div>
       <div className="sku">{producto.sku}</div>
       <h3>{producto.nombre}</h3>

@@ -4,22 +4,62 @@
    Los valores nacen de design/tokens.css; aquí viven las clases del sitio.
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   TOKENS — dos temas sobre los mismos nombres
+
+   Claro por defecto. Oscuro cuando el sistema lo pide (prefers-color-scheme)
+   y cuando el visitante lo elige (data-tema en <html>, que gana siempre).
+
+   Un token nombra el ROL, no el color: --acento es azul profundo en claro y
+   cian en oscuro. Por eso ningun literal hexadecimal vive fuera de este bloque:
+   si aparece un #hex mas abajo, es un tema a medio hacer.
+
+   La banda invertida (--inv-*) es la unica seccion que va contra el fondo
+   dominante: papel sobre azul noche en el tema oscuro, azul noche sobre papel
+   en el claro. Se invierte el material, no la idea.
+   -------------------------------------------------------------------------- */
 :root{
-  --ground:#04101d;        /* fondo dominante */
-  --panel:#0a1c30;         /* bandas y tarjetas */
-  --panel-2:#0d2338;       /* tarjeta elevada */
-  --ink:#eaf2f8;
-  --ink-2:#a6bccd;         /* párrafos */
-  --dim:#8ba3ba;           /* etiquetas */
-  --line:rgba(139,163,186,.22);
-  --line-2:rgba(139,163,186,.42);--line2:rgba(139,163,186,.42);
-  --cyan:#3ec1ff;
-  --cyan-soft:rgba(62,193,255,.10);
-  --paper:#f2f1ec;         /* la banda de precio */
-  --paper-ink:#0a1622;
-  --paper-dim:#5b6a78;
-  --wa:#25d366;
-  --brand-deep:#0157b4;    /* azules literales del logotipo */
+  color-scheme:light;
+
+  --ground:#f2f1ec;        /* el papel manda */
+  --panel:#e8e6df;         /* bandas y tarjetas */
+  --panel-2:#dedbd2;       /* tarjeta elevada */
+  --ink:#0a1622;           /* titulares */
+  --ink-2:#3d4c5a;         /* parrafos */
+  --ink-3:#4a5865;         /* bajadas */
+  --dim:#55636f;           /* etiquetas mono, metadatos */
+  --line:rgba(10,22,34,.16);
+  --line-2:rgba(10,22,34,.34);--line2:rgba(10,22,34,.34);
+
+  --acento:#0157b4;        /* acento unico: el azul literal del logotipo */
+  --acento-alto:#013f80;   /* estado hover: sobre papel, el enlace se oscurece */
+  --acento-suave:rgba(1,87,180,.08);
+  --sobre-acento:#f2f1ec;  /* texto sobre el acento */
+  --sobre-acento-2:rgba(242,241,236,.86);
+  --sobre-acento-3:rgba(242,241,236,.88);
+
+  --nav-fondo:rgba(242,241,236,.92);
+  --ficha-fondo:rgba(214,210,199,.55);
+  --velo:rgba(10,22,34,.55);
+  --inv-realce:rgba(62,193,255,.12);
+  --peligro:#b0202a;       /* color de estado destructivo, no de marca */
+
+  /* banda invertida: aqui es azul noche sobre papel */
+  --inv:#04101d;
+  --inv-ink:#eaf2f8;
+  --inv-p:#a6bccd;
+  --inv-dim:#8ba3ba;
+  --inv-line:rgba(234,242,248,.18);
+  --inv-btn:#f2f1ec;
+  --inv-btn-ink:#04101d;
+  --inv-btn-alto:#fbfaf7;
+  --inv-btn-ink-alto:#04101d;
+
+  --wa:#25d366;            /* color del canal WhatsApp, no de marca */
+  --wa-alto:#43e07d;
+  --wa-sombra:rgba(10,22,34,.20);
+  --sobre-wa:#04101d;
+  --brand-deep:#0157b4;    /* azules literales del logotipo, para piezas graficas */
   --brand-bright:#02b5ff;
 
   --disp:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
@@ -28,6 +68,75 @@
   --pad:clamp(20px,5vw,96px);
   --max:1440px;
   --band:clamp(56px,7vw,96px);
+}
+
+/* El tema oscuro, identico al que ya estaba verificado. */
+@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]){
+  color-scheme:dark;
+  --ground:#04101d;
+  --panel:#0a1c30;
+  --panel-2:#0d2338;
+  --ink:#eaf2f8;
+  --ink-2:#a6bccd;
+  --ink-3:#bcd0e0;
+  --dim:#8ba3ba;
+  --line:rgba(139,163,186,.22);
+  --line-2:rgba(139,163,186,.42);--line2:rgba(139,163,186,.42);
+  --acento:#3ec1ff;
+  --acento-alto:#8ed8ff;
+  --acento-suave:rgba(62,193,255,.10);
+  --sobre-acento:#04101d;
+  --sobre-acento-2:rgba(4,16,29,.72);
+  --sobre-acento-3:rgba(4,16,29,.78);
+  --nav-fondo:rgba(4,16,29,.92);
+  --ficha-fondo:rgba(10,28,48,.55);
+  --velo:rgba(2,8,15,.72);
+  --inv-realce:rgba(62,193,255,.10);
+  --wa-sombra:rgba(37,211,102,.45);
+  --peligro:#ff7a7a;
+  --inv:#f2f1ec;
+  --inv-ink:#0a1622;
+  --inv-p:#3d4c5a;
+  --inv-dim:#5b6a78;
+  --inv-line:rgba(10,22,34,.18);
+  --inv-btn:#04101d;
+  --inv-btn-ink:#f2f1ec;
+  --inv-btn-alto:#0a2136;
+  --inv-btn-ink-alto:#f7f6f2;
+}}
+
+:root[data-tema="oscuro"]{
+  color-scheme:dark;
+  --ground:#04101d;
+  --panel:#0a1c30;
+  --panel-2:#0d2338;
+  --ink:#eaf2f8;
+  --ink-2:#a6bccd;
+  --ink-3:#bcd0e0;
+  --dim:#8ba3ba;
+  --line:rgba(139,163,186,.22);
+  --line-2:rgba(139,163,186,.42);--line2:rgba(139,163,186,.42);
+  --acento:#3ec1ff;
+  --acento-alto:#8ed8ff;
+  --acento-suave:rgba(62,193,255,.10);
+  --sobre-acento:#04101d;
+  --sobre-acento-2:rgba(4,16,29,.72);
+  --sobre-acento-3:rgba(4,16,29,.78);
+  --nav-fondo:rgba(4,16,29,.92);
+  --ficha-fondo:rgba(10,28,48,.55);
+  --velo:rgba(2,8,15,.72);
+  --inv-realce:rgba(62,193,255,.10);
+  --wa-sombra:rgba(37,211,102,.45);
+  --peligro:#ff7a7a;
+  --inv:#f2f1ec;
+  --inv-ink:#0a1622;
+  --inv-p:#3d4c5a;
+  --inv-dim:#5b6a78;
+  --inv-line:rgba(10,22,34,.18);
+  --inv-btn:#04101d;
+  --inv-btn-ink:#f2f1ec;
+  --inv-btn-alto:#0a2136;
+  --inv-btn-ink-alto:#f7f6f2;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -39,9 +148,9 @@ body{
 }
 img{max-width:100%;display:block}
 p{margin:0}
-a{color:var(--cyan);text-decoration:none}
-a:hover{color:#8ed8ff}
-:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+a{color:var(--acento);text-decoration:none}
+a:hover{color:var(--acento-alto)}
+:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
 h1,h2{margin:0;font-weight:800;letter-spacing:-.035em;line-height:.94;text-transform:uppercase}
@@ -53,8 +162,8 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .band{padding-block:var(--band)}
 .mono{font-family:var(--mono)}
 .lbl{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
-.lbl-cyan{color:var(--cyan)}
-.lede{font-size:clamp(16px,1.35vw,19px);line-height:1.62;color:#bcd0e0;font-weight:400}
+.lbl-cyan{color:var(--acento)}
+.lede{font-size:clamp(16px,1.35vw,19px);line-height:1.62;color:var(--ink-3);font-weight:400}
 .dimtext{color:var(--ink-2);font-size:16px;line-height:1.62}
 .ph{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px dashed var(--line-2);padding:9px 13px}
 
@@ -62,19 +171,34 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;border:0;cursor:pointer;
   font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
   padding:17px 28px;min-height:52px;transition:background .2s ease,color .2s ease,border-color .2s ease}
-.btn-cyan{background:var(--cyan);color:#04101d}
-.btn-cyan:hover{background:#8ed8ff;color:#04101d}
-.btn-wa{background:var(--wa);color:#04101d}
-.btn-wa:hover{background:#43e07d;color:#04101d}
-.btn-dark{background:#04101d;color:var(--paper)}
-.btn-dark:hover{background:#0a2136;color:#fff}
+.btn-cyan{background:var(--acento);color:var(--sobre-acento)}
+.btn-cyan:hover{background:var(--acento-alto);color:var(--sobre-acento)}
+.btn-wa{background:var(--wa);color:var(--sobre-wa)}
+.btn-wa:hover{background:var(--wa-alto);color:var(--sobre-wa)}
+.btn-inv{background:var(--inv-btn);color:var(--inv-btn-ink)}
+.btn-inv:hover{background:var(--inv-btn-alto);color:var(--inv-btn-ink-alto)}
 .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
-.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-ghost:hover{border-color:var(--acento);color:var(--acento)}
 .btn-sm{padding:11px 18px;min-height:40px;font-size:11.5px;letter-spacing:.1em}
 .ico{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
+/* --- conmutador de tema --- */
+/* El boton ofrece el tema contrario al que se esta viendo. Los dos iconos
+   viajan siempre en el HTML y es el CSS quien elige cual se ve, para que el
+   pre-render y la hidratacion pinten exactamente lo mismo. */
+.tema-btn{display:inline-grid;place-items:center;width:40px;height:40px;flex:none;
+  background:transparent;border:1px solid var(--line-2);color:var(--dim);cursor:pointer;padding:0;
+  transition:border-color .2s ease,color .2s ease}
+.tema-btn:hover{border-color:var(--acento);color:var(--acento)}
+.tema-btn .ico{width:18px;height:18px}
+.tema-btn .ico-sol{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]) .tema-btn .ico-sol{display:block}
+  :root:not([data-tema="claro"]) .tema-btn .ico-luna{display:none}}
+:root[data-tema="oscuro"] .tema-btn .ico-sol{display:block}
+:root[data-tema="oscuro"] .tema-btn .ico-luna{display:none}
+
 /* --- barra superior --- */
-.nav{position:sticky;top:0;z-index:50;background:rgba(4,16,29,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{position:sticky;top:0;z-index:50;background:var(--nav-fondo);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:20px}
 .brand{display:flex;align-items:center;gap:13px;color:var(--ink)}
 .brand:hover{color:var(--ink)}
@@ -82,7 +206,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .brand-tag{display:block;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:4px}
 .nav-links{display:none;gap:26px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
 .nav-links a{color:var(--dim)}
-.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--cyan)}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--acento)}
 .nav-tel{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:none}
 @media(min-width:1000px){.nav-links{display:flex}.nav-tel{display:block}}
 
@@ -92,24 +216,24 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .spec b{font-weight:600;color:var(--ink);letter-spacing:.05em}
 
 /* --- cinta --- */
-.ribbon{border-block:1px solid var(--cyan);background:var(--cyan-soft);padding:14px 0;overflow:hidden}
-.ribbon div{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--cyan);white-space:nowrap;animation:mq 46s linear infinite}
+.ribbon{border-block:1px solid var(--acento);background:var(--acento-suave);padding:14px 0;overflow:hidden}
+.ribbon div{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--acento);white-space:nowrap;animation:mq 46s linear infinite}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* --- banda de papel --- */
-.paper{background:var(--paper);color:var(--paper-ink)}
-.paper h2{color:var(--paper-ink)}
-.paper .lbl{color:var(--paper-dim)}
-.paper p{color:#3d4c5a}
+.inv{background:var(--inv);color:var(--inv-ink)}
+.inv h2{color:var(--inv-ink)}
+.inv .lbl{color:var(--inv-dim)}
+.inv p{color:var(--inv-p)}
 
 /* --- cierre --- */
-.close{background:var(--cyan);color:#04101d}
+.close{background:var(--acento);color:var(--sobre-acento)}
 .close .num{font-family:var(--mono);font-size:clamp(2.4rem,6.5vw,5.5rem);font-weight:600;letter-spacing:-.03em;line-height:1}
 
 /* --- pie --- */
 .foot{border-top:1px solid var(--line);padding-block:44px 48px}
 .foot a{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
-.foot a:hover{color:var(--cyan)}
+.foot a:hover{color:var(--acento)}
 
 /* ==========================================================================
    CATÁLOGO
@@ -124,13 +248,25 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
   font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink-2);border-bottom:1px solid var(--line)}
 .chk:hover{color:var(--ink)}
 .chk input{appearance:none;width:15px;height:15px;flex:none;border:1px solid var(--line-2);background:transparent;cursor:pointer;position:relative}
-.chk input:checked{background:var(--cyan);border-color:var(--cyan)}
-.chk input:checked::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid #04101d;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.chk input:checked{background:var(--acento);border-color:var(--acento)}
+.chk input:checked::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid var(--sobre-acento);border-width:0 2px 2px 0;transform:rotate(45deg)}
 .chk .n{margin-left:auto;color:var(--dim);font-size:11px}
 
 .cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;
   border-bottom:1px solid var(--line-2);padding-bottom:18px;margin-bottom:32px}
-.grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);grid-template-columns:1fr}
+/* Las lineas las ponen las tarjetas, no el contenedor. Pintar el fondo de
+   la grilla con --line dejaba las celdas sobrantes de la ultima fila como
+   un bloque relleno: apenas se notaba sobre azul noche y sobre papel era
+   un hueco gris. Con la sombra en cada tarjeta, donde no hay tarjeta no
+   hay nada.
+
+   Cada tarjeta pinta solo su derecha y su abajo: con las cuatro caras, dos
+   sombras contiguas caian en el mismo hueco de 1px y la linea salia el doble
+   de oscura. El arriba y el izquierda del marco los pone la grilla, y sus
+   otros dos lados van transparentes para reservar el sitio sin pintarlo. */
+.grid{display:grid;gap:1px;background:var(--ground);grid-template-columns:1fr;
+  border:1px solid transparent;border-top-color:var(--line);border-left-color:var(--line)}
+.card{box-shadow:1px 0 0 var(--line),0 1px 0 var(--line)}
 @media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1180px){.grid{grid-template-columns:repeat(3,1fr)}}
 
@@ -140,7 +276,11 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .card .shot img,.card .shot svg{max-height:100%;width:auto;transition:transform .4s ease}
 .card:hover .shot img,.card:hover .shot svg{transform:scale(1.04)}
 .card .tag{position:absolute;top:12px;left:12px;font-family:var(--mono);font-size:9.5px;font-weight:600;
-  letter-spacing:.16em;text-transform:uppercase;background:var(--cyan);color:#04101d;padding:5px 9px}
+  letter-spacing:.16em;text-transform:uppercase;background:var(--acento);color:var(--sobre-acento);padding:5px 9px}
+/* Va dentro del encuadre, sobre el fondo del panel y no sobre la foto:
+   el recorte esta centrado y el borde inferior queda libre. */
+.card .nota{position:absolute;left:12px;right:12px;bottom:12px;font-family:var(--mono);font-size:9.5px;
+  font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-align:center}
 .card .sku{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 .card h3{font-size:21px;margin:10px 0 8px}
 .card .desc{font-size:14.5px;line-height:1.55;color:var(--ink-2);flex:1}
@@ -157,16 +297,16 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .cart-btn{position:relative;display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--line-2);
   color:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
   padding:11px 16px;cursor:pointer}
-.cart-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-.cart-btn .count{min-width:19px;height:19px;display:grid;place-items:center;background:var(--cyan);color:#04101d;
+.cart-btn:hover{border-color:var(--acento);color:var(--acento)}
+.cart-btn .count{min-width:19px;height:19px;display:grid;place-items:center;background:var(--acento);color:var(--sobre-acento);
   font-size:11px;font-weight:600;padding-inline:5px}
 .cart-btn .count[hidden]{display:none}
 .cart-btn.pulse{animation:pulse .45s ease}
-@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.07);border-color:var(--cyan)}100%{transform:scale(1)}}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.07);border-color:var(--acento)}100%{transform:scale(1)}}
 
 .drawer{position:fixed;inset:0;z-index:100;display:none}
 .drawer[open]{display:block}
-.drawer .veil{position:absolute;inset:0;background:rgba(2,8,15,.72);backdrop-filter:blur(3px)}
+.drawer .veil{position:absolute;inset:0;background:var(--velo);backdrop-filter:blur(3px)}
 .drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--panel);
   border-left:1px solid var(--line-2);display:flex;flex-direction:column}
 .drawer .head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line)}
@@ -178,14 +318,15 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .line .pr{font-family:var(--mono);font-size:14px;font-weight:600;text-align:right;white-space:nowrap}
 .line .qty{display:flex;align-items:center;gap:0;border:1px solid var(--line-2);width:max-content}
 .line .qty button{width:32px;height:32px;background:transparent;border:0;color:var(--ink);cursor:pointer;font-size:16px;line-height:1}
-.line .qty button:hover{background:var(--cyan);color:#04101d}
+.line .qty button:hover{background:var(--acento);color:var(--sobre-acento)}
 .line .qty span{min-width:34px;text-align:center;font-family:var(--mono);font-size:13px;font-weight:600}
 .line .rm{background:none;border:0;color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.14em;
   text-transform:uppercase;cursor:pointer;padding:0;justify-self:end;align-self:center}
-.line .rm:hover{color:#ff7a7a}
+.line .rm:hover{color:var(--peligro)}
 
 @media(max-width:639px){
   .btn-sm,.cart-btn,.chk,.line .rm{min-height:44px}
+  .tema-btn{width:44px;height:44px}
   .line .qty button{width:44px;height:44px}
 }
 
@@ -194,7 +335,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .total .v{font-size:26px;font-weight:600}
 .note{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;line-height:1.7;color:var(--dim)}
 
-.wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px rgba(37,211,102,.45)}
+.wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px var(--wa-sombra)}
 @media(min-width:960px){.wa-float{right:28px;bottom:28px}}
 
 
@@ -203,20 +344,20 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
    ========================================================================== */
 .hero{position:relative;overflow:hidden}
     .hero .motif{position:absolute;right:-10%;top:-8%;width:min(640px,58vw);aspect-ratio:100/120;
-      fill:none;stroke:#3ec1ff;stroke-width:1.1;stroke-linejoin:round;opacity:.15;pointer-events:none}
+      fill:none;stroke:var(--acento);stroke-width:1.1;stroke-linejoin:round;opacity:.15;pointer-events:none}
     .hero-grid{position:relative;display:grid;gap:44px;align-items:start}
     @media(min-width:960px){.hero-grid{grid-template-columns:1fr 360px;gap:72px}}
-    .ficha{border:1px solid var(--line-2);padding:24px 24px 18px;background:rgba(10,28,48,.55)}
+    .ficha{border:1px solid var(--line-2);padding:24px 24px 18px;background:var(--ficha-fondo)}
     .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}
     @media(min-width:900px){.split{grid-template-columns:1.3fr 1fr;gap:72px}}
-    .precios{display:grid;gap:0;border-top:2px solid var(--paper-ink)}
+    .precios{display:grid;gap:0;border-top:2px solid var(--inv-ink)}
     @media(min-width:820px){.precios{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    .precios > div{padding:32px 0;border-bottom:1px solid rgba(10,22,34,.18)}
+    .precios > div{padding:32px 0;border-bottom:1px solid var(--inv-line)}
     @media(min-width:820px){
       .precios > div{border-bottom:0;padding:34px 34px 36px}
-      .precios > div:first-child{padding-left:0;border-right:1px solid rgba(10,22,34,.18)}
+      .precios > div:first-child{padding-left:0;border-right:1px solid var(--inv-line)}
       .precios > div:last-child{padding-right:0}
-      .precios > div:nth-child(2){border-right:1px solid rgba(10,22,34,.18)}
+      .precios > div:nth-child(2){border-right:1px solid var(--inv-line)}
     }
     .precios .amt{display:flex;align-items:flex-start;gap:6px;margin-top:16px}
     .precios .amt sup{font-family:var(--mono);font-size:clamp(18px,2vw,26px);font-weight:500;padding-top:.5em}
@@ -224,7 +365,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     .pasos{border-top:1px solid var(--line-2)}
     .paso{display:grid;gap:10px 36px;padding:26px 0;border-bottom:1px solid var(--line)}
     @media(min-width:900px){.paso{grid-template-columns:110px 1fr 1.15fr;align-items:start}}
-    .paso .k{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--cyan)}
+    .paso .k{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--acento)}
     .paso h3{font-size:clamp(20px,2.2vw,27px)}
     .cols3{display:grid;gap:0;border-top:1px solid var(--line-2)}
     @media(min-width:900px){.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -237,7 +378,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     }
     .lista{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:11px}
     .lista li{display:flex;gap:11px;font-size:15px;line-height:1.55;color:var(--ink-2)}
-    .lista .ico{color:var(--cyan);margin-top:3px}
+    .lista .ico{color:var(--acento);margin-top:3px}
     .distritos{display:grid;gap:0 44px;border-top:1px solid var(--line-2);grid-template-columns:repeat(2,1fr)}
     @media(min-width:760px){.distritos{grid-template-columns:repeat(4,1fr)}}
     .dist{font-family:var(--mono);font-size:13px;letter-spacing:.06em;padding:12px 0;border-bottom:1px solid var(--line)}

@@ -6,8 +6,8 @@ documento existe hoy en `src/styles/site.css`. Si algo cambia en el código, se 
 
 | | |
 |---|---|
-| **Versión** | 3 — dirección "ficha técnica" |
-| **Fecha** | 27 de agosto de 2026 |
+| **Versión** | 4 — dos temas sobre la dirección "ficha técnica" |
+| **Fecha** | 29 de agosto de 2026 |
 | **Implementación** | `src/styles/site.css` · `src/components/` · `src/pages/` |
 | **Sustituye a** | `stitch_boutique_de_agua_premium/design.md` (dirección clara/premium, descartada) |
 
@@ -62,11 +62,13 @@ producto técnico**. Los datos son los elementos gráficos, no la decoración.
 
 Cuatro recursos sostienen la identidad. Si se quitan, vuelve a ser una plantilla:
 
-1. **Fondo azul noche dominante.** El color lo pone el producto y el dato, no el fondo.
+1. **Un fondo dominante sin ruido.** Azul noche en el tema oscuro, papel crudo en el
+   claro. En los dos, el color lo pone el producto y el dato, nunca el fondo.
 2. **Los datos en tamaño editorial.** pH 8.3, 08 pasos, 20 L, 0 intermediarios, S/ 30.
    Un dato concreto no se puede copiar; "calidad premium" lo escribe cualquiera.
-3. **Una sola banda de papel crudo** que interrumpe el azul para el precio. La única
-   inversión de valor de toda la página, y por eso funciona.
+3. **Una sola banda invertida** que rompe el fondo dominante para el precio: papel
+   sobre azul en el tema oscuro, azul sobre papel en el claro. Es la única inversión
+   de valor de toda la página, y por eso funciona.
 4. **El motivo gota+montaña del isotipo** como marca de agua estructural, recortada
    y en gran escala. Es el único elemento gráfico que nadie más tiene.
 
@@ -75,9 +77,12 @@ Cuatro recursos sostienen la identidad. Si se quitan, vuelve a ser una plantilla
 Las bandas **no** se repiten idénticas. La secuencia es:
 
 ```
-oscuro (hero) → cinta cian → PAPEL (precio) → oscuro (proceso)
-→ panel elevado (planes) → oscuro (cobertura + preguntas) → CIAN (cierre) → oscuro (pie)
+fondo (hero) → cinta de acento → INVERTIDA (precio) → fondo (proceso)
+→ panel elevado (planes) → fondo (cobertura + preguntas) → ACENTO (cierre) → fondo (pie)
 ```
+
+La secuencia es la misma en los dos temas porque está escrita en roles. Lo que cambia
+es qué material ocupa cada papel.
 
 Nunca tres bandas seguidas del mismo fondo. Si una página nueva necesita más secciones,
 alterna; no encadenes.
@@ -109,7 +114,7 @@ trazo, sin círculo ni fondo, en `stroke: #3ec1ff`:
 | Etiqueta dentro de una ilustración | escala .20 | 6 |
 
 **Reglas.** Espacio libre mínimo alrededor: la altura de la gota. Nunca se rota, se
-deforma, se le cambia el color a otro que no sea `--cyan` (interfaz) o los azules de
+deforma, se le cambia el color a otro que no sea `--acento` (interfaz) o los azules de
 marca (piezas gráficas), ni se coloca sobre una imagen con detalle. El logotipo completo
 con círculo se reserva para etiquetas de producto, redes y documentos, no para la web.
 
@@ -117,61 +122,123 @@ con círculo se reserva para etiquetas de producto, redes y documentos, no para 
 
 ## 4. Color
 
-### Paleta
+### Dos temas, un solo juego de nombres
+
+La paleta ya no es una lista de colores: es una lista de **roles**. Cada token tiene
+dos valores y el tema decide cuál se usa. `--acento` es azul profundo sobre papel y
+cian sobre azul noche; es el mismo rol en los dos casos.
+
+- **Claro por defecto.** Es lo que ve quien no ha pedido nada.
+- **Oscuro cuando el sistema lo pide** (`prefers-color-scheme: dark`).
+- **Y oscuro o claro cuando el visitante lo elige**, con `data-tema` en `<html>`.
+  La elección manual gana siempre, y se recuerda.
+
+Los tres se resuelven en `src/styles/site.css`, en un único bloque al principio del
+archivo. **Debajo de ese bloque no hay ni un color escrito a mano**: un literal ahí
+abajo es un tema a medio hacer, y se vería bien en uno de los dos y mal en el otro.
+Hay una prueba que lo comprueba (`tests/build.test.ts`).
+
+### Los roles
+
+| Token | Claro | Oscuro | Para qué |
+|---|---|---|---|
+| `--ground` | `#f2f1ec` | `#04101d` | fondo dominante |
+| `--panel` | `#e8e6df` | `#0a1c30` | bandas y tarjetas |
+| `--panel-2` | `#dedbd2` | `#0d2338` | tarjeta sobre panel |
+| `--ink` | `#0a1622` | `#eaf2f8` | titulares |
+| `--ink-2` | `#3d4c5a` | `#a6bccd` | párrafos |
+| `--ink-3` | `#4a5865` | `#bcd0e0` | bajadas (`.lede`) |
+| `--dim` | `#55636f` | `#8ba3ba` | etiquetas mono, metadatos |
+| `--line` / `--line-2` | tinta al 16 / 34 % | gris azulado al 22 / 42 % | separadores y bordes |
+| `--acento` | `#0157b4` | `#3ec1ff` | **el acento único** |
+| `--acento-alto` | `#013f80` | `#8ed8ff` | estado hover del acento |
+| `--acento-suave` | acento al 8 % | acento al 10 % | tinte de la cinta |
+| `--sobre-acento` | `#f2f1ec` | `#04101d` | texto encima del acento |
+| `--nav-fondo` | papel al 92 % | azul noche al 92 % | barra superior translúcida |
+| `--ficha-fondo` | papel hundido al 55 % | azul al 55 % | la ficha técnica del hero |
+| `--velo` | tinta al 55 % | negro azulado al 72 % | fondo del cajón del pedido |
+| `--peligro` | `#b0202a` | `#ff7a7a` | quitar una línea del pedido |
+
+Y la **banda invertida**, que es la única sección que va contra el fondo dominante:
+
+| Token | Claro | Oscuro |
+|---|---|---|
+| `--inv` | `#04101d` | `#f2f1ec` |
+| `--inv-ink` | `#eaf2f8` | `#0a1622` |
+| `--inv-p` | `#a6bccd` | `#3d4c5a` |
+| `--inv-dim` | `#8ba3ba` | `#5b6a78` |
+| `--inv-line` | claro al 18 % | tinta al 18 % |
+| `--inv-realce` | cian al 12 % | cian al 10 % |
+| `--inv-btn` / `--inv-btn-ink` | `#f2f1ec` / `#04101d` | `#04101d` / `#f2f1ec` |
+
+Fuera del tema, porque no dependen de él:
 
 ```css
---ground:     #04101d   /* fondo dominante */
---panel:      #0a1c30   /* bandas y superficies elevadas */
---panel-2:    #0d2338   /* tarjeta sobre panel */
---ink:        #eaf2f8   /* titulares y texto fuerte */
---ink-2:      #a6bccd   /* párrafos */
---dim:        #8ba3ba   /* etiquetas mono, metadatos */
---line:       rgba(139,163,186,.22)   /* separadores */
---line-2:     rgba(139,163,186,.42)   /* bordes de bloque */
---cyan:       #3ec1ff   /* acento único de interfaz */
---cyan-soft:  rgba(62,193,255,.10)
---paper:      #f2f1ec   /* la banda de precio */
---paper-ink:  #0a1622
---paper-dim:  #5b6a78
---wa:         #25d366   /* WhatsApp — color de canal, no de marca */
---brand-deep: #0157b4   /* azules literales del logotipo */
+--wa:#25d366   /* color del canal WhatsApp, no de marca */
+--wa-alto:#43e07d
+--sobre-wa:#04101d
+--brand-deep:#0157b4    /* azules literales del logotipo, para piezas gráficas */
 --brand-bright:#02b5ff
 ```
 
+### El acento cambia de valor, no de papel
+
+En claro, el acento es `#0157b4`: **el azul literal del logotipo**. No es una
+decisión estética sino aritmética. `#3ec1ff` sobre papel da 1.7:1 y es ilegible;
+cualquier texto, icono o etiqueta en cian sobre `#f2f1ec` sería inaccesible.
+
+Esto matiza la regla que decía que `--brand-deep` se reservaba para piezas gráficas
+porque mezclar los dos azules "ensucia los dos". La regla sigue en pie con una
+precisión: **lo que ensucia es usar los dos como tinta en la misma vista**. En el tema
+claro solo hay un azul, el profundo, y hace de tinta y de relleno. En el oscuro solo
+hay uno, el cian. Nunca conviven.
+
+### La inversión se invierte
+
+La banda de precio es la única que va contra el fondo. En oscuro es **papel sobre azul
+noche**; en claro es **azul noche sobre papel**. Se invierte el material, no la idea:
+sigue siendo la única ruptura de la página y sigue estando en el precio.
+
+Por eso las clases se llaman `.inv` y `.btn-inv`, y no `.paper` y `.btn-dark`. El
+nombre viejo mentía en la mitad de los casos.
+
 ### Reglas de uso
 
-- **Un solo acento.** `--cyan` es el único color de interfaz. Si aparece un segundo
-  acento, la pieza está mal.
+- **Un solo acento por tema.** Si aparece un segundo, la pieza está mal.
 - **`--wa` no es color de marca.** Es el color del canal de WhatsApp y sólo se usa en
   botones que abren WhatsApp. Nunca como fondo, borde o texto decorativo.
-- **`--brand-deep` y `--brand-bright`** salieron del PNG del logotipo. Se reservan para
-  el isotipo, sellos y degradados de piezas gráficas. El azul del logo es más oscuro y
-  saturado que el de la interfaz; mezclarlos ensucia los dos.
+- **`--peligro` no es un acento**, es un estado: sólo el hover de quitar una línea.
 - **Blancos y negros templados.** Nunca `#fff` ni `#000` puros. El papel es cálido
-  (`#f2f1ec`), el fondo es azulado (`#04101d`). Esa tensión frío/cálido es parte del
-  carácter.
-- **Cian sobre papel: sólo como tinte al 10 %** (`rgba(62,193,255,.10)`), para destacar
-  la celda de "2 bidones". Nunca cian sólido sobre papel.
+  (`#f2f1ec`), el azul es frío (`#04101d`). Esa tensión frío/cálido es parte del
+  carácter, y se conserva en los dos temas: el claro no es un gris neutro.
 - **Sin degradados de fondo.** El único degradado permitido es el del isotipo en piezas
   gráficas (`140deg`, bright → deep).
 
 ### Contraste — medido, no estimado
 
-| Par | Ratio | WCAG |
-|---|---|---|
-| `--ink` sobre `--ground` | 16.9 | AAA |
-| `--ink-2` sobre `--ground` | 9.8 | AAA |
-| `--dim` sobre `--ground` | 7.3 | AAA |
-| `--cyan` sobre `--ground` | 9.4 | AAA |
-| `--ink-2` sobre `--panel` | 8.8 | AAA |
-| `--dim` sobre `--panel` | 6.6 | AA |
-| `--paper-ink` sobre `--paper` | 16.1 | AAA |
-| `--paper-dim` sobre `--paper` | 4.9 | AA |
-| `--ground` sobre `--cyan` (botón) | 9.4 | AAA |
-| `--ground` sobre `--wa` (botón) | 9.7 | AAA |
+No es una tabla escrita a mano. `contraste.mjs` recorre los **210 nodos de texto** de
+las dos páginas publicadas, resuelve las transparencias contra el fondo que les toca y
+compara con el mínimo que corresponde a su tamaño. Los dos temas pasan **WCAG AA**
+enteros.
 
-Cualquier par nuevo debe llegar a **4.5:1** en texto normal y **3:1** en texto ≥ 24 px.
-`--dim` es el gris más claro permitido para texto; por debajo de eso no hay nada.
+| Par | Claro | Oscuro | WCAG |
+|---|---|---|---|
+| `--ink` sobre `--ground` | 16.1 | 16.9 | AAA |
+| `--ink-2` sobre `--ground` | 7.8 | 9.8 | AAA |
+| `--dim` sobre `--ground` | 5.5 | 7.3 | AA |
+| `--acento` sobre `--ground` | 6.2 | 9.4 | AA / AAA |
+| `--sobre-acento` sobre `--acento` (botón) | 6.2 | 9.4 | AA / AAA |
+| `--sobre-wa` sobre `--wa` (botón) | 9.7 | 9.7 | AAA |
+| `--inv-ink` sobre `--inv` | 16.9 | 16.1 | AAA |
+| `--inv-dim` sobre `--inv` | 7.3 | 4.9 | AA |
+
+Cualquier par nuevo debe llegar a **4.5:1** en texto normal y **3:1** en texto ≥ 24 px,
+**en los dos temas**. `--dim` es el gris más claro permitido para texto.
+
+> La medición encontró un fallo que llevaba tiempo publicado: la etiqueta de 12 px
+> del cierre daba 4.38:1 en oscuro, por debajo del mínimo, aunque esta tabla afirmaba
+> lo contrario. Se corrigió subiendo la opacidad de `--sobre-acento-2`. Es la razón por
+> la que la tabla ahora se genera midiendo y no estimando.
 
 ---
 
@@ -222,7 +289,7 @@ Todos los tamaños grandes son fluidos con `clamp()`; no hay saltos por breakpoi
 ### Etiquetas mono
 
 Toda etiqueta de sección usa la clase `.lbl`: 11 px, peso 500, `letter-spacing: .2em`,
-mayúsculas, color `--dim` (o `--cyan` con `.lbl-cyan` cuando abre sección).
+mayúsculas, color `--dim` (o `--acento` con `.lbl-cyan` cuando abre sección).
 El interletrado de .2em es lo que las hace legibles a ese tamaño; no se reduce.
 
 ---
@@ -293,18 +360,29 @@ La línea es el separador principal, no la sombra ni la caja.
 
 - `1px solid var(--line)` — filas de tabla, separadores internos, filas de ficha.
 - `1px solid var(--line-2)` — borde de bloque, apertura de sección, tarjeta de ficha.
-- `2px solid var(--paper-ink)` — sólo la apertura de la tabla de precios en papel.
+- `2px solid var(--inv-ink)` — sólo la apertura de la tabla de precios, dentro de la banda invertida.
 - `1px dashed var(--line-2)` — **exclusivo** de los marcadores entre corchetes.
 
-Las tarjetas del catálogo no llevan borde propio: la grilla usa `gap: 1px` sobre un fondo
-`--line`, y las líneas que se ven son el fondo asomando. Eso da una retícula continua,
-no una colección de cajas.
+Las tarjetas del catálogo no llevan borde propio: la grilla usa `gap: 1px` y cada
+tarjeta pinta con `box-shadow` **su lado derecho y su lado de abajo**. El arriba y el
+izquierda del marco los pone la grilla; sus otros dos lados van transparentes, para
+reservar el sitio sin pintarlo dos veces. Eso da una retícula continua, no una
+colección de cajas.
+
+> Hasta la v3 las líneas eran el fondo de la grilla (`--line`) asomando por los huecos.
+> Funcionaba, pero rellenaba también las celdas sobrantes de la última fila: con siete
+> productos en tres columnas quedaban dos celdas pintadas. Sobre azul noche apenas se
+> veía; sobre papel era un bloque gris. Con la sombra en la tarjeta, donde no hay
+> tarjeta no hay nada. Cada tarjeta pinta un solo lado porque con las cuatro caras dos
+> sombras contiguas caían en el mismo hueco de 1 px y la línea salía el doble de oscura.
 
 ### Sombras
 
 Casi no hay. La profundidad viene del contraste de fondo, no del desenfoque.
-Las únicas permitidas son las de los botones de WhatsApp
-(`0 10px 25px -5px rgba(37,211,102,.35)`), porque son elementos flotantes reales.
+Las únicas permitidas son las del botón flotante de WhatsApp y las líneas de la
+retícula del catálogo. La del botón flotante usa `--wa-sombra`, que **sí cambia con el
+tema**: sobre azul noche el halo verde se lee como brillo, y sobre papel se leía como
+una mancha, así que en el tema claro pasa a ser una sombra neutra.
 
 ---
 
@@ -318,13 +396,14 @@ Altura mínima **52 px** (40 px en la variante `.btn-sm`). Siempre mono, 13 px, 
 | Clase | Uso | Aspecto |
 |---|---|---|
 | `.btn-wa` | Acción principal de pedido | Fondo `--wa`, texto `--ground` |
-| `.btn-cyan` | Acción principal de interfaz (agregar, consultar) | Fondo `--cyan`, texto `--ground` |
-| `.btn-dark` | Acción principal **sobre papel** | Fondo `--ground`, texto `--paper` |
+| `.btn-cyan` | Acción principal de interfaz (agregar, consultar) | Fondo `--acento`, texto `--sobre-acento` |
+| `.btn-inv` | Acción principal **dentro de la banda invertida** | Fondo `--inv-btn`, texto `--inv-btn-ink` |
+| `.tema-btn` | Conmutador de tema, en la barra superior | Cuadrado de 40 px (44 en móvil), borde `--line-2`, trazo `--dim`; hover al acento |
 | `.btn-ghost` | Acción secundaria | Transparente, borde `--line-2` |
 
 **Una sola acción principal por pantalla**, repetida a lo largo de la página. Si hay dos
 botones juntos, uno es fantasma. `:hover` cambia fondo o borde, nunca desplaza el
-elemento más de 1 px. `:focus-visible` es `2px solid var(--cyan)` con `offset: 3px`.
+elemento más de 1 px. `:focus-visible` es `2px solid var(--acento)` con `offset: 3px`.
 
 ### Ficha técnica
 
@@ -332,14 +411,14 @@ El componente identitario. Bloque con borde `--line-2`, fondo `rgba(10,28,48,.55
 filas `.spec` de dos columnas: etiqueta a la izquierda en `--dim`, valor a la derecha en
 `--ink` peso 600. Todo en mono, 12 px, mayúsculas.
 
-El pH se destaca en `--cyan` a 15 px. Es el único valor con tratamiento especial.
+El pH se destaca en `--acento` a 15 px. Es el único valor con tratamiento especial.
 
 Nunca se añaden filas que no estén verificadas. Una ficha con datos inventados destruye
 justamente lo que la ficha existe para transmitir.
 
 ### Cinta
 
-Banda de 14 px de alto entre bordes cian, fondo `--cyan-soft`, texto mono de 12 px con
+Banda de 14 px de alto entre bordes del acento, fondo `--acento-suave`, texto mono de 12 px con
 `letter-spacing: .26em`, desplazándose 46 s en bucle. El contenido se escribe **duplicado**
 para que el bucle no muestre vacío. Respeta `prefers-reduced-motion`.
 
@@ -401,27 +480,41 @@ a que se invente uno. Se retiran sólo cuando el dato real ocupa su lugar.
 Retícula de 24 px, trazo de 1.7, sin relleno, heredando el color del texto. Los iconos
 decorativos llevan `aria-hidden="true"`.
 
+El conmutador de tema usa los dos únicos iconos que no acompañan a un texto: un sol
+y una luna, en la misma retícula y el mismo trazo. **Los dos viajan siempre en el
+HTML** y es el CSS quien decide cuál se ve, a partir del mismo `data-tema` que pinta
+la página. Así el pre-render y la hidratación dibujan exactamente lo mismo.
+
 Se usa una fuente de iconos externa **nunca**: en la primera versión los iconos de
 Material Symbols aparecieron como las palabras `chat`, `verified`, `check` cuando Google
 Fonts no cargó. Un icono que puede convertirse en texto suelto no entra al sitio.
 
 ---
 
-## 11. Ilustración de producto
+## 11. Imagen de producto
 
-Mientras no haya fotografía propia, los productos se dibujan en SVG:
-`bidon-20l.svg`, `bidon-vacio.svg`, `botella-600.svg`, `dispensador.svg`.
+Fotografía con licencia de Adobe Stock, recortada sobre fondo transparente:
+`producto-bidon-20l.webp`, `producto-bidones.webp`, `producto-botella.webp`,
+`producto-dispensador.webp` y `portada-bidones.webp`. Sustituyen a las ilustraciones
+SVG que hubo hasta la versión 3. El detalle de cada licencia está en `marca/LICENCIAS.md`.
 
-Reglas: `viewBox` de 200 × 300 (120 × 300 en botella), degradado vertical de cuerpo
-frío, estrías horizontales al 22 % de opacidad, un realce vertical a la izquierda, tapa
-con sello estriado, y **etiqueta legible con el isotipo, el nombre y "CONT. NETO 20 L"**.
+**Ninguna imagen puede presentarse como la planta de Villa Fresh, su producto real ni
+su equipo.** Son fotografías genéricas con licencia. Cuando lleguen las fotos propias,
+se reemplazan.
 
-La ilustración **no finge ser una fotografía**. Es honesta sobre lo que es y por eso
-puede convivir con el resto sin pedir disculpas. Cuando lleguen las fotos reales de
-producto y de planta, se reemplazan; la ilustración no es una aspiración permanente.
+### Lo que la fotografía no puede decir
 
-Prohibido: renders de banco de imágenes, bidones genéricos con etiquetas inventadas,
-y cualquier imagen generada que muestre una etiqueta que no es la de Villa Fresh.
+Un bidón lleno y uno vacío son **la misma fotografía**: el plástico es transparente y
+no hay línea de agua. Por eso Stock no tiene "bidón vacío", y por eso las ilustraciones
+antiguas rotulaban `SELLADO` y `VACÍO` dentro del dibujo: no era decoración, era
+información.
+
+Esa información se conserva como **etiqueta mono al pie del encuadre** (`.card .nota`),
+sobre el fondo del panel y no sobre la foto. Sin ella, `VF-EV20` y `VF-B20` serían la
+misma tarjeta.
+
+Prohibido: bidones genéricos con etiquetas inventadas y cualquier imagen generada que
+muestre una etiqueta que no es la de Villa Fresh.
 
 ---
 
@@ -447,7 +540,7 @@ Sin animaciones de entrada al hacer scroll, sin parallax, sin contadores animado
 - Contraste verificado y documentado en la sección 4. Ningún par nuevo por debajo de 4.5:1.
 - **Objetivo táctil mínimo 44 px**; los botones son de 52 px, los pequeños de 40 px y
   sólo se usan junto a otro objetivo mayor.
-- Foco visible en todo elemento interactivo: `2px solid var(--cyan)`, `offset: 3px`.
+- Foco visible en todo elemento interactivo: `2px solid var(--acento)`, `offset: 3px`.
   Nunca `outline: none` sin reemplazo.
 - Cuerpo de texto largo nunca por debajo de **14 px**. Las etiquetas mono cortas pueden
   bajar a 10–11 px porque son etiquetas, no lectura.
@@ -533,7 +626,7 @@ villa-fresh/
 │  ├─ data/productos.ts               Productos y precios; único archivo a editar
 │  ├─ data/negocio.ts                 Teléfono, redes y datos del negocio
 │  └─ styles/site.css                 Implementación del sistema visual
-├─ public/                             Ilustraciones, logotipos e imagen de compartir
+├─ public/                             Fotografía de producto, logotipos, favicon y OG
 ├─ tests/                              Pruebas puras y del HTML publicado
 ├─ marca/                              Piezas de marca y su código fuente HTML
 ├─ design/                             Tokens y variante Light Editorial descartada
@@ -541,23 +634,26 @@ villa-fresh/
 └─ dist/                               Sitio generado; se publica esta carpeta
 ```
 
-Stack: **HTML estático sin build**. La decisión y su condición de salida están
-argumentadas en `README.md`. Cuando llegue Astro, este documento no cambia: cambia
-dónde vive la implementación.
+Stack: **React sobre Bun, pre-renderizado a HTML estático**. `bun run build` compila
+el cliente, compila el servidor y `scripts/prerender.ts` escribe cada ruta con su
+contenido dentro del HTML. Lo que se publica es `dist/`, y su texto tiene que estar
+en el HTML: un build que produzca un contenedor vacío es un build fallido.
 
 ---
 
 ## 18. Checklist de QA
 
-Antes de publicar cualquier cambio:
+Antes de publicar cualquier cambio, **en los dos temas**:
 
 - [ ] Sin scroll horizontal a 390, 768, 1024 y 1440 px
 - [ ] Consola del navegador sin errores
-- [ ] Ningún par de color nuevo por debajo de 4.5:1
+- [ ] Ningún par de color nuevo por debajo de 4.5:1, medido en claro y en oscuro
+- [ ] Ningún color escrito a mano fuera del bloque de tokens
+- [ ] Todo token nuevo tiene sus dos valores; ninguno queda definido en un solo tema
 - [ ] Foco visible al recorrer la página con Tab
 - [ ] Los iconos son SVG en línea, no una fuente
 - [ ] Cero radios redondeados nuevos
-- [ ] Un solo acento cian; el verde sólo en botones de WhatsApp
+- [ ] Un solo acento por tema; el verde sólo en botones de WhatsApp
 - [ ] Ningún dato sin verificar presentado como cierto
 - [ ] Los corchetes pendientes siguen visibles hasta que el dato exista
 - [ ] Todos los precios vienen de `src/data/productos.ts`
@@ -570,7 +666,12 @@ Antes de publicar cualquier cambio:
 
 Lo que **rompe** esta identidad, aunque se vea bien en aislado:
 
-- Fondo blanco dominante o azul cielo claro como base.
+- Azul cielo claro como base, o un tema claro que sea gris neutro en vez de papel
+  cálido: la tensión frío/cálido entre `#f2f1ec` y `#04101d` es parte del carácter.
+- Un color escrito a mano fuera del bloque de tokens. Se vería bien en un tema y mal
+  en el otro, y nadie lo notaría hasta que alguien cambie de tema.
+- Una sección que invierta el fondo por decoración. La banda invertida es una sola y
+  está en el precio.
 - Esquinas redondeadas, tarjetas con sombra difusa, degradados de fondo.
 - Un segundo color de acento.
 - Inter, Roboto, Montserrat, Poppins.
@@ -587,7 +688,8 @@ Lo que **rompe** esta identidad, aunque se vea bien en aislado:
 ## 20. Fuente de la verdad
 
 1. **`src/styles/site.css`** es la implementación. Ante una discrepancia, el código manda y
-   este documento se corrige.
+   este documento se corrige. La tabla de contraste no se escribe a mano: se mide sobre
+   las páginas publicadas, y ya corrigió una vez a este documento.
 2. **Este documento** manda sobre cualquier mockup, incluido el canvas de exploración y
    el `design.md` original de Stitch, que queda archivado como referencia histórica.
 3. **`contenido/redes-sociales-villafresh.md`** manda sobre cualquier texto de mockup.

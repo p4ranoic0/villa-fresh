@@ -6,7 +6,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" href="/bidon-20l.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!-- El tema se resuelve aqui, no en React, por dos razones:
+     se aplica antes del primer pintado (sin parpadeo) y el conmutador
+     responde antes de que cargue el bundle, no despues de hidratar. -->
+<script>(function(){
+  var C='vf-tema',r=document.documentElement;
+  try{var t=localStorage.getItem(C);if(t)r.dataset.tema=t}catch(e){}
+  document.addEventListener('click',function(ev){
+    if(!ev.target.closest||!ev.target.closest('[data-conmuta-tema]'))return;
+    var e=r.dataset.tema,
+        oscuro=e?e==='oscuro':matchMedia('(prefers-color-scheme: dark)').matches,
+        s=oscuro?'claro':'oscuro';
+    r.dataset.tema=s;
+    try{localStorage.setItem(C,s)}catch(e){}
+  });
+})()</script>
 <!--app-head-->
 </head>
 <body>

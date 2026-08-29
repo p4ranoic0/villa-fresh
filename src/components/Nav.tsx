@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { NEGOCIO } from '../data/negocio'
+import BotonTema from './BotonTema'
 import Isotipo from './Isotipo'
 
 interface Props {
@@ -31,6 +32,7 @@ export default function Nav({ accion, enCatalogo }: Props) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           <span className="nav-tel">{NEGOCIO.telefonoVisible}</span>
+          <BotonTema />
           {accion}
         </div>
       </div>
