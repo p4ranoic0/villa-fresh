@@ -46,10 +46,12 @@ villa-fresh/
 │  └─ styles/site.css                 Implementación del sistema visual
 ├─ public/                             Archivos copiados al artefacto publicado
 │  ├─ og-villafresh.jpg               Imagen de compartir en WhatsApp y Facebook
-│  ├─ producto-*.webp · portada-*.webp Fotografía con licencia (ver marca/LICENCIAS.md)
-│  └─ favicon.svg · logos              Isotipo y logotipos
+│  ├─ producto-*.webp                 Fotografía con licencia (ver marca/LICENCIAS.md)
+│  ├─ proceso-agua.mp4 · .webp        Secuencia sincronizada con el scroll y su póster
+│  └─ favicon.svg                     Isotipo
+│                                      Sólo lo que se publica: public/ se copia entera
 ├─ tests/                              Pruebas puras y del HTML publicado
-├─ marca/                              Piezas de marca y su código fuente HTML
+├─ marca/                              Logotipos, piezas de marca y licencias
 ├─ design/                             Tokens y variante Light Editorial descartada
 ├─ contenido/                          Copy real extraído de las redes
 └─ dist/                               Sitio generado; se publica esta carpeta

@@ -1,3 +1,5 @@
+import SecuenciaAgua from '../../components/SecuenciaAgua'
+
 export default function Proceso() {
   return (
     <section className="band" id="proceso">
@@ -9,6 +11,7 @@ export default function Proceso() {
           </div>
           <p className="lede" style={{ maxWidth: '46ch' }}>No compramos agua a terceros ni reenvasamos. Tratamos, controlamos y embotellamos nosotros mismos, y por eso podemos responder por cada bidón que sale de planta.</p>
         </div>
+        <SecuenciaAgua />
         <div className="pasos">
           <div className="paso">
             <div className="k">01</div>

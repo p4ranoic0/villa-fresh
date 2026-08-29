@@ -6,7 +6,7 @@ documento existe hoy en `src/styles/site.css`. Si algo cambia en el código, se 
 
 | | |
 |---|---|
-| **Versión** | 4 — dos temas sobre la dirección "ficha técnica" |
+| **Versión** | 5 — dos temas y movimiento |
 | **Fecha** | 29 de agosto de 2026 |
 | **Implementación** | `src/styles/site.css` · `src/components/` · `src/pages/` |
 | **Sustituye a** | `stitch_boutique_de_agua_premium/design.md` (dirección clara/premium, descartada) |
@@ -93,8 +93,11 @@ alterna; no encadenes.
 
 El isotipo es una **gota que contiene una montaña**, dentro de un círculo azul.
 
-Archivos: `public/logo-villafresh-fondo-blanco.jpg` (positivo) y
-`public/logo-villafresh-slogan-fondo-negro.png` (con bajada, fondo oscuro).
+Archivos: `marca/logo-villafresh-fondo-blanco.jpg` (positivo) y
+`marca/logo-villafresh-slogan-fondo-negro.png` (con bajada, fondo oscuro).
+Viven en `marca/` y no en `public/` porque la interfaz no los usa: `public/` se
+copia entera al artefacto publicado, y ahí dentro eran 1,5 MB que ningún
+visitante llegaba a pedir nunca. El favicon sí es de la web: `public/favicon.svg`.
 
 En la interfaz **no se usa el logotipo completo**: se usa el motivo redibujado como
 trazo, sin círculo ni fondo, en `stroke: #3ec1ff`:
@@ -513,6 +516,22 @@ Esa información se conserva como **etiqueta mono al pie del encuadre** (`.card 
 sobre el fondo del panel y no sobre la foto. Sin ella, `VF-EV20` y `VF-B20` serían la
 misma tarjeta.
 
+### El vídeo de proceso
+
+`proceso-agua.mp4` y su póster `proceso-agua.webp`: burbujas subiendo hasta la
+superficie, sobre negro. Se eligió por lo que **no** es. No es una jarra sirviendo agua
+en una cocina soleada, que es la imagen que usa todo el rubro y que esta guía prohíbe
+explícitamente. Es un proceso ocurriendo dentro de un recipiente, abstracto y técnico,
+y encaja con la sección que lo acompaña.
+
+El encuadre es oscuro en los dos temas porque el material es oscuro. **Es una imagen
+dentro de un marco, no una sección invertida**: la banda de precio sigue siendo la
+única inversión de la página.
+
+Lleva al pie una etiqueta mono que dice lo que es: *imagen de archivo con licencia*.
+No es un crédito decorativo, es la misma honestidad que rige el resto de la
+fotografía, escrita donde se ve.
+
 Prohibido: bidones genéricos con etiquetas inventadas y cualquier imagen generada que
 muestre una etiqueta que no es la de Villa Fresh.
 
@@ -522,16 +541,80 @@ muestre una etiqueta que no es la de Villa Fresh.
 
 Discreto. El agua se mueve; la interfaz no compite.
 
-| Transición | Duración |
-|---|---|
-| Color de botón, borde, texto | 200 ms |
-| Fondo de tarjeta | 250 ms |
-| Escala de imagen en hover | 400 ms |
-| Pulso del carrito | 450 ms |
-| Cinta | 46 s en bucle lineal |
+### La pregunta antes de animar
 
-Sin animaciones de entrada al hacer scroll, sin parallax, sin contadores animados.
-`prefers-reduced-motion: reduce` desactiva todo, incluido el `scroll-behavior: smooth`.
+Antes de mover nada: **¿cuántas veces al día va a ver esto el visitante?** Lo que se
+repite mucho no se anima, porque la animación convierte en lento algo que era
+instantáneo. Lo que ocurre una vez por visita puede permitirse un recorrido.
+
+Por eso el conmutador de tema **no** hace una transición de color de toda la página.
+Un cambio de tema con 40 propiedades transicionando a la vez llega a destino por
+partes y se lee como un fallo de carga. Cambia de golpe, que es lo correcto.
+
+### Curvas
+
+Las curvas de serie de CSS son demasiado blandas. Estas están en los tokens:
+
+```css
+--sal:cubic-bezier(.23,1,.32,1);       /* entradas y salidas */
+--vaiven:cubic-bezier(.77,0,.175,1);   /* movimiento dentro de la pantalla */
+--cajon:cubic-bezier(.32,.72,0,1);     /* el cajón del pedido */
+```
+
+**`ease-in` no se usa nunca.** Arranca lento justo en el instante en que el visitante
+está mirando, y hace que la misma duración se sienta más lenta. Hay una prueba que
+falla si aparece uno.
+
+### Inventario completo
+
+| Qué | Duración | Curva | Por qué existe |
+|---|---|---|---|
+| Pulsación de botón | 160 ms | `--sal` | Respuesta: el elemento acusa el dedo |
+| Color de botón, borde, texto | 200 ms | `ease` | Evita el salto de color |
+| Fondo de tarjeta | 250 ms | `ease` | Señala qué tarjeta está bajo el cursor |
+| Escala de imagen en hover | 400 ms | `--sal` | Sólo con puntero fino |
+| Cajón del pedido | 380 ms | `--cajon` | Entra por donde se va: hace legible el gesto |
+| Velo del cajón | 300 ms | `ease` | Sin él, el fondo se oscurece de golpe |
+| Pulso del carrito | 450 ms | `ease` | Confirma que la línea se añadió |
+| Revelado de los pasos | según scroll | lineal | Los pasos son una secuencia |
+| Secuencia de agua | según scroll | lineal | Ver abajo |
+| Cinta | 46 s en bucle | lineal | Movimiento constante |
+
+Nada más. No hay parallax, ni contadores animados, ni revelados en cada sección.
+
+### El revelado de los pasos
+
+Es el único revelado del sitio y está en `.paso` porque los cuatro pasos son una
+secuencia: aparecen en el orden en que ocurren. Se hace con `animation-timeline: view()`,
+sin JavaScript.
+
+**El estado base es el estado final.** Un navegador sin líneas de tiempo de scroll, o
+una carga en la que el CSS llegue tarde, muestran el texto ya visible. La animación
+sólo puede quitar; nunca es lo que hace aparecer el contenido. Hay una prueba que
+comprueba que `.paso` no nace en `opacity: 0`.
+
+### La secuencia de agua
+
+El vídeo de la sección de proceso avanza con el scroll: el bloque cruza la ventana y
+el agua pasa de agitada a asentada. Es lo que dice la sección, contado con imagen.
+
+- **El destino se persigue, no se copia.** El fotograma va detrás de la posición del
+  scroll con una interpolación del 18 % por cuadro. Clavado 1:1 se siente mecánico.
+- **Sin escuchar el scroll.** Un `requestAnimationFrame` que sólo vive mientras el
+  bloque está a la vista, arrancado y parado por un `IntersectionObserver`. El scroll
+  dispara muchas más veces de las que hay cuadros.
+- **El vídeo está codificado con todos los fotogramas clave.** Sin eso, mover
+  `currentTime` salta al fotograma clave más cercano y la secuencia va a tirones.
+  Es la razón de que un clip de 6 s a 12 fps ocupe 570 KB.
+- **No se descarga casi nunca.** Lo que viaja en el HTML es el póster de 17 KB. El
+  vídeo se pide sólo si la pantalla mide 900 px o más, nadie ha pedido menos
+  movimiento y el sistema no está ahorrando datos; y aun entonces, sólo cuando la
+  sección se acerca. En un móvil esta pieza cuesta cero bytes de más.
+
+### `prefers-reduced-motion`
+
+`reduce` desactiva todo: la cinta, el revelado, el `scroll-behavior: smooth` y la
+descarga del vídeo, que ni siquiera se pide. Queda el póster.
 
 ---
 
@@ -658,7 +741,11 @@ Antes de publicar cualquier cambio, **en los dos temas**:
 - [ ] Los corchetes pendientes siguen visibles hasta que el dato exista
 - [ ] Todos los precios vienen de `src/data/productos.ts`
 - [ ] Los enlaces de WhatsApp llevan el mensaje precargado correcto
-- [ ] `prefers-reduced-motion` detiene la cinta
+- [ ] `prefers-reduced-motion` detiene la cinta, el revelado y la descarga del vídeo
+- [ ] Ninguna animación nueva usa `ease-in`
+- [ ] Ningún revelado es lo que hace visible el contenido: el estado base es el final
+- [ ] El hover que cambia tamaño está detrás de `(hover:hover) and (pointer:fine)`
+- [ ] `public/` sólo contiene lo que se publica: se copia entera al artefacto
 
 ---
 

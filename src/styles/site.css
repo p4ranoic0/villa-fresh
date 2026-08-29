@@ -59,11 +59,19 @@
   --wa-alto:#43e07d;
   --wa-sombra:rgba(10,22,34,.20);
   --sobre-wa:#04101d;
+  --visor-fondo:#04101d;   /* el encuadre del video: el material es oscuro en los dos temas */
   --brand-deep:#0157b4;    /* azules literales del logotipo, para piezas graficas */
   --brand-bright:#02b5ff;
 
   --disp:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
   --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+
+  /* Curvas propias. Las de serie de CSS son demasiado blandas: ease-out
+     apenas se nota y ease-in arranca lento justo en el instante que el
+     visitante esta mirando. Ninguna animacion de esta hoja usa ease-in. */
+  --sal:cubic-bezier(.23,1,.32,1);        /* entradas y salidas */
+  --vaiven:cubic-bezier(.77,0,.175,1);    /* movimiento dentro de la pantalla */
+  --cajon:cubic-bezier(.32,.72,0,1);      /* el cajon del pedido */
 
   --pad:clamp(20px,5vw,96px);
   --max:1440px;
@@ -170,7 +178,11 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 /* --- botones --- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;border:0;cursor:pointer;
   font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-  padding:17px 28px;min-height:52px;transition:background .2s ease,color .2s ease,border-color .2s ease}
+  padding:17px 28px;min-height:52px;
+  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .16s var(--sal)}
+/* Nada mas: el elemento acusa la pulsacion y con eso el sitio deja de
+   parecer una imagen. Es la unica animacion que se ve decenas de veces. */
+.btn:active,.cart-btn:active,.tema-btn:active{transform:scale(.97)}
 .btn-cyan{background:var(--acento);color:var(--sobre-acento)}
 .btn-cyan:hover{background:var(--acento-alto);color:var(--sobre-acento)}
 .btn-wa{background:var(--wa);color:var(--sobre-wa)}
@@ -188,7 +200,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
    pre-render y la hidratacion pinten exactamente lo mismo. */
 .tema-btn{display:inline-grid;place-items:center;width:40px;height:40px;flex:none;
   background:transparent;border:1px solid var(--line-2);color:var(--dim);cursor:pointer;padding:0;
-  transition:border-color .2s ease,color .2s ease}
+  transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .tema-btn:hover{border-color:var(--acento);color:var(--acento)}
 .tema-btn .ico{width:18px;height:18px}
 .tema-btn .ico-sol{display:none}
@@ -273,8 +285,12 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .card{background:var(--ground);display:flex;flex-direction:column;padding:24px;transition:background .25s ease}
 .card:hover{background:var(--panel)}
 .card .shot{background:var(--panel);aspect-ratio:1/1;display:grid;place-items:center;padding:22px;position:relative;margin-bottom:20px}
-.card .shot img,.card .shot svg{max-height:100%;width:auto;transition:transform .4s ease}
-.card:hover .shot img,.card:hover .shot svg{transform:scale(1.04)}
+.card .shot img,.card .shot svg{max-height:100%;width:auto;transition:transform .4s var(--sal)}
+/* En una pantalla tactil el hover se dispara al tocar y se queda
+   pegado: la tarjeta se agranda sola y no vuelve. */
+@media (hover:hover) and (pointer:fine){
+  .card:hover .shot img,.card:hover .shot svg{transform:scale(1.04)}
+}
 .card .tag{position:absolute;top:12px;left:12px;font-family:var(--mono);font-size:9.5px;font-weight:600;
   letter-spacing:.16em;text-transform:uppercase;background:var(--acento);color:var(--sobre-acento);padding:5px 9px}
 /* Va dentro del encuadre, sobre el fondo del panel y no sobre la foto:
@@ -297,6 +313,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .cart-btn{position:relative;display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--line-2);
   color:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
   padding:11px 16px;cursor:pointer}
+.cart-btn{transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .cart-btn:hover{border-color:var(--acento);color:var(--acento)}
 .cart-btn .count{min-width:19px;height:19px;display:grid;place-items:center;background:var(--acento);color:var(--sobre-acento);
   font-size:11px;font-weight:600;padding-inline:5px}
@@ -304,11 +321,25 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .cart-btn.pulse{animation:pulse .45s ease}
 @keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.07);border-color:var(--acento)}100%{transform:scale(1)}}
 
+/* El cajon aparecia y desaparecia de golpe. Un panel que se materializa sin
+   recorrido no se lee como que llega desde un lado, se lee como un fallo, y
+   ademas rompe el gesto de deslizar para cerrarlo: entra por donde se va.
+   `allow-discrete` y `@starting-style` permiten animar algo que alterna
+   `display`; donde no existan, el cajon sigue funcionando, sin transicion. */
 .drawer{position:fixed;inset:0;z-index:100;display:none}
 .drawer[open]{display:block}
-.drawer .veil{position:absolute;inset:0;background:var(--velo);backdrop-filter:blur(3px)}
+.drawer .veil{position:absolute;inset:0;background:var(--velo);backdrop-filter:blur(3px);
+  opacity:1;transition:opacity .3s ease,display .3s allow-discrete}
 .drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--panel);
-  border-left:1px solid var(--line-2);display:flex;flex-direction:column}
+  border-left:1px solid var(--line-2);display:flex;flex-direction:column;
+  transform:translateX(0);transition:transform .38s var(--cajon),display .38s allow-discrete}
+@media (prefers-reduced-motion:no-preference){
+  @starting-style{
+    .drawer[open] .veil{opacity:0}
+    /* Porcentaje y no pixeles: se mueve su propio ancho, mida lo que mida. */
+    .drawer[open] .panel{transform:translateX(100%)}
+  }
+}
 .drawer .head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line)}
 .drawer .body{flex:1;overflow-y:auto;padding:8px 24px 24px}
 .drawer .foot2{border-top:1px solid var(--line);padding:22px 24px;display:grid;gap:14px}
@@ -339,6 +370,19 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 @media(min-width:960px){.wa-float{right:28px;bottom:28px}}
 
 
+/* --------------------------------------------------------------------------
+   VISOR — el vídeo de proceso sincronizado con el scroll
+
+   El encuadre es oscuro en los dos temas porque el material es oscuro: es una
+   imagen, no una sección invertida. La banda de precio sigue siendo la única
+   inversión de la página.
+   -------------------------------------------------------------------------- */
+.visor{margin:0 0 clamp(30px,4vw,48px);position:relative;border:1px solid var(--line-2)}
+.visor-video{display:block;width:100%;height:clamp(240px,38vh,420px);object-fit:cover;
+  object-position:center 14%;background:var(--visor-fondo)}
+.visor-pie{display:block;padding:12px 14px;border-top:1px solid var(--line);
+  font-size:10px;letter-spacing:.18em}
+
 /* ==========================================================================
    PATRONES DE PÁGINA (home)
    ========================================================================== */
@@ -363,6 +407,18 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     .precios .amt sup{font-family:var(--mono);font-size:clamp(18px,2vw,26px);font-weight:500;padding-top:.5em}
     .precios .amt b{font-size:clamp(64px,8vw,104px);font-weight:800;letter-spacing:-.05em;line-height:.86}
     .pasos{border-top:1px solid var(--line-2)}
+    /* El único revelado del sitio, y está aquí porque los pasos son una
+       secuencia: aparecen en el orden en que ocurren. El estado base es el
+       final, así que si el navegador no soporta líneas de tiempo de scroll
+       —o si el CSS no llega— el texto ya está visible. La animación sólo
+       puede quitar, nunca es lo que hace aparecer el contenido. */
+    @media (prefers-reduced-motion:no-preference){
+      @supports (animation-timeline:view()){
+        .paso{animation:surge linear both;animation-timeline:view();
+          animation-range:entry 8% entry 55%}
+      }
+    }
+    @keyframes surge{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
     .paso{display:grid;gap:10px 36px;padding:26px 0;border-bottom:1px solid var(--line)}
     @media(min-width:900px){.paso{grid-template-columns:110px 1fr 1.15fr;align-items:start}}
     .paso .k{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.16em;color:var(--acento)}

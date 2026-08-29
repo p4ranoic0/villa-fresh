@@ -20,6 +20,10 @@ export default function App() {
       <Titulo />
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* Un servidor estático sirve la misma portada en las dos direcciones.
+            Sin este alias, quien entre por /index.html carga el HTML correcto
+            y luego React no encuentra ruta y lo vacía. */}
+        <Route path="/index.html" element={<Home />} />
         <Route path="/catalogo.html" element={<Catalogo />} />
       </Routes>
     </>

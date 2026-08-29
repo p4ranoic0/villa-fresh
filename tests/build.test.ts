@@ -157,3 +157,55 @@ test('toda imagen referida existe en lo publicado', async () => {
     }
   }
 })
+
+/* --------------------------------------------------------------------------
+   La secuencia de agua de la sección de proceso
+   -------------------------------------------------------------------------- */
+
+test('la secuencia publica el póster, no el vídeo', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  // El póster (17 KB) viaja en el HTML y ya cuenta lo mismo.
+  expect(html).toContain('poster="/proceso-agua.webp"')
+  // El vídeo (570 KB) no. Lo pide el navegador solo si la pantalla es ancha,
+  // no hay preferencia por menos movimiento y no se están ahorrando datos.
+  // Un src aquí lo descargaría siempre, incluso en un móvil con datos contados.
+  expect(html).not.toContain('proceso-agua.mp4')
+  expect(html).toContain('preload="none"')
+})
+
+test('la secuencia no reclama ser la planta de Villa Fresh', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html).toContain('Imagen de archivo con licencia')
+})
+
+test('ninguna animación arranca con ease-in', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Sin los comentarios: ahí abajo está explicado justamente por qué no se usa.
+  const declaraciones = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  // ease-in retrasa el movimiento justo en el instante que el visitante está
+  // mirando, y hace que la misma duración se sienta más lenta.
+  expect(declaraciones).not.toMatch(/[\s,:]ease-in[\s,;}]/)
+})
+
+test('el movimiento se apaga con prefers-reduced-motion', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  expect(css).toContain('@media (prefers-reduced-motion:reduce)')
+  // Y lo que se añade por gusto sólo existe si nadie ha pedido lo contrario.
+  expect(css).toContain('@media (prefers-reduced-motion:no-preference)')
+})
+
+test('el revelado de los pasos nunca es lo que hace visible el texto', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // El estado base tiene que ser el final. Si `.paso` naciera en opacity:0,
+  // un navegador sin líneas de tiempo de scroll dejaría el proceso en blanco.
+  const regla = css.slice(css.indexOf('.pasos{'), css.indexOf('@keyframes surge'))
+  expect(regla).not.toMatch(/\.paso\{[^}]*opacity:0/)
+  expect(css).toContain('@supports (animation-timeline:view())')
+})
+
+test('la portada responde también en /index.html', async () => {
+  // Un servidor estático sirve la portada en las dos direcciones; si React
+  // sólo conoce "/", quien entre por /index.html se queda sin página.
+  const app = await readFile('src/App.tsx', 'utf8')
+  expect(app).toContain('path="/index.html"')
+})
