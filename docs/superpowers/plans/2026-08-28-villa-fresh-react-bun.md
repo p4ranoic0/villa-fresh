@@ -1966,13 +1966,45 @@ python3 -m http.server 8000 -d legacy      # original, http://localhost:8000
 Con Playwright: `/` y `/catalogo.html` contra `index.html` y `catalogo.html`, a **375**, **768**
 y **1440 px** de ancho, página completa.
 
+**Antes de cada captura hay que estabilizar la página**, y en las dos versiones por igual.
+Sin esto el diff produce falsos fallos que parecen deriva de maquetación y no lo son —
+ocurrió con las tres capturas del catálogo en la primera pasada:
+
+```js
+// congelar animaciones: la cinta gira en bucle de 46 s y cada captura la pilla
+// en una fase distinta
+const s = document.createElement('style')
+s.textContent = '*,*::before,*::after{animation:none !important;transition:none !important}'
+document.head.appendChild(s)
+
+// forzar las imágenes diferidas: con loading="lazy", a 375 px sólo cargan 2 de 7
+// y la página mide 177 px menos
+document.querySelectorAll('img[loading="lazy"]').forEach((i) => (i.loading = 'eager'))
+window.scrollTo(0, document.body.scrollHeight)
+await new Promise((r) => setTimeout(r, 600))
+window.scrollTo(0, 0)
+await Promise.all([...document.images].map((i) =>
+  i.complete ? null : new Promise((r) => { i.onload = i.onerror = r })))
+
+// esperar la tipografía web: una captura tomada antes usa métricas de la
+// cascada de reserva y desplaza el texto una fracción de píxel
+await document.fonts.ready
+```
+
+**Control de método antes de creerse un fallo:** captura la MISMA página dos veces y
+compáralas. Si difieren, el problema es la captura, no la migración.
+
 - [ ] **Step 3: Comparar y clasificar cada diferencia**
 
 Toda diferencia es un **defecto que se corrige**, no una mejora que se acepta. Se anotan
 en una lista y se corrigen en esta tarea, no en la siguiente.
 
-Diferencia esperada y admisible, sólo esta:
+Diferencias esperadas y admisibles, sólo estas dos:
 - El orden de los atributos en el HTML generado.
+- **El marcador entre corchetes del catálogo**, que ahora dice
+  `SRC/DATA/PRODUCTOS.TS` en vez de `ASSETS/PRODUCTOS.JS`. Es un cambio pedido: el
+  archivo que hay que editar cambió de sitio. Aparece como una franja de unos 10 px
+  al final de la página, en los tres anchos.
 
 Las URL **no** cambian respecto al sitio actual: el catálogo sigue siendo
 `/catalogo.html`.
