@@ -1599,8 +1599,11 @@ Migración 1:1 de `legacy/catalogo.html` y de la parte de grilla y filtros de
 `legacy/assets/site.js`.
 
 **Files:**
-- Create: `src/features/catalogo/Filtros.tsx`, `src/features/catalogo/TarjetaProducto.tsx`,
+- Create: `src/features/catalogo/FiltrosCatalogo.tsx`, `src/features/catalogo/TarjetaProducto.tsx`,
   `src/features/catalogo/Grilla.tsx`
+
+  **El componente NO puede llamarse `Filtros.tsx`:** convive con `filtros.ts` en la misma
+  carpeta, y el sistema de archivos de macOS no distingue mayúsculas, así que colisionan.
 - Modify: `src/pages/Catalogo.tsx`
 - Modify: `tests/build.test.ts`
 
@@ -1608,7 +1611,7 @@ Migración 1:1 de `legacy/catalogo.html` y de la parte de grilla y filtros de
 - Consumes: `PRODUCTOS`, `CATEGORIAS`; `filtrarPorCategorias`, `contarPorCategoria`,
   `alternar`; `soles`; `usePedido`.
 - Produces:
-  - `<Filtros activas onAlternar />`
+  - `<FiltrosCatalogo activas onAlternar />`
   - `<TarjetaProducto producto onAgregar />`
   - `<Grilla productos onAgregar />`
 
@@ -1625,11 +1628,12 @@ test('el catálogo publica los 7 productos dentro del HTML, sin depender de Java
 })
 
 test('los 5 productos sin precio se publican como "A cotizar"', async () => {
-  // Cuenta exacta en vez de buscar "S/ 0.00": el total del cajón vacío ES "S/ 0.00",
-  // y React separa textos contiguos con <!-- --> al renderizar en servidor, así que
-  // afirmar sobre el fragmento "S/ 0.00 <small>" sería frágil.
+  // Se cuenta el NODO DE PRECIO, no el texto suelto. Dos motivos: buscar "S/ 0.00"
+  // sería ambiguo (el total del cajón vacío es exactamente eso) y frágil (React separa
+  // textos contiguos con <!-- --> al renderizar en servidor); y contar el texto
+  // "A cotizar" daría 6, no 5, porque VF-EMP lleva además una etiqueta con ese literal.
   const html = await readFile('dist/catalogo.html', 'utf8')
-  expect(html.split('A cotizar').length - 1).toBe(5)
+  expect(html.split('<div class="price pending">A cotizar</div>').length - 1).toBe(5)
 })
 ```
 
@@ -1713,7 +1717,7 @@ export default function Grilla({ productos, onAgregar }: Props) {
 }
 ```
 
-- [ ] **Step 5: Crear `Filtros.tsx`**
+- [ ] **Step 5: Crear `FiltrosCatalogo.tsx`**
 
 Casillas con conteo, como `pintarFiltros()`. Las categorías sin productos no se muestran.
 
@@ -1727,7 +1731,7 @@ interface Props {
   onAlternar: (id: CategoriaId) => void
 }
 
-export default function Filtros({ activas, onAlternar }: Props) {
+export default function FiltrosCatalogo({ activas, onAlternar }: Props) {
   return (
     <div id="vf-filtros">
       {CATEGORIAS.map((categoria) => {
