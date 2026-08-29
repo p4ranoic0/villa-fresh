@@ -209,3 +209,32 @@ test('la portada responde también en /index.html', async () => {
   const app = await readFile('src/App.tsx', 'utf8')
   expect(app).toContain('path="/index.html"')
 })
+
+test('los iconos son SVG en línea, sin librería ni fuente', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  // Doce iconos dibujados a mano en una retícula de 24 con trazo 1.7. La
+  // primera versión del sitio usaba una fuente de iconos y, cuando Google
+  // Fonts no cargó, los iconos salieron como las palabras "chat" y "check".
+  expect(html).toContain('class="ico"')
+  expect(html).toContain('viewBox="0 0 24 24"')
+  expect(html).not.toMatch(/material-symbols|font-awesome|<i class="(fa|icon)/)
+})
+
+test('cada paso del proceso lleva su propio icono', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const seccion = html.slice(html.indexOf('id="proceso"'), html.indexOf('id="planes"'))
+  // Cuatro pasos, cuatro dibujos distintos. Si dos pasos comparten icono, el
+  // icono ha dejado de distinguir y sólo decora.
+  const dibujos = new Set([...seccion.matchAll(/<svg class="ico"[^>]*>(.*?)<\/svg>/g)].map((m) => m[1]))
+  expect(dibujos.size).toBe(4)
+})
+
+test('la entrada de la portada nunca es lo que hace visible el hero', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const entrada = css.slice(css.indexOf('MOVIMIENTO DE PÁGINA'))
+  // Igual que el revelado: el estado base es el final, y la animación vive
+  // dentro de prefers-reduced-motion. Sin eso, quien pida menos movimiento
+  // se quedaría mirando una portada en blanco.
+  expect(entrada).toContain('@media (prefers-reduced-motion:no-preference)')
+  expect(entrada.indexOf('@media (prefers-reduced-motion:no-preference)')).toBeLessThan(entrada.indexOf('.hero-grid'))
+})

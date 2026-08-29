@@ -6,7 +6,7 @@ documento existe hoy en `src/styles/site.css`. Si algo cambia en el código, se 
 
 | | |
 |---|---|
-| **Versión** | 5 — dos temas y movimiento |
+| **Versión** | 6 — iconografía y movimiento de página |
 | **Fecha** | 29 de agosto de 2026 |
 | **Implementación** | `src/styles/site.css` · `src/components/` · `src/pages/` |
 | **Sustituye a** | `stitch_boutique_de_agua_premium/design.md` (dirección clara/premium, descartada) |
@@ -483,6 +483,29 @@ a que se invente uno. Se retiran sólo cuando el dato real ocupa su lugar.
 Retícula de 24 px, trazo de 1.7, sin relleno, heredando el color del texto. Los iconos
 decorativos llevan `aria-hidden="true"`.
 
+### El juego completo
+
+Doce, y cada uno existe porque distingue algo. Un icono que no distingue, decora.
+
+| Icono | Dónde | Qué separa |
+|---|---|---|
+| `IconoWhatsApp` | Botones de WhatsApp | El canal |
+| `IconoCheck` | Listas de los tres planes | Lo que incluye cada plan |
+| `IconoCarrito` | Barra superior del catálogo | El pedido en curso |
+| `IconoSol` · `IconoLuna` | Conmutador de tema | El tema que se ofrece |
+| `IconoFiltro` | Paso 01 | Filtrado y sedimentación |
+| `IconoMembrana` | Paso 02 | Ósmosis inversa |
+| `IconoNivel` | Paso 03 | Alcalinización |
+| `IconoBurbujas` | Paso 04 | Ozonización |
+| `IconoCasa` · `IconoEdificio` · `IconoCono` | Los tres planes | Hogar, empresa, obra |
+
+**Obra es un cono y no un casco.** El casco se probó dos veces: a 22 px es una cúpula
+sobre una línea y se lee como un puente. Un icono que hay que explicar no está limpio,
+y el dibujo correcto es el que se reconoce, no el más literal.
+
+Los cuatro del proceso tienen que distinguirse **entre sí** antes que parecerse a lo
+que nombran. Hay una prueba que falla si dos pasos comparten dibujo.
+
 El conmutador de tema usa los dos únicos iconos que no acompañan a un texto: un sol
 y una luna, en la misma retícula y el mismo trazo. **Los dos viajan siempre en el
 HTML** y es el CSS quien decide cuál se ve, a partir del mismo `data-tema` que pinta
@@ -527,6 +550,12 @@ y encaja con la sección que lo acompaña.
 El encuadre es oscuro en los dos temas porque el material es oscuro. **Es una imagen
 dentro de un marco, no una sección invertida**: la banda de precio sigue siendo la
 única inversión de la página.
+
+A partir de 1040 px **el vídeo y los cuatro pasos comparten bloque**: el vídeo se queda
+fijo en su columna mientras los pasos le pasan por delante, así que el agua se va
+asentando conforme se lee. Antes iba suelto encima de la sección y era una caja negra
+sin relación con lo que tenía alrededor. Por debajo de ese ancho se apilan, y el vídeo
+ni se descarga.
 
 Lleva al pie una etiqueta mono que dice lo que es: *imagen de archivo con licencia*.
 No es un crédito decorativo, es la misma honestidad que rige el resto de la
@@ -576,22 +605,33 @@ falla si aparece uno.
 | Cajón del pedido | 380 ms | `--cajon` | Entra por donde se va: hace legible el gesto |
 | Velo del cajón | 300 ms | `ease` | Sin él, el fondo se oscurece de golpe |
 | Pulso del carrito | 450 ms | `ease` | Confirma que la línea se añadió |
-| Revelado de los pasos | según scroll | lineal | Los pasos son una secuencia |
+| Entrada de la portada | 550 ms, +62 ms por pieza | `--sal` | Se ve una vez: da un orden de lectura |
+| Revelado de las series | según scroll | lineal | Pasos, precios, planes y preguntas |
 | Secuencia de agua | según scroll | lineal | Ver abajo |
 | Cinta | 46 s en bucle | lineal | Movimiento constante |
 
 Nada más. No hay parallax, ni contadores animados, ni revelados en cada sección.
 
-### El revelado de los pasos
+### La entrada de la portada
 
-Es el único revelado del sitio y está en `.paso` porque los cuatro pasos son una
-secuencia: aparecen en el orden en que ocurren. Se hace con `animation-timeline: view()`,
-sin JavaScript.
+Lo único que se mueve sin que el visitante haga nada. Etiqueta, titular, bajada y
+botones entran escalonados cada 62 ms, y la ficha técnica cierra. Más separación entre
+piezas y deja de leerse como una cascada para sentirse lento.
 
-**El estado base es el estado final.** Un navegador sin líneas de tiempo de scroll, o
-una carga en la que el CSS llegue tarde, muestran el texto ya visible. La animación
-sólo puede quitar; nunca es lo que hace aparecer el contenido. Hay una prueba que
-comprueba que `.paso` no nace en `opacity: 0`.
+Se ve una vez por visita, que es exactamente el tipo de momento que puede permitirse
+movimiento.
+
+### El revelado de las series
+
+Sólo donde hay **series**: los cuatro pasos, las tres celdas de precio, los tres planes
+y las preguntas. Un revelado en cada bloque de la página deja de ser ritmo y pasa a ser
+un tic; ésa es la diferencia entre pacing y andamiaje. Se hace con
+`animation-timeline: view()`, sin JavaScript.
+
+**El estado base es el estado final**, y esto vale para la entrada y para el revelado.
+Un navegador sin líneas de tiempo de scroll, o una carga en la que el CSS llegue tarde,
+muestran el texto ya visible. La animación sólo puede quitar; nunca es lo que hace
+aparecer el contenido. Hay pruebas que lo comprueban en los dos casos.
 
 ### La secuencia de agua
 

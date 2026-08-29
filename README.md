@@ -163,6 +163,16 @@ la única ruptura, papel sobre azul en el oscuro y azul sobre papel en el claro.
 El tema se resuelve en un script en línea de `index.html`, antes del primer pintado,
 para que no haya parpadeo y para que el conmutador responda sin esperar al bundle.
 
+**Iconografía.** Doce iconos SVG en línea, dibujados a mano en una retícula de 24 con
+trazo 1.7. Sin librería y sin fuente de iconos: en la primera versión del sitio los
+iconos eran una fuente y, cuando Google Fonts no cargó, salieron impresos como las
+palabras `chat` y `check`.
+
+**Movimiento.** Una entrada escalonada al cargar la portada, el revelado de las series
+al pasar por ellas, y el vídeo de proceso que avanza con el scroll. Todo se apaga con
+`prefers-reduced-motion`, y en ningún caso la animación es lo que hace visible el
+contenido: el estado base es siempre el final.
+
 - Tipografías: **Archivo** (titulares, 800) e **IBM Plex Mono** (datos y etiquetas).
 - El sistema vigente y el porqué de cada decisión están en `DESIGN.md`.
 - `design/README.md` y sus tokens documentan la variante *Light Editorial* descartada.
