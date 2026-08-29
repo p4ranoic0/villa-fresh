@@ -48,7 +48,7 @@ export default function Catalogo() {
           <div>
             <div className="cat-head">
               <span className="lbl" id="vf-cuenta">
-                {visibles.length} {visibles.length === 1 ? 'producto' : 'productos'}
+                {`${visibles.length} ${visibles.length === 1 ? 'producto' : 'productos'}`}
               </span>
               <span className="lbl">Precios en soles · IGV incluido</span>
             </div>
