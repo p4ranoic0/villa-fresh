@@ -1,5 +1,14 @@
-import { test, expect } from 'bun:test'
+import { beforeAll, test, expect } from 'bun:test'
+import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
+
+beforeAll(() => {
+  if (!existsSync('dist/index.html')) {
+    throw new Error(
+      'dist/ no existe: estas pruebas verifican el HTML publicado. Ejecuta `bun run build` antes, o usa `bun run test:build`, que encadena las dos cosas.',
+    )
+  }
+})
 
 test('la home publicada lleva su título dentro del HTML', async () => {
   const html = await readFile('dist/index.html', 'utf8')

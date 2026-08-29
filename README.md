@@ -13,11 +13,13 @@ bun install
 bun run dev          # desarrollo: http://localhost:5173
 bun run build        # genera el sitio estático en dist/
 bun run preview      # comprueba dist/ en http://localhost:4173
-bun test
+bun test             # comprueba la lógica pura
+bun run test:build   # construye y comprueba también el HTML publicado
 bun run typecheck
 ```
 
-Para publicar, ejecuta `bun run build` y sube **el contenido de `dist/`** a Netlify,
+Antes de publicar, ejecuta `bun run test:build`: construye el sitio y verifica el HTML
+publicado. Después, sube **el contenido de `dist/`** a Netlify,
 Vercel, GitHub Pages o cualquier hosting estático. El servidor no necesita Bun, Node,
 React ni un backend.
 
