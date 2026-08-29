@@ -1,33 +1,28 @@
 import { useState } from 'react'
 import Footer from '../components/Footer'
-import { IconoCarrito } from '../components/Icono'
 import Nav from '../components/Nav'
 import WaFlotante from '../components/WaFlotante'
 import { PRODUCTOS } from '../data/productos'
 import FiltrosCatalogo from '../features/catalogo/FiltrosCatalogo'
 import Grilla from '../features/catalogo/Grilla'
 import { alternar, filtrarPorCategorias } from '../features/catalogo/filtros'
+import BotonCarrito from '../features/pedido/BotonCarrito'
+import CajonPedido from '../features/pedido/CajonPedido'
 import { usePedido } from '../features/pedido/usePedido'
 import type { CategoriaId } from '../types'
 
 export default function Catalogo() {
   const [activas, setActivas] = useState<ReadonlySet<CategoriaId>>(new Set())
+  const [abierto, setAbierto] = useState(false)
   const visibles = filtrarPorCategorias(PRODUCTOS, activas)
   const pedido = usePedido()
 
-  const botonCarrito = (
-    <button className="cart-btn" id="vf-abrir" type="button">
-      <IconoCarrito />
-      Pedido{' '}
-      <span className="count" id="vf-count" hidden={pedido.unidades === 0}>
-        {pedido.unidades}
-      </span>
-    </button>
-  )
-
   return (
     <>
-      <Nav enCatalogo accion={botonCarrito} />
+      <Nav
+        enCatalogo
+        accion={<BotonCarrito unidades={pedido.unidades} onAbrir={() => setAbierto(true)} />}
+      />
 
       <section className="band" style={{ paddingBottom: 'clamp(28px,4vw,44px)' }}>
         <div className="wrap">
@@ -63,6 +58,7 @@ export default function Catalogo() {
         </div>
       </section>
 
+      <CajonPedido abierto={abierto} onCerrar={() => setAbierto(false)} pedido={pedido} />
       <Footer />
       <WaFlotante />
     </>
