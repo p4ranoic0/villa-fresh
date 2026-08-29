@@ -120,7 +120,7 @@ tratado en planta es falso y expone frente a Indecopi y a la etiqueta sanitaria.
 - [ ] Dirección de la planta / punto de atención
 - [ ] Horario de atención y de reparto
 - [ ] **Distritos reales** de cobertura (los que están hoy son referenciales) y costo de delivery por zona
-- [ ] Precio de **recarga**, **envase vacío**, **botellas** y **dispensador** → cargarlos en `assets/productos.js`
+- [ ] Precio de **recarga**, **envase vacío**, **botellas** y **dispensador** → cargarlos en `src/data/productos.ts`
 - [ ] Presentaciones reales de botella (¿500 ml, 625 ml, 1 L?)
 - [ ] N.° de registro sanitario **DIGESA**
 - [ ] Desglose real de los **8 pasos** de purificación (hoy se muestran las 4 etapas documentadas)

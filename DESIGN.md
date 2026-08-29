@@ -2,7 +2,7 @@
 
 Documento fuente de la identidad visual y de interfaz de Villa Fresh.
 Describe **lo que está implementado**, no lo que sería deseable: cada valor de este
-documento existe hoy en `assets/site.css`. Si algo cambia en el código, se cambia aquí.
+documento existe hoy en `src/styles/site.css`. Si algo cambia en el código, se cambia aquí.
 
 | | |
 |---|---|
@@ -88,8 +88,8 @@ alterna; no encadenes.
 
 El isotipo es una **gota que contiene una montaña**, dentro de un círculo azul.
 
-Archivos: `assets/logo-villafresh-fondo-blanco.jpg` (positivo) y
-`assets/logo-villafresh-slogan-fondo-negro.png` (con bajada, fondo oscuro).
+Archivos: `public/logo-villafresh-fondo-blanco.jpg` (positivo) y
+`public/logo-villafresh-slogan-fondo-negro.png` (con bajada, fondo oscuro).
 
 En la interfaz **no se usa el logotipo completo**: se usa el motivo redibujado como
 trazo, sin círculo ni fondo, en `stroke: #3ec1ff`:
@@ -508,8 +508,8 @@ Antes de escribir una línea de una pantalla nueva:
    confirmó. **El mockup original de Stitch no es fuente**: traía precios y afirmaciones
    ficticias.
 2. Si el dato no existe, va entre corchetes visibles. No se rellena con un valor plausible.
-3. Los precios sólo se editan en `assets/productos.js`. Nunca escritos a mano en el HTML.
-4. Los colores, tipos y espacios salen de las variables de `assets/site.css`. Ningún
+3. Los precios sólo se editan en `src/data/productos.ts`. Nunca escritos a mano en el JSX.
+4. Los colores, tipos y espacios salen de las variables de `src/styles/site.css`. Ningún
    hex suelto en el marcado.
 
 ---
@@ -518,17 +518,27 @@ Antes de escribir una línea de una pantalla nueva:
 
 ```
 villa-fresh/
-├─ DESIGN.md          ← este documento: fuente de la verdad visual
-├─ README.md          Cómo correrlo, datos del negocio, pendientes
-├─ index.html         Home
-├─ catalogo.html      Catálogo
-├─ assets/
-│  ├─ site.css        Implementación del sistema
-│  ├─ site.js         Filtros, pedido, mensaje de WhatsApp
-│  ├─ productos.js    Productos y precios (único archivo de datos)
-│  └─ *.svg / logos
-├─ design/            Tokens, hoja visual, decisiones previas, alternativas descartadas
-└─ contenido/         Copy real extraído de las redes
+├─ index.html                         Plantilla de Vite para el pre-render
+├─ package.json · bun.lock            Scripts y versiones fijadas
+├─ vite.config.ts · tsconfig.json     Configuración de Vite y TypeScript
+├─ scripts/
+│  └─ prerender.ts                    Escribe dist/index.html y dist/catalogo.html
+├─ src/
+│  ├─ main.tsx · entry-server.tsx     Hidratación y renderizado de servidor
+│  ├─ App.tsx · rutas.ts              Rutas, títulos y metaetiquetas por página
+│  ├─ components/                     Navegación, pie, isotipo e iconos compartidos
+│  ├─ pages/                          Portada y catálogo
+│  ├─ features/catalogo/              Filtros, grilla y tarjetas
+│  ├─ features/pedido/                Estado, persistencia y mensaje de WhatsApp
+│  ├─ data/productos.ts               Productos y precios; único archivo a editar
+│  ├─ data/negocio.ts                 Teléfono, redes y datos del negocio
+│  └─ styles/site.css                 Implementación del sistema visual
+├─ public/                             Ilustraciones, logotipos e imagen de compartir
+├─ tests/                              Pruebas puras y del HTML publicado
+├─ marca/                              Piezas de marca y su código fuente HTML
+├─ design/                             Tokens y variante Light Editorial descartada
+├─ contenido/                          Copy real extraído de las redes
+└─ dist/                               Sitio generado; se publica esta carpeta
 ```
 
 Stack: **HTML estático sin build**. La decisión y su condición de salida están
@@ -550,7 +560,7 @@ Antes de publicar cualquier cambio:
 - [ ] Un solo acento cian; el verde sólo en botones de WhatsApp
 - [ ] Ningún dato sin verificar presentado como cierto
 - [ ] Los corchetes pendientes siguen visibles hasta que el dato exista
-- [ ] Todos los precios vienen de `productos.js`
+- [ ] Todos los precios vienen de `src/data/productos.ts`
 - [ ] Los enlaces de WhatsApp llevan el mensaje precargado correcto
 - [ ] `prefers-reduced-motion` detiene la cinta
 
@@ -576,12 +586,12 @@ Lo que **rompe** esta identidad, aunque se vea bien en aislado:
 
 ## 20. Fuente de la verdad
 
-1. **`assets/site.css`** es la implementación. Ante una discrepancia, el código manda y
+1. **`src/styles/site.css`** es la implementación. Ante una discrepancia, el código manda y
    este documento se corrige.
 2. **Este documento** manda sobre cualquier mockup, incluido el canvas de exploración y
    el `design.md` original de Stitch, que queda archivado como referencia histórica.
 3. **`contenido/redes-sociales-villafresh.md`** manda sobre cualquier texto de mockup.
-4. **`assets/productos.js`** manda sobre cualquier precio escrito en otro sitio.
+4. **`src/data/productos.ts`** manda sobre cualquier precio escrito en otro sitio.
 
 Cuando esta versión cambie, se sube el número de versión de la cabecera y se anota qué
 cambió en `design/README.md`.

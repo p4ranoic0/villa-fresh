@@ -111,13 +111,13 @@ repite en los comentarios de Facebook, y hoy no tenía respuesta en la web.
 
 ---
 
-## v3 — El sitio vive ahora en `assets/site.css`
+## v3 — El sitio vive ahora en `src/styles/site.css`
 
 A partir del 27/08/2026 el sitio publicado usa la dirección **"ficha técnica"** (azul
 noche + tipografía de datos). Los estilos que realmente se sirven están en
-`assets/site.css`; este directorio conserva el sistema de tokens original, la hoja
+`src/styles/site.css`; este directorio conserva el sistema de tokens original, la hoja
 visual (`preview.html`) y, en `alternativas/`, la home anterior en estilo editorial
 claro por si hace falta compararlas.
 
-Si tocas colores o tipografía, hazlo en `assets/site.css`. `tokens.css` queda como
+Si tocas colores o tipografía, hazlo en `src/styles/site.css`. `tokens.css` queda como
 referencia del sistema, no como archivo servido.
