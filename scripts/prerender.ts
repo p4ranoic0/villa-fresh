@@ -5,7 +5,8 @@
    ========================================================================== */
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import { RUTAS } from '../src/rutas'
+import { RUTAS, SITIO_URL } from '../src/rutas'
+import type { MetaRuta } from '../src/rutas'
 // @ts-expect-error — lo genera `vite build --ssr` justo antes de este script
 import { render } from '../dist-ssr/entry-server.js'
 
@@ -19,10 +20,18 @@ function escapar(texto: string): string {
     .replaceAll('"', '&quot;')
 }
 
-function cabecera(title: string, description: string): string {
+function cabecera(ruta: MetaRuta): string {
+  const url = `${SITIO_URL}${ruta.path}`
+  const imagen = `${SITIO_URL}${ruta.imagenOg}`
   return [
-    `<title>${escapar(title)}</title>`,
-    `<meta name="description" content="${escapar(description)}">`,
+    `<title>${escapar(ruta.title)}</title>`,
+    `<meta name="description" content="${escapar(ruta.description)}">`,
+    `<meta property="og:title" content="${escapar(ruta.title)}">`,
+    `<meta property="og:description" content="${escapar(ruta.description)}">`,
+    `<meta property="og:image" content="${escapar(imagen)}">`,
+    '<meta property="og:type" content="website">',
+    `<meta property="og:url" content="${escapar(url)}">`,
+    '<meta name="twitter:card" content="summary_large_image">',
   ].join('\n')
 }
 
@@ -35,7 +44,7 @@ try {
     if (!html.trim()) throw new Error(`${ruta.path} renderizó vacío`)
 
     const salida = plantilla
-      .replace('<!--app-head-->', cabecera(ruta.title, ruta.description))
+      .replace('<!--app-head-->', cabecera(ruta))
       .replace('<!--app-html-->', html)
 
     const destino = join(DIST, ruta.archivo)
