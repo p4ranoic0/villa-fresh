@@ -6,6 +6,16 @@ export const NEGOCIO = {
   instagram: 'https://www.instagram.com/villafresh.lima/',
 } as const
 
+/**
+ * Se pone en true cuando `public/pago-yape.svg` exista.
+ *
+ * No se detecta en tiempo de ejecución a propósito: el HTML se pre-renderiza,
+ * así que preguntar por el archivo desde el navegador llegaría tarde y dejaría
+ * el hueco parpadeando. Es una línea que se cambia a mano el día que llegue el
+ * archivo oficial.
+ */
+export const existeLogoYape = false
+
 /** Enlace de WhatsApp con el mensaje ya escrito. */
 export function urlWhatsApp(texto?: string): string {
   const base = `https://wa.me/${NEGOCIO.telefono}`

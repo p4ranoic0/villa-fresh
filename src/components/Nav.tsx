@@ -5,13 +5,11 @@ import BotonTema from './BotonTema'
 import Isotipo from './Isotipo'
 
 interface Props {
-  /** Bloque de acción a la derecha: botón de catálogo o botón del carrito. */
+  /** Bloque de acción a la derecha: el botón del pedido. */
   accion: ReactNode
-  /** Marca "Catálogo" como página actual. */
-  enCatalogo?: boolean
 }
 
-export default function Nav({ accion, enCatalogo }: Props) {
+export default function Nav({ accion }: Props) {
   return (
     <nav className="nav">
       <div className="wrap nav-in">
@@ -24,9 +22,7 @@ export default function Nav({ accion, enCatalogo }: Props) {
         </Link>
         <div className="nav-links">
           <a href="/#proceso">Proceso</a>
-          <Link to="/catalogo.html" aria-current={enCatalogo ? 'page' : undefined}>
-            Catálogo
-          </Link>
+          <a href="/#productos">Productos</a>
           <a href="/#cobertura">Cobertura</a>
           <a href="/#preguntas">Preguntas</a>
         </div>

@@ -33,13 +33,13 @@ villa-fresh/
 ├─ package.json · bun.lock            Scripts y versiones fijadas
 ├─ vite.config.ts · tsconfig.json     Configuración de Vite y TypeScript
 ├─ scripts/
-│  └─ prerender.ts                    Escribe dist/index.html y dist/catalogo.html
+│  └─ prerender.ts                    Escribe dist/index.html
 ├─ src/
 │  ├─ main.tsx · entry-server.tsx     Hidratación y renderizado de servidor
 │  ├─ App.tsx · rutas.ts              Rutas, títulos y metaetiquetas por página
 │  ├─ components/                     Navegación, pie, isotipo e iconos compartidos
-│  ├─ pages/                          Portada y catálogo
-│  ├─ features/catalogo/              Filtros, grilla y tarjetas
+│  ├─ pages/                          La portada, que es todo el sitio
+│  ├─ features/catalogo/              Grilla y tarjetas de producto
 │  ├─ features/pedido/                Estado, persistencia y mensaje de WhatsApp
 │  ├─ data/productos.ts               ← PRODUCTOS Y PRECIOS; único archivo a editar
 │  ├─ data/negocio.ts                 Teléfono, redes y datos del negocio
@@ -92,13 +92,13 @@ producto fuera del catálogo. Después de editarlo, vuelve a ejecutar `bun run b
 
 ## Cómo funciona el pedido
 
-No hay backend ni pasarela de pago. El catálogo arma el pedido en el navegador
+No hay backend ni pasarela de pago. La sección de productos arma el pedido en el navegador
 (persistido en `localStorage`) y el botón **Enviar pedido** abre `wa.me/51994647840`
 con el mensaje ya escrito: productos, cantidades, subtotales, total y dos líneas para
 la dirección y el distrito.
 
 Los productos con `precio: null` viajan en el mensaje como *"a cotizar"*. Al restaurar
-un pedido se descartan datos inválidos y SKU que ya no existan en el catálogo.
+un pedido se descartan datos inválidos y SKU que ya no existan.
 
 ---
 
@@ -186,12 +186,12 @@ contenido: el estado base es siempre el final.
 
 ## Por qué React pre-renderizado
 
-React permite dividir la portada, el catálogo y el pedido en componentes tipados y
+React permite dividir la portada y el pedido en componentes tipados y
 probados sin convertir el sitio publicado en una aplicación vacía que dependa de
 JavaScript para mostrar contenido. Vite genera el bundle del navegador y otro de
 servidor; después `scripts/prerender.ts` renderiza cada ruta y escribe HTML completo en
-`dist/index.html` y `dist/catalogo.html`. En el navegador, React hidrata ese HTML para
-devolverle filtros, carrito y persistencia.
+`dist/index.html`. En el navegador, React hidrata ese HTML para devolverle el carrito
+y la persistencia.
 
 El pre-render **no es opcional**. Los previsualizadores de WhatsApp y Facebook no
 ejecutan JavaScript, y WhatsApp es el canal de venta del negocio. Sin texto, título y
@@ -199,8 +199,11 @@ metaetiquetas dentro del HTML publicado, un enlace compartido perdería precisam
 información que debe convencer al cliente antes de abrir la página. El build falla si
 una ruta renderiza vacía, y `tests/build.test.ts` comprueba el artefacto final.
 
-El catálogo se publica como **`/catalogo.html`**, no como una carpeta. Es la URL del
-sitio anterior, por lo que conserva los enlaces existentes, y se comporta igual en
-hosting estático y en `vite preview`. La forma `/catalogo/index.html` hacía que algunas
-peticiones a `/catalogo` cayeran en el fallback de la Home: el servidor entregaba una
-página y React intentaba hidratar otra, provocando el error de hidratación #418.
+El sitio es **una sola página**. Hubo un catálogo aparte en `/catalogo.html` hasta el
+29/08/2026: con seis productos era un clic de más para llegar a lo mismo, y un filtro por
+categorías que nunca iba a tener nada que filtrar. Los productos viven ahora en
+`#productos`, en la misma página donde se lee el precio.
+
+React conoce además la ruta `/index.html`, porque cualquier servidor estático sirve la
+portada en las dos direcciones y sin ese alias la página no monta al entrar por la
+segunda.

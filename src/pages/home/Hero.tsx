@@ -1,4 +1,3 @@
-import { Link } from 'react-router'
 import { IconoWhatsApp } from '../../components/Icono'
 import { urlWhatsApp } from '../../data/negocio'
 
@@ -30,9 +29,7 @@ export default function Hero() {
               <IconoWhatsApp />
               Pedir por WhatsApp
             </a>
-            <Link className="btn btn-ghost" to="/catalogo.html">
-              Ver catálogo
-            </Link>
+            <a className="btn btn-ghost" href="#productos">Ver productos</a>
           </div>
         </div>
 

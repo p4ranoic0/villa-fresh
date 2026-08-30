@@ -21,10 +21,12 @@ test('la home publicada NO es un contenedor vacío', async () => {
   expect(html).not.toContain('<!--app-html-->')
 })
 
-test('el catálogo se publica en su propia carpeta, con su título', async () => {
-  const html = await readFile('dist/catalogo.html', 'utf8')
-  expect(html).toContain('<title>Catálogo — Villa Fresh | Bidones, recarga y accesorios en Lima</title>')
-  expect(html).not.toContain('<div id="root"></div>')
+test('el sitio se publica en una sola página', async () => {
+  // Con seis productos, un catálogo aparte era un clic de más para llegar a lo
+  // mismo y un filtro sin nada que filtrar. Todo vive en la portada.
+  expect(existsSync('dist/catalogo.html')).toBe(false)
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html).toContain('id="productos"')
 })
 
 test('el titular del hero viaja dentro del HTML publicado', async () => {
@@ -45,20 +47,20 @@ test('los marcadores pendientes se publican a propósito', async () => {
   expect(html).toContain('Distritos referenciales')
 })
 
-test('el catálogo publica los 7 productos dentro del HTML, sin depender de JavaScript', async () => {
-  const html = await readFile('dist/catalogo.html', 'utf8')
-  for (const sku of ['VF-B20', 'VF-B20X2', 'VF-R20', 'VF-EV20', 'VF-BOT', 'VF-DISP', 'VF-EMP']) {
+test('los 6 productos viajan dentro del HTML, sin depender de JavaScript', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  for (const sku of ['VF-B20', 'VF-B20X2', 'VF-R20', 'VF-BOT', 'VF-MARCA', 'VF-EMP']) {
     expect(html).toContain(sku)
   }
 })
 
-test('los 4 productos sin precio se publican como "A cotizar"', async () => {
+test('los 3 productos sin precio se publican como "A cotizar"', async () => {
   // Cuenta exacta en vez de buscar "S/ 0.00": el total del cajón vacío ES "S/ 0.00",
   // y React separa textos contiguos con <!-- --> al renderizar en servidor, así que
   // afirmar sobre el fragmento "S/ 0.00 <small>" sería frágil. Se cuenta el nodo de
   // precio porque VF-EMP también conserva una etiqueta literal con el texto "A cotizar".
-  const html = await readFile('dist/catalogo.html', 'utf8')
-  expect(html.split('<div class="price pending">A cotizar</div>').length - 1).toBe(4)
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html.split('<div class="price pending">A cotizar</div>').length - 1).toBe(3)
 })
 
 /* --------------------------------------------------------------------------
@@ -99,11 +101,9 @@ test('el tema se resuelve antes del primer pintado, no al hidratar', async () =>
   expect(html).toContain('data-conmuta-tema=""')
 })
 
-test('el conmutador viaja en el HTML de las dos páginas', async () => {
-  for (const pagina of ['dist/index.html', 'dist/catalogo.html']) {
-    const html = await readFile(pagina, 'utf8')
-    expect(html).toContain('aria-label="Cambiar entre tema claro y oscuro"')
-  }
+test('el conmutador de tema viaja en el HTML', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html).toContain('aria-label="Cambiar entre tema claro y oscuro"')
 })
 
 test('ningún color se pinta a mano fuera del bloque de tokens', async () => {
@@ -136,13 +136,13 @@ test('cada tema define exactamente los mismos tokens', async () => {
 })
 
 test('las tarjetas publican la foto y el dato que la foto no da', async () => {
-  const html = await readFile('dist/catalogo.html', 'utf8')
-  // Un bidon lleno y uno vacio son la misma fotografia: el plastico es
-  // transparente y no hay linea de agua. Sin la etiqueta, VF-EV20 y VF-B20
-  // serian la misma tarjeta.
+  const html = await readFile('dist/index.html', 'utf8')
+  // El bidón y la recarga comparten fotografía porque son el mismo objeto: lo
+  // que cambia es si traes el envase. Sin la etiqueta serían la misma tarjeta.
   expect(html).toContain('producto-bidon-20l.webp')
-  expect(html).toContain('Envase vacío, sin agua')
   expect(html).toContain('Sellado en planta')
+  expect(html).toContain('Cambias envase por envase')
+  expect(html).toContain('Tu etiqueta, nuestra agua')
   // Y ya no queda rastro de las ilustraciones que sustituyo la fotografia.
   for (const viejo of ['bidon-20l.svg', 'bidon-vacio.svg', 'botella-600.svg', 'dispensador.svg']) {
     expect(html).not.toContain(viejo)
@@ -150,11 +150,9 @@ test('las tarjetas publican la foto y el dato que la foto no da', async () => {
 })
 
 test('toda imagen referida existe en lo publicado', async () => {
-  for (const pagina of ['dist/index.html', 'dist/catalogo.html']) {
-    const html = await readFile(pagina, 'utf8')
-    for (const [, ruta] of html.matchAll(/(?:src|href)="(\/[^"]+\.(?:webp|jpg|png|svg))"/g)) {
-      expect({ pagina, ruta, existe: existsSync(`dist${ruta}`) }).toEqual({ pagina, ruta, existe: true })
-    }
+  const html = await readFile('dist/index.html', 'utf8')
+  for (const [, ruta] of html.matchAll(/(?:src|href)="(\/[^"]+\.(?:webp|jpg|png|svg))"/g)) {
+    expect({ ruta, existe: existsSync(`dist${ruta}`) }).toEqual({ ruta, existe: true })
   }
 })
 

@@ -778,13 +778,13 @@ villa-fresh/
 ├─ package.json · bun.lock            Scripts y versiones fijadas
 ├─ vite.config.ts · tsconfig.json     Configuración de Vite y TypeScript
 ├─ scripts/
-│  └─ prerender.ts                    Escribe dist/index.html y dist/catalogo.html
+│  └─ prerender.ts                    Escribe dist/index.html
 ├─ src/
 │  ├─ main.tsx · entry-server.tsx     Hidratación y renderizado de servidor
 │  ├─ App.tsx · rutas.ts              Rutas, títulos y metaetiquetas por página
 │  ├─ components/                     Navegación, pie, isotipo e iconos compartidos
-│  ├─ pages/                          Portada y catálogo
-│  ├─ features/catalogo/              Filtros, grilla y tarjetas
+│  ├─ pages/                          La portada, que es todo el sitio
+│  ├─ features/catalogo/              Grilla y tarjetas de producto
 │  ├─ features/pedido/                Estado, persistencia y mensaje de WhatsApp
 │  ├─ data/productos.ts               Productos y precios; único archivo a editar
 │  ├─ data/negocio.ts                 Teléfono, redes y datos del negocio

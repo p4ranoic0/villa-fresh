@@ -7,7 +7,7 @@ export default function Preguntas() {
         <div className="qas">
           <div className="qa">
             <h3>¿Necesito entregar un envase vacío?</h3>
-            <p className="dimtext">El bidón es retornable. En la primera compra coordinamos el envase; de ahí en adelante cambias vacío por lleno a precio de recarga. También vendemos el envase por separado.</p>
+            <p className="dimtext">En la primera compra coordinamos el envase; de ahí en adelante cambias vacío por lleno y pagas S/ 20 de recarga. Si necesitas comprar el envase aparte, consúltanos por WhatsApp.</p>
           </div>
           <div className="qa">
             <h3>¿En cuánto llega el pedido?</h3>
@@ -19,7 +19,7 @@ export default function Preguntas() {
           </div>
           <div className="qa">
             <h3>¿Cómo se paga?</h3>
-            <p className="dimtext">Yape, efectivo o transferencia al momento de la entrega. Para empresas se coordina la modalidad que necesite administración.</p>
+            <p className="dimtext">Con Yape al momento de la entrega. Para empresas se coordina la modalidad que necesite administración.</p>
           </div>
         </div>
       </div>

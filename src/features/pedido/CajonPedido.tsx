@@ -1,3 +1,4 @@
+import Pagos from '../../components/Pagos'
 import { useEffect, useRef } from 'react'
 import { IconoWhatsApp } from '../../components/Icono'
 import { PRODUCTOS } from '../../data/productos'
@@ -99,7 +100,7 @@ export default function CajonPedido({ abierto, onCerrar, pedido }: Props) {
             Enviar pedido por WhatsApp
           </button>
           <button className="btn btn-ghost btn-sm" id="vf-limpiar" type="button" onClick={pedido.limpiar}>Vaciar pedido</button>
-          <p className="note">Pago con Yape, efectivo o transferencia al recibir.</p>
+          <Pagos />
         </div>
       </div>
     </div>

@@ -255,6 +255,28 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .close{background:var(--acento);color:var(--sobre-acento)}
 .close .num{font-family:var(--mono);font-size:clamp(2.4rem,6.5vw,5.5rem);font-weight:600;letter-spacing:-.03em;line-height:1}
 
+/* --- medios de pago --- */
+.pagos{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.pagos-lista{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:12px}
+.pagos-lista li{display:flex;align-items:center}
+.pago-nombre{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.06em;
+  border:1px solid var(--line-2);padding:7px 12px;color:var(--ink)}
+.inv .pago-nombre{border-color:var(--inv-line);color:var(--inv-ink)}
+.inv .pagos .lbl{color:var(--inv-dim)}
+
+/* --- redes --- */
+.redes{display:flex;gap:10px;flex-wrap:wrap}
+.redes a{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);
+  padding:11px 15px;font-family:var(--mono);font-size:11.5px;font-weight:600;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--ink);
+  transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
+.redes a:hover{border-color:var(--acento);color:var(--acento)}
+.redes a:active{transform:scale(.97)}
+/* Sobre la banda de acento el texto y el borde vienen del mismo juego que la
+   banda, no del de la página. */
+.close .redes a{border-color:var(--sobre-acento-2);color:var(--sobre-acento)}
+.close .redes a:hover{border-color:var(--sobre-acento);color:var(--sobre-acento)}
+
 /* --- pie --- */
 .foot{border-top:1px solid var(--line);padding-block:44px 48px}
 .foot a{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}

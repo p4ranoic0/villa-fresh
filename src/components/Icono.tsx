@@ -131,3 +131,29 @@ export function IconoCono() {
     </svg>
   )
 }
+
+/* --------------------------------------------------------------------------
+   Redes. Marcas de terceros, redibujadas como trazo en la misma retícula
+   para que no rompan el sistema: ni el azul de Facebook ni el degradado de
+   Instagram entran en la página.
+   -------------------------------------------------------------------------- */
+
+export function IconoFacebook() {
+  return (
+    <svg className="ico" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.4 3.4h-2.3a4 4 0 0 0-4 4v2.6H6.7v3.3h2.4v7.3" />
+      <path d="M9.1 13.3h4.5" />
+      <path d="M13.6 20.6v-7.3" />
+    </svg>
+  )
+}
+
+export function IconoInstagram() {
+  return (
+    <svg className="ico" viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="3.4" y="3.4" width="17.2" height="17.2" rx="4.6" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M16.9 7.1v.01" />
+    </svg>
+  )
+}

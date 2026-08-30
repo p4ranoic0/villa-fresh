@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router'
 import Home from './pages/Home'
-import Catalogo from './pages/Catalogo'
 import { RUTAS } from './rutas'
 
 /** Mantiene el <title> al navegar en cliente; en el HTML publicado lo pone el prerender. */
@@ -24,7 +23,6 @@ export default function App() {
             Sin este alias, quien entre por /index.html carga el HTML correcto
             y luego React no encuentra ruta y lo vacía. */}
         <Route path="/index.html" element={<Home />} />
-        <Route path="/catalogo.html" element={<Catalogo />} />
       </Routes>
     </>
   )

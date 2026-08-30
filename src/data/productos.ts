@@ -3,7 +3,10 @@
    Este archivo es el único lugar donde se editan productos y precios.
    precio: null  →  la web muestra "A cotizar" y el producto se pide igual,
                     como cotización por WhatsApp.
-   Confirmados: bidón S/30, 2 bidones S/50 y recarga S/20. El resto, pendiente.
+   Confirmados: bidón S/30, 2 bidones S/50 y recarga S/20. IGV incluido.
+   Salieron del catálogo el envase vacío y el dispensador: el contraste de
+   contenido (contenido/verificacion.md) no encontró una sola publicación que
+   respaldara que se vendan. Vuelven cuando el negocio lo confirme.
    ========================================================================== */
 import type { Categoria, Producto } from '../types'
 
@@ -49,16 +52,6 @@ export const PRODUCTOS: Producto[] = [
     desc: 'Cambias tu bidón vacío por uno lleno y sellado. Precio preferencial de recarga.',
   },
   {
-    sku: 'VF-EV20',
-    nombre: 'Envase vacío 20 L',
-    categoria: 'envases',
-    precio: null,
-    unidad: 'compra única',
-    imagen: '/producto-bidon-20l.webp',
-    nota: 'Envase vacío, sin agua',
-    desc: 'Para quien empieza sin bidón. Se compra una sola vez y después solo pagas la recarga.',
-  },
-  {
     sku: 'VF-BOT',
     nombre: 'Botella personal',
     categoria: 'botellas',
@@ -68,13 +61,14 @@ export const PRODUCTOS: Producto[] = [
     desc: 'La misma agua purificada en presentación individual, para llevar. Consulta presentaciones disponibles.',
   },
   {
-    sku: 'VF-DISP',
-    nombre: 'Dispensador para bidón',
-    categoria: 'accesorios',
+    sku: 'VF-MARCA',
+    nombre: 'Botellas con tu marca',
+    categoria: 'botellas',
     precio: null,
-    unidad: 'consultar stock',
-    imagen: '/producto-dispensador.webp',
-    desc: 'Bomba o dispensador para servir del bidón de 20 L sin cargarlo. Consulta modelos y disponibilidad.',
+    unidad: 'pedido especial',
+    imagen: '/producto-botella.webp',
+    nota: 'Tu etiqueta, nuestra agua',
+    desc: 'La misma agua purificada con la etiqueta de tu empresa, tu evento o tu obra. Se cotiza según cantidad y presentación.',
   },
   {
     sku: 'VF-EMP',

@@ -1,5 +1,4 @@
-import { Link } from 'react-router'
-
+import Pagos from '../../components/Pagos'
 export default function BandaPrecio() {
   return (
     <section className="inv band" id="precio">
@@ -36,8 +35,8 @@ export default function BandaPrecio() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', borderTop: '1px solid var(--inv-line)', paddingTop: 30 }}>
-          <span className="mono" style={{ fontSize: '12px', letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--inv-dim)' }}>Pago con Yape, efectivo o transferencia al recibir</span>
-          <Link className="btn btn-inv" to="/catalogo.html">Ver catálogo completo</Link>
+          <Pagos />
+          <a className="btn btn-inv" href="#productos">Ver todos los productos</a>
         </div>
       </div>
     </section>

@@ -9,6 +9,27 @@
 
 **38 afirmaciones revisadas · 24 con respaldo · 10 sin fuente · 4 pendientes a la vista.**
 
+## Resuelto el 29/08/2026
+
+El negocio respondió y se aplicaron los cambios:
+
+| # | Qué pasó |
+|---|---|
+| 01 | **IGV sí está incluido.** Confirmado. La línea del catálogo era correcta y se queda. |
+| 02 | **Solo Yape.** Efectivo y transferencia salen de las tres apariciones. La contradicción interna queda cerrada. |
+| 03 | **Los distritos se quedan**, pero la sección deja de presentarlos como cobertura cerrada: ahora dice que son de referencia y que se consulte el propio. El botón de WhatsApp pasa a acento. |
+| 04 | **Dispensador fuera del catálogo.** Sin respaldo y sin confirmar. Vuelve si el negocio lo confirma. |
+| 05 | **La botella personal existe.** Confirmado. Se queda, con las presentaciones aún por definir. |
+| 06 | **Envase vacío fuera del catálogo**, y la pregunta frecuente deja de afirmar que se vende suelto: ahora invita a consultarlo. |
+| 08 | «Retornable» sale del texto: la respuesta describe el intercambio sin usar la palabra. |
+| 09 | «Ruta diaria» sale de los dos sitios donde estaba. |
+| 11 | **Libro de reclamaciones: aplazado** por decisión del negocio. Sigue siendo una obligación legal pendiente. |
+
+Nuevo en la misma pasada: **botellas con la marca del cliente** (`VF-MARCA`), un servicio
+de etiqueta personalizada para empresas, eventos y obra, con la tarifa por confirmar.
+
+Sin resolver: 07 («Más vendido»), 10 (comparación de sabor), 12, 13 y 14.
+
 ---
 
 ## Sin respaldo
