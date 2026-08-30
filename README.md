@@ -136,6 +136,8 @@ tratado en planta es falso y expone frente a Indecopi y a la etiqueta sanitaria.
 - [ ] Precio de **recarga**, **envase vacío**, **botellas** y **dispensador** → cargarlos en `src/data/productos.ts`
 - [ ] Presentaciones reales de botella (¿500 ml, 625 ml, 1 L?)
 - [ ] N.° de registro sanitario **DIGESA**
+- [ ] Confirmar la asociación a la **CCL** (aparece con sello en las redes; se
+      publica en la ficha técnica del hero)
 - [ ] Desglose real de los **8 pasos** de purificación (hoy se muestran las 4 etapas documentadas)
 - [ ] Correo corporativo y dominio
 - [ ] Libro de Reclamaciones (obligatorio en Perú para venta al consumidor)

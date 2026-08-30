@@ -56,6 +56,7 @@ export default function Hero() {
           <div className="spec"><span>Contenido neto</span><b>20 L</b></div>
           <div className="spec"><span>Envase</span><b>Sellado</b></div>
           <div className="spec"><span>Registro sanitario</span><b>DIGESA</b></div>
+          <div className="spec"><span>Gremio</span><b>Asociado a la CCL</b></div>
           <div className="spec"><span>Entrega</span><b>Mismo día</b></div>
           <div className="spec"><span>Cobertura</span><b>Lima Metrop.</b></div>
         </aside>

@@ -1,7 +1,8 @@
 # Villa Fresh — Consolidado de contenido de redes sociales
 
 > Fuente: página de Facebook `villafreshlima` y perfil de Instagram `villafresh.lima`.
-> Extracción realizada el 27/08/2026. Base de contenido para la construcción del sitio web.
+> Extracción realizada el 27/08/2026, ampliada el 29/08/2026 revisando el perfil de
+> Instagram publicación por publicación. Base de contenido para el sitio web.
 
 ---
 
@@ -201,3 +202,39 @@ Consulta recurrente en comentarios: **precio y cobertura por distrito** (ej. Sur
 - [ ] Correo electrónico corporativo y dominio web
 - [ ] Medios de pago aceptados además de Yape (Plin, transferencia, efectivo, factura)
 - [ ] Política de garantía / devolución de envases
+
+
+---
+
+## Ampliación del 29/08/2026 (Instagram, 9 publicaciones)
+
+Se revisó el perfil entero. Confirma lo que ya estaba y añade tres cosas.
+
+### Confirmado, sin cambios
+
+- **S/ 30 el bidón** y **S/ 50 dos bidones**, en varias piezas.
+- **pH 8.3**, ósmosis inversa, alcalinización, ozonización.
+- **«Planta propia»**, dicho literalmente: *«Gracias a nuestra planta propia,
+  garantizamos abastecimiento constante y atención rápida para proyectos de
+  cualquier tamaño.»*
+- Certificación de DIGESA, sin número.
+- Segmentación en **hogares, oficinas y negocios**, que es la misma de la sección
+  «Tres formas de pedir».
+
+### Nuevo
+
+1. **Empresa asociada a la CCL** (Cámara de Comercio de Lima). Aparece con su sello en
+   la pieza para constructoras. Es la única credencial de tercero que la marca comunica
+   además de DIGESA. Añadida a la ficha técnica del hero.
+2. **La etiqueta real del bidón** es el logotipo circular **con la bajada**
+   («Pureza que refresca tu vida»), no la versión corta. Las fotos de producto del
+   catálogo se rehicieron con esa versión.
+3. **«Precio de recarga preferencial»** se comunica, pero **sin cifra**. El pendiente
+   sigue abierto.
+
+### Lo que las redes NO tienen
+
+No hay fotografía de producto ni de planta utilizable. Las nueve publicaciones son
+piezas de marketing compuestas: llevan texto incrustado, van en cuadrado y están
+comprimidas. Las que muestran equipo de planta son fotogramas de vídeo de baja
+resolución. **El pendiente de fotografía propia no se resuelve desde aquí.**

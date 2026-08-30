@@ -28,6 +28,10 @@ que rehacerlas con fotografía propia. El detalle está en `DESIGN.md` §11.
 3b. **Logotipo de Villa Fresh colocado sobre el envase** con
     `scripts/marcar-producto.py`. Se usa el archivo de marca tal cual, sin añadirle
     texto. Los recortes sin marca quedan en `marca/sin-marca/` como fuente.
+
+    Se usa la versión **con la bajada** («Pureza que refresca tu vida»), que es la
+    que lleva el bidón real. Se comprobó mirando las publicaciones de Instagram: la
+    primera pasada usó la versión corta y no coincidía con el envase.
 4. Exportación a **WebP**. La spec pedía PNG; se cambió porque el mismo recorte pesa
    296 KB en PNG y 48 KB en WebP, con transparencia y sin pérdida visible. WebP con canal
    alfa está soportado en todos los navegadores actuales.
