@@ -24,15 +24,17 @@ export default function Home() {
   return (
     <>
       <Nav accion={<BotonCarrito unidades={pedido.unidades} onAbrir={abrirCajon} />} />
-      <Hero />
-      <Cinta />
-      <BandaPrecio />
-      <Productos onAgregar={pedido.agregar} />
-      <Proceso />
-      <Planes />
-      <Cobertura />
-      <Preguntas />
-      <Cierre />
+      <main>
+        <Hero />
+        <Cinta />
+        <BandaPrecio />
+        <Productos onAgregar={pedido.agregar} />
+        <Proceso />
+        <Planes />
+        <Cobertura />
+        <Preguntas />
+        <Cierre />
+      </main>
       <Footer />
       <CajonPedido abierto={abierto} onCerrar={cerrarCajon} pedido={pedido} />
       <WaFlotante />

@@ -1,6 +1,7 @@
 import { beforeAll, test, expect } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
+import { SITIO_URL } from '../src/rutas'
 
 beforeAll(() => {
   if (!existsSync('dist/index.html')) {
@@ -305,4 +306,69 @@ test('la web no afirma nada que no tenga fuente', async () => {
     expect({ frase, presente: html.toLowerCase().includes(frase.toLowerCase()) })
       .toEqual({ frase, presente: false })
   }
+})
+
+/* --------------------------------------------------------------------------
+   Estructura SEO
+   -------------------------------------------------------------------------- */
+
+function jsonLdPublicado(html: string): unknown {
+  const contenido = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)?.[1]
+  if (!contenido) throw new Error('el HTML publicado no contiene datos estructurados JSON-LD')
+  return JSON.parse(contenido)
+}
+
+function objetosAnidados(valor: unknown): Record<string, unknown>[] {
+  if (Array.isArray(valor)) return valor.flatMap(objetosAnidados)
+  if (valor === null || typeof valor !== 'object') return []
+  const objeto = valor as Record<string, unknown>
+  return [objeto, ...Object.values(objeto).flatMap(objetosAnidados)]
+}
+
+test('los datos estructurados publicados son JSON válido', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(jsonLdPublicado(html)).toBeTruthy()
+})
+
+test('los datos estructurados publican sólo los tres precios confirmados en PEN', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const ofertas = objetosAnidados(jsonLdPublicado(html))
+    .filter((objeto) => objeto['@type'] === 'Offer')
+
+  expect(ofertas.map((oferta) => oferta.price).sort((a, b) => Number(a) - Number(b)))
+    .toEqual([20, 30, 50])
+  expect(ofertas.map((oferta) => oferta.priceCurrency)).toEqual(['PEN', 'PEN', 'PEN'])
+})
+
+test('los datos estructurados no inventan información del negocio', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const claves = new Set(objetosAnidados(jsonLdPublicado(html)).flatMap(Object.keys))
+
+  for (const prohibida of [
+    'address',
+    'openingHours',
+    'openingHoursSpecification',
+    'geo',
+    'aggregateRating',
+    'review',
+  ]) {
+    expect(claves.has(prohibida)).toBe(false)
+  }
+})
+
+test('robots y sitemap publicados apuntan al dominio configurado', async () => {
+  const [robots, sitemap] = await Promise.all([
+    readFile('dist/robots.txt', 'utf8'),
+    readFile('dist/sitemap.xml', 'utf8'),
+  ])
+  expect(robots).toContain(SITIO_URL)
+  expect(sitemap).toContain(SITIO_URL)
+})
+
+test('la página publicada tiene un solo main y un solo enlace canonical', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  expect(html.match(/<main(?:\s|>)/g)?.length ?? 0).toBe(1)
+  expect(html.match(/<\/main>/g)?.length ?? 0).toBe(1)
+  expect(html.match(/<link rel="canonical"/g)?.length ?? 0).toBe(1)
+  expect(html).toContain(`<link rel="canonical" href="${SITIO_URL}/">`)
 })
