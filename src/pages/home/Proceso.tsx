@@ -19,7 +19,7 @@ const PASOS = [
     n: '03',
     icono: <IconoNivel />,
     titulo: 'Alcalinización a pH 8.3',
-    texto: 'El agua vuelve a un pH alcalino y estable, más suave al tomar que el agua de caño.',
+    texto: 'El agua vuelve a un pH alcalino y estable de 8.3.',
   },
   {
     n: '04',

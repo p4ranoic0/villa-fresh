@@ -10,7 +10,7 @@ export default function Cierre() {
           <div className="num" style={{ marginTop: 14 }}><a href={urlWhatsApp()} style={{ color: 'inherit' }} target="_blank" rel="noopener">{NEGOCIO.telefonoVisible}</a></div>
         </div>
         <div style={{ maxWidth: '38ch', paddingBottom: 8 }}>
-          <p style={{ fontSize: '17px', lineHeight: 1.6, color: 'var(--sobre-acento-3)' }}>Escribe la dirección y cuántos bidones. Nada de formularios, nada de esperar respuesta al día siguiente.</p>
+          <p style={{ fontSize: '17px', lineHeight: 1.6, color: 'var(--sobre-acento-3)' }}>Escribe la dirección y cuántos bidones. Nada de formularios.</p>
           {/* Las redes son donde el negocio publica de verdad: promociones,
               piezas nuevas y respuestas en comentarios. Hasta ahora sólo
               estaban en el pie, donde casi nadie llega. */}

@@ -28,7 +28,30 @@ El negocio respondió y se aplicaron los cambios:
 Nuevo en la misma pasada: **botellas con la marca del cliente** (`VF-MARCA`), un servicio
 de etiqueta personalizada para empresas, eventos y obra, con la tarifa por confirmar.
 
-Sin resolver: 07 («Más vendido»), 10 (comparación de sabor), 12, 13 y 14.
+### Segunda pasada: fuera todo lo supuesto
+
+Instrucción del negocio: **no suponer, trabajar solo con lo que hay**. Se barrió la web
+entera buscando afirmaciones sin fuente, no solo las dos que el contraste había marcado.
+
+| Estaba publicado | Por qué salió |
+|---|---|
+| Etiqueta «Más vendido» | Afirmación sobre las ventas del negocio. |
+| «Precio de promoción **permanente**» | Las redes dicen «promoción». «Permanente» es una promesa sobre el precio futuro. |
+| «Más suave al tomar que **el agua de caño**» | Comparación de sabor con un tercero. |
+| «Un solo contacto para todo el abastecimiento» | Promesa operativa. Sustituida por «abastecimiento constante desde planta propia», que sí sale de las redes. |
+| «Atención directa, **sin call center**» | Promesa operativa. Sustituida por «entrega directa desde planta, sin retrasos». |
+| «Precio por volumen **según consumo mensual**» | La escala mensual no la confirmó nadie. Queda «precio por volumen». |
+| «Nada de esperar respuesta **al día siguiente**» | Promesa de tiempo de respuesta. Queda «nada de formularios», que es comprobable en la propia página. |
+
+Y una que me inventé **mientras quitaba invenciones**: al reescribir el paso 03 puse
+«el 8.3 que va impreso en la etiqueta». La etiqueta que se ve en Instagram no lleva el
+pH. Corregido a «un pH alcalino y estable de 8.3». La misma frase estaba en `DESIGN.md`
+describiendo la promesa de marca y también se corrigió.
+
+`tests/build.test.ts` falla si cualquiera de estas frases vuelve al HTML publicado.
+
+Sin resolver: 12 (razón social y RUC), 13 (n.º DIGESA) y 14 (CCL). Los tres necesitan un
+dato externo, no una decisión.
 
 ---
 

@@ -22,8 +22,8 @@ export default function Planes() {
             <h3 style={{ fontSize: 'clamp(22px,2.4vw,30px)', marginTop: 14 }}>Que nunca falte agua en el dispensador.</h3>
             <ul className="lista">
               <li><IconoCheck /><span>Entregas programadas y reposición constante</span></li>
-              <li><IconoCheck /><span>Precio por volumen según consumo mensual</span></li>
-              <li><IconoCheck /><span>Un solo contacto para todo el abastecimiento</span></li>
+              <li><IconoCheck /><span>Precio por volumen</span></li>
+              <li><IconoCheck /><span>Abastecimiento constante desde planta propia</span></li>
             </ul>
             <div className="mono" style={{ fontSize: '16px', letterSpacing: '.06em', textTransform: 'uppercase', marginTop: 26 }}>Precio por volumen</div>
           </div>
@@ -33,7 +33,7 @@ export default function Planes() {
             <ul className="lista">
               <li><IconoCheck /><span>Tarifa especial por volumen alto</span></li>
               <li><IconoCheck /><span>Entregas que siguen el cronograma de obra</span></li>
-              <li><IconoCheck /><span>Atención directa, sin call center</span></li>
+              <li><IconoCheck /><span>Entrega directa desde planta, sin retrasos</span></li>
             </ul>
             <div className="mono" style={{ fontSize: '16px', letterSpacing: '.06em', textTransform: 'uppercase', marginTop: 26 }}>Tarifa por proyecto</div>
           </div>

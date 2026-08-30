@@ -25,7 +25,6 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'bidones',
     precio: 30,
     unidad: 'con envase',
-    etiqueta: 'Más vendido',
     imagen: '/producto-bidon-20l.webp',
     nota: 'Sellado en planta',
     desc: 'Agua purificada por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada. Envase sellado, entrega el mismo día.',
@@ -39,7 +38,7 @@ export const PRODUCTOS: Producto[] = [
     etiqueta: 'Promoción',
     imagen: '/producto-bidones.webp',
     nota: 'Sellado en planta',
-    desc: 'Dos bidones en una sola entrega, al precio de promoción permanente. La forma más conveniente de pedir.',
+    desc: 'Dos bidones en una sola entrega, al precio de promoción.',
   },
   {
     sku: 'VF-R20',
@@ -79,6 +78,6 @@ export const PRODUCTOS: Producto[] = [
     etiqueta: 'A cotizar',
     imagen: '/producto-bidones.webp',
     nota: 'Entregas programadas',
-    desc: 'Oficina, negocio u obra: entregas programadas, reposición constante y precio según consumo mensual.',
+    desc: 'Oficina, negocio u obra: entregas programadas, abastecimiento constante y precio por volumen.',
   },
 ]

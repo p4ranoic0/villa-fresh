@@ -39,7 +39,7 @@ Es: precisa · transparente · sin adornos · confiable · cercana sin ser infor
 
 **No es:** aspiracional, lujosa, "wellness", ecologista de postal, ni startup.
 No promete bienestar ni estilo de vida: promete un bidón sellado en tu puerta hoy,
-con el pH impreso al costado.
+con el pH y el proceso dichos sin adornos.
 
 ### El diferencial que ordena todo el diseño
 

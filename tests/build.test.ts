@@ -284,3 +284,25 @@ test('sobre el envase no hay más texto que el logotipo', async () => {
   expect(guion).not.toMatch(/ImageDraw|ImageFont|\.text\(/)
   expect(guion).toContain('logo-villafresh-circulo.png')
 })
+
+test('la web no afirma nada que no tenga fuente', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  // Cada una de estas estuvo publicada y ninguna salía de las redes ni del
+  // negocio: eran suposiciones del diseño presentadas como hecho. El detalle
+  // está en contenido/verificacion.md.
+  const suposiciones = [
+    'Más vendido',            // afirmación sobre las ventas del negocio
+    'promoción permanente',   // promesa sobre el precio futuro
+    'agua de caño',           // comparación de sabor con un tercero
+    'call center',            // promesa sobre cómo atienden
+    'consumo mensual',        // escala de precio que nadie confirmó
+    'día siguiente',          // promesa de tiempo de respuesta
+    'efectivo o transferencia', // medios de pago sin confirmar
+    'ruta diaria',            // descripción de la operación, no del plazo
+    'retornable',             // política de envases sin confirmar
+  ]
+  for (const frase of suposiciones) {
+    expect({ frase, presente: html.toLowerCase().includes(frase.toLowerCase()) })
+      .toEqual({ frase, presente: false })
+  }
+})
