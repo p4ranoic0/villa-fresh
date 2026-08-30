@@ -282,23 +282,6 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .foot a{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
 .foot a:hover{color:var(--acento)}
 
-/* ==========================================================================
-   CATÁLOGO
-   ========================================================================== */
-.cat-layout{display:grid;gap:40px;align-items:start}
-@media(min-width:960px){.cat-layout{grid-template-columns:230px 1fr;gap:56px}}
-
-.filters{position:sticky;top:96px;border-top:1px solid var(--line-2);padding-top:22px}
-.filters fieldset{border:0;margin:0 0 26px;padding:0}
-.filters legend{padding:0}
-.chk{display:flex;align-items:center;gap:11px;padding:9px 0;cursor:pointer;
-  font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink-2);border-bottom:1px solid var(--line)}
-.chk:hover{color:var(--ink)}
-.chk input{appearance:none;width:15px;height:15px;flex:none;border:1px solid var(--line-2);background:transparent;cursor:pointer;position:relative}
-.chk input:checked{background:var(--acento);border-color:var(--acento)}
-.chk input:checked::after{content:"";position:absolute;left:4px;top:1px;width:4px;height:8px;border:solid var(--sobre-acento);border-width:0 2px 2px 0;transform:rotate(45deg)}
-.chk .n{margin-left:auto;color:var(--dim);font-size:11px}
-
 .cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;
   border-bottom:1px solid var(--line-2);padding-bottom:18px;margin-bottom:32px}
 /* Las lineas las ponen las tarjetas, no el contenedor. Pintar el fondo de
@@ -391,7 +374,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .line .rm:hover{color:var(--peligro)}
 
 @media(max-width:639px){
-  .btn-sm,.cart-btn,.chk,.line .rm{min-height:44px}
+  .btn-sm,.cart-btn,.line .rm{min-height:44px}
   .tema-btn{width:44px;height:44px}
   .line .qty button{width:44px;height:44px}
 }

@@ -1,5 +1,5 @@
 import { PRODUCTOS } from '../../data/productos'
-import Grilla from '../../features/catalogo/Grilla'
+import Grilla from '../../features/productos/Grilla'
 
 interface Props {
   onAgregar: (sku: string) => void
