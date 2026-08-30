@@ -15,11 +15,19 @@ Todas de tarifa libre (`pricing: free`). Cinco fotografías y un vídeo.
 Los originales a resolución completa se recuperan en Adobe Stock con esos identificadores:
 la licencia está en la cuenta, así que no hace falta versionarlos aquí.
 
+**Las cuatro de producto llevan ahora el logotipo puesto.** Dejan de ser fotografías
+genéricas y pasan a representar el producto de Villa Fresh. Lo que no cambia: el envase
+de la foto no es el envase que se entrega, y si el bidón real lleva otra etiqueta hay
+que rehacerlas con fotografía propia. El detalle está en `DESIGN.md` §11.
+
 ## Tratamiento aplicado
 
 1. Licencia y descarga a resolución completa.
 2. Fondo recortado con `image_remove_background` (Photoshop API) en las tres de producto.
 3. Recorte al contenido útil, encaje en lienzo cuadrado de 760 px con 6 % de margen.
+3b. **Logotipo de Villa Fresh colocado sobre el envase** con
+    `scripts/marcar-producto.py`. Se usa el archivo de marca tal cual, sin añadirle
+    texto. Los recortes sin marca quedan en `marca/sin-marca/` como fuente.
 4. Exportación a **WebP**. La spec pedía PNG; se cambió porque el mismo recorte pesa
    296 KB en PNG y 48 KB en WebP, con transparencia y sin pérdida visible. WebP con canal
    alfa está soportado en todos los navegadores actuales.

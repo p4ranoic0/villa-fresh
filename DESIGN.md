@@ -6,7 +6,7 @@ documento existe hoy en `src/styles/site.css`. Si algo cambia en el código, se 
 
 | | |
 |---|---|
-| **Versión** | 6 — iconografía y movimiento de página |
+| **Versión** | 7 — fotografía de producto con la marca puesta |
 | **Fecha** | 29 de agosto de 2026 |
 | **Implementación** | `src/styles/site.css` · `src/components/` · `src/pages/` |
 | **Sustituye a** | `stitch_boutique_de_agua_premium/design.md` (dirección clara/premium, descartada) |
@@ -537,9 +537,36 @@ Fotografía con licencia de Adobe Stock, recortada sobre fondo transparente:
 `producto-dispensador.webp` y `portada-bidones.webp`. Sustituyen a las ilustraciones
 SVG que hubo hasta la versión 3. El detalle de cada licencia está en `marca/LICENCIAS.md`.
 
-**Ninguna imagen puede presentarse como la planta de Villa Fresh, su producto real ni
-su equipo.** Son fotografías genéricas con licencia. Cuando lleguen las fotos propias,
-se reemplazan.
+### Qué son exactamente estas imágenes
+
+Fotografía de archivo con licencia, recortada, **con el logotipo real de Villa Fresh
+colocado encima**. Eso las convierte en una representación del producto de Villa Fresh,
+no en una foto de él.
+
+La regla anterior decía que ninguna imagen podía presentarse como el producto real. Al
+poner la marca, esa regla deja de cumplirse y no tiene sentido fingir lo contrario. Lo
+que sigue en pie, y es lo que de verdad importa:
+
+- **La planta y el equipo no se representan nunca.** Ahí no hay nada que colocar: una
+  nave o unas personas de archivo serían otra planta y otra gente.
+- **Sobre el envase no se escribe nada** que no sea el logotipo tal cual está en
+  `marca/`. Ni una palabra añadida.
+- **El envase de la foto no es el envase que se entrega.** Si el bidón real lleva otra
+  etiqueta, estas fotos hay que rehacerlas con una foto propia.
+
+`scripts/marcar-producto.py` deja el proceso repetible: cambia la posición y se
+regenera. Los recortes sin marca se conservan en `marca/sin-marca/`.
+
+### La etiqueta inventada sigue prohibida
+
+El mockup que originó esto llevaba botellas rotuladas **«NATURAL ALPINE WATER»**. Eso
+no es sólo una etiqueta inventada: es falso. Villa Fresh vende **agua de mesa
+purificada por ósmosis inversa**, no agua de manantial, y esa distinción es
+precisamente el argumento de la página entera.
+
+Colocar el logotipo real es branding. Escribir una categoría de producto que la marca
+no vende es otra cosa. Cualquier texto que aparezca sobre un envase tiene que salir de
+`src/data/`, donde está el contenido verificado.
 
 ### Lo que la fotografía no puede decir
 
@@ -574,8 +601,8 @@ Lleva al pie una etiqueta mono que dice lo que es: *imagen de archivo con licenc
 No es un crédito decorativo, es la misma honestidad que rige el resto de la
 fotografía, escrita donde se ve.
 
-Prohibido: bidones genéricos con etiquetas inventadas y cualquier imagen generada que
-muestre una etiqueta que no es la de Villa Fresh.
+Prohibido: etiquetas inventadas, texto añadido sobre el envase, y cualquier imagen
+generada que muestre una etiqueta que no es la de Villa Fresh.
 
 ---
 

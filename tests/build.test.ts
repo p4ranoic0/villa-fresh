@@ -277,3 +277,13 @@ test('la banda de precio no inventa un tercer precio', async () => {
   expect(cifras).toEqual(['30', '50'])
   expect(banda).toContain('A cotizar')
 })
+
+test('sobre el envase no hay más texto que el logotipo', async () => {
+  const guion = await readFile('scripts/marcar-producto.py', 'utf8')
+  // El mockup de referencia rotulaba las botellas "NATURAL ALPINE WATER".
+  // Además de ser una etiqueta inventada es falso: Villa Fresh vende agua de
+  // mesa purificada, no de manantial, y esa distinción es el argumento de la
+  // página. El script coloca el archivo de marca y no escribe nada.
+  expect(guion).not.toMatch(/ImageDraw|ImageFont|\.text\(/)
+  expect(guion).toContain('logo-villafresh-circulo.png')
+})

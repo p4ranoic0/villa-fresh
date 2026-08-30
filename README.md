@@ -139,9 +139,10 @@ tratado en planta es falso y expone frente a Indecopi y a la etiqueta sanitaria.
 - [ ] Desglose real de los **8 pasos** de purificación (hoy se muestran las 4 etapas documentadas)
 - [ ] Correo corporativo y dominio
 - [ ] Libro de Reclamaciones (obligatorio en Perú para venta al consumidor)
-- [ ] Fotos reales del producto y de la planta. Hoy hay fotografía **genérica con
-      licencia**, que no puede presentarse como la planta ni el producto de Villa
-      Fresh; el detalle está en `marca/LICENCIAS.md`
+- [ ] Fotos reales del producto y de la planta. Hoy hay fotografía de archivo con
+      licencia **con el logotipo puesto encima** (`scripts/marcar-producto.py`), que
+      representa el producto pero no es el envase que se entrega. La planta y el
+      equipo no se representan en absoluto. Detalle en `marca/LICENCIAS.md`
 
 Los pendientes aparecen en la web entre corchetes, a propósito, para que se vean y
 no se olviden.
