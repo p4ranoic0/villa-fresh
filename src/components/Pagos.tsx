@@ -1,4 +1,5 @@
 import { existeLogoYape } from '../data/negocio'
+import { activo } from '../rutas-publicas'
 
 /**
  * Medios de pago aceptados.
@@ -19,7 +20,7 @@ export default function Pagos() {
       <ul className="pagos-lista">
         <li>
           {existeLogoYape
-            ? <img src="/pago-yape.svg" alt="Yape" height={20} />
+            ? <img src={activo('/pago-yape.svg')} alt="Yape" height={20} />
             : <span className="pago-nombre">Yape</span>}
         </li>
       </ul>

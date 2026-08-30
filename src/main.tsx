@@ -1,10 +1,11 @@
 import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
+import { BASE_PUBLICA } from './rutas-publicas'
 import './styles/site.css'
 
 const app = (
-  <BrowserRouter>
+  <BrowserRouter basename={BASE_PUBLICA}>
     <App />
   </BrowserRouter>
 )

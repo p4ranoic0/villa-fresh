@@ -9,6 +9,7 @@
    respaldara que se vendan. Vuelven cuando el negocio lo confirme.
    ========================================================================== */
 import type { Categoria, Producto } from '../types'
+import { activo } from '../rutas-publicas'
 
 export const CATEGORIAS: Categoria[] = [
   { id: 'bidones', nombre: 'Bidones y recarga' },
@@ -25,7 +26,7 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'bidones',
     precio: 30,
     unidad: 'con envase',
-    imagen: '/producto-bidon-20l.webp',
+    imagen: activo('/producto-bidon-20l.webp'),
     nota: 'Sellado en planta',
     desc: 'Agua purificada por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada. Envase sellado, entrega el mismo día.',
   },
@@ -36,7 +37,7 @@ export const PRODUCTOS: Producto[] = [
     precio: 50,
     unidad: 'ahorras S/ 10',
     etiqueta: 'Promoción',
-    imagen: '/producto-bidones.webp',
+    imagen: activo('/producto-bidones.webp'),
     nota: 'Sellado en planta',
     desc: 'Dos bidones en una sola entrega, al precio de promoción.',
   },
@@ -46,7 +47,7 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'bidones',
     precio: 20,
     unidad: 'con tu envase',
-    imagen: '/producto-bidon-20l.webp',
+    imagen: activo('/producto-bidon-20l.webp'),
     nota: 'Cambias envase por envase',
     desc: 'Cambias tu bidón vacío por uno lleno y sellado. Precio preferencial de recarga.',
   },
@@ -56,7 +57,7 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'botellas',
     precio: null,
     unidad: 'presentación por confirmar',
-    imagen: '/producto-botella.webp',
+    imagen: activo('/producto-botella.webp'),
     desc: 'La misma agua purificada en presentación individual, para llevar. Consulta presentaciones disponibles.',
   },
   {
@@ -65,7 +66,7 @@ export const PRODUCTOS: Producto[] = [
     categoria: 'botellas',
     precio: null,
     unidad: 'pedido especial',
-    imagen: '/producto-botella.webp',
+    imagen: activo('/producto-botella.webp'),
     nota: 'Tu etiqueta, nuestra agua',
     desc: 'La misma agua purificada con la etiqueta de tu empresa, tu evento o tu obra. Se cotiza según cantidad y presentación.',
   },
@@ -76,7 +77,7 @@ export const PRODUCTOS: Producto[] = [
     precio: null,
     unidad: 'precio por volumen',
     etiqueta: 'A cotizar',
-    imagen: '/producto-bidones.webp',
+    imagen: activo('/producto-bidones.webp'),
     nota: 'Entregas programadas',
     desc: 'Oficina, negocio u obra: entregas programadas, abastecimiento constante y precio por volumen.',
   },

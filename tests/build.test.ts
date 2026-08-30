@@ -3,6 +3,16 @@ import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { SITIO_URL } from '../src/rutas'
 
+const URL_PAGES = 'https://p4ranoic0.github.io/villa-fresh'
+const BASE_PAGES = '/villa-fresh/'
+
+function archivoPublicado(ruta: string): string {
+  if (!ruta.startsWith(BASE_PAGES)) {
+    throw new Error(`la ruta publicada no empieza por ${BASE_PAGES}: ${ruta}`)
+  }
+  return `dist/${ruta.slice(BASE_PAGES.length)}`
+}
+
 beforeAll(() => {
   if (!existsSync('dist/index.html')) {
     throw new Error(
@@ -71,9 +81,9 @@ test('los 3 productos sin precio se publican como "A cotizar"', async () => {
 /** Devuelve la hoja de estilo publicada, sea cual sea su hash. */
 async function cssPublicado() {
   const html = await readFile('dist/index.html', 'utf8')
-  const ruta = html.match(/href="(\/assets\/[^"]+\.css)"/)?.[1]
+  const ruta = html.match(/href="(\/[^"]+\/assets\/[^"]+\.css)"/)?.[1]
   if (!ruta) throw new Error('el HTML publicado no enlaza ninguna hoja de estilo')
-  return readFile(`dist${ruta}`, 'utf8')
+  return readFile(archivoPublicado(ruta), 'utf8')
 }
 
 test('la web publicada define los dos temas y deja mandar al sistema', async () => {
@@ -153,7 +163,7 @@ test('las tarjetas publican la foto y el dato que la foto no da', async () => {
 test('toda imagen referida existe en lo publicado', async () => {
   const html = await readFile('dist/index.html', 'utf8')
   for (const [, ruta] of html.matchAll(/(?:src|href)="(\/[^"]+\.(?:webp|jpg|png|svg))"/g)) {
-    expect({ ruta, existe: existsSync(`dist${ruta}`) }).toEqual({ ruta, existe: true })
+    expect({ ruta, existe: existsSync(archivoPublicado(ruta)) }).toEqual({ ruta, existe: true })
   }
 })
 
@@ -164,7 +174,7 @@ test('toda imagen referida existe en lo publicado', async () => {
 test('la secuencia publica el póster, no el vídeo', async () => {
   const html = await readFile('dist/index.html', 'utf8')
   // El póster (17 KB) viaja en el HTML y ya cuenta lo mismo.
-  expect(html).toContain('poster="/proceso-agua.webp"')
+  expect(html).toContain(`poster="${BASE_PAGES}proceso-agua.webp"`)
   // El vídeo (570 KB) no. Lo pide el navegador solo si la pantalla es ancha,
   // no hay preferencia por menos movimiento y no se están ahorrando datos.
   // Un src aquí lo descargaría siempre, incluso en un móvil con datos contados.
@@ -371,4 +381,26 @@ test('la página publicada tiene un solo main y un solo enlace canonical', async
   expect(html.match(/<\/main>/g)?.length ?? 0).toBe(1)
   expect(html.match(/<link rel="canonical"/g)?.length ?? 0).toBe(1)
   expect(html).toContain(`<link rel="canonical" href="${SITIO_URL}/">`)
+})
+
+/* --------------------------------------------------------------------------
+   Publicación bajo la subcarpeta de GitHub Pages
+   -------------------------------------------------------------------------- */
+
+test('toda ruta local del HTML publicado lleva la base de GitHub Pages', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const rutas = [...html.matchAll(/(?:src|href|poster)="(\/[^\"]+)"/g)].map(([, ruta]) => ruta)
+  expect(rutas.length).toBeGreaterThan(0)
+  for (const ruta of rutas) expect(ruta.startsWith(BASE_PAGES)).toBe(true)
+})
+
+test('canonical, og:url y sitemap citan la URL de GitHub Pages', async () => {
+  const [html, sitemap] = await Promise.all([
+    readFile('dist/index.html', 'utf8'),
+    readFile('dist/sitemap.xml', 'utf8'),
+  ])
+  expect(SITIO_URL).toBe(URL_PAGES)
+  expect(html).toContain(`<link rel="canonical" href="${URL_PAGES}/">`)
+  expect(html).toContain(`<meta property="og:url" content="${URL_PAGES}/">`)
+  expect(sitemap).toContain(`<loc>${URL_PAGES}/</loc>`)
 })

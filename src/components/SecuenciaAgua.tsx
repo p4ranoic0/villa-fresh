@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { activo } from '../rutas-publicas'
 
 /** Ancho a partir del cual vale la pena traerse el vídeo. */
 const ANCHO_MINIMO = '(min-width: 900px)'
@@ -77,7 +78,7 @@ export default function SecuenciaAgua() {
         if (entrada.isIntersecting) {
           if (!v.src) {
             v.preload = 'auto'
-            v.src = '/proceso-agua.mp4'
+            v.src = activo('/proceso-agua.mp4')
           }
           if (!cuadro) cuadro = requestAnimationFrame(avanzar)
         } else if (cuadro) {
@@ -101,7 +102,7 @@ export default function SecuenciaAgua() {
       <video
         ref={video}
         className="visor-video"
-        poster="/proceso-agua.webp"
+        poster={activo('/proceso-agua.webp')}
         preload="none"
         muted
         playsInline

@@ -21,10 +21,10 @@ export default function Nav({ accion }: Props) {
           </span>
         </Link>
         <div className="nav-links">
-          <a href="/#proceso">Proceso</a>
-          <a href="/#productos">Productos</a>
-          <a href="/#cobertura">Cobertura</a>
-          <a href="/#preguntas">Preguntas</a>
+          <Link to="/#proceso">Proceso</Link>
+          <Link to="/#productos">Productos</Link>
+          <Link to="/#cobertura">Cobertura</Link>
+          <Link to="/#preguntas">Preguntas</Link>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
           <span className="nav-tel">{NEGOCIO.telefonoVisible}</span>

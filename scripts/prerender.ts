@@ -23,6 +23,10 @@ function escapar(texto: string): string {
     .replaceAll('"', '&quot;')
 }
 
+function urlAbsoluta(rutaPublica: string): string {
+  return new URL(rutaPublica, `${SITIO_URL}/`).href
+}
+
 function datosEstructurados(ruta: MetaRuta): string {
   const conPrecio = PRODUCTOS.filter(
     (producto): producto is Producto & { precio: number } => producto.precio !== null,
@@ -39,7 +43,7 @@ function datosEstructurados(ruta: MetaRuta): string {
         telephone: `+51 ${NEGOCIO.telefonoVisible}`,
         areaServed: NEGOCIO.areaAtendida,
         sameAs: [NEGOCIO.facebook, NEGOCIO.instagram],
-        image: `${SITIO_URL}${ruta.imagenOg}`,
+        image: urlAbsoluta(ruta.imagenOg),
         url: `${SITIO_URL}${ruta.path}`,
         priceRange: `S/ ${Math.min(...precios)}–${Math.max(...precios)}`,
       },
@@ -48,7 +52,7 @@ function datosEstructurados(ruta: MetaRuta): string {
         sku: producto.sku,
         name: producto.nombre,
         description: producto.desc,
-        image: `${SITIO_URL}${producto.imagen}`,
+        image: urlAbsoluta(producto.imagen),
         offers: {
           '@type': 'Offer',
           price: producto.precio,
@@ -65,7 +69,7 @@ function datosEstructurados(ruta: MetaRuta): string {
 
 function cabecera(ruta: MetaRuta): string {
   const url = `${SITIO_URL}${ruta.path}`
-  const imagen = `${SITIO_URL}${ruta.imagenOg}`
+  const imagen = urlAbsoluta(ruta.imagenOg)
   return [
     `<title>${escapar(ruta.title)}</title>`,
     `<meta name="description" content="${escapar(ruta.description)}">`,
