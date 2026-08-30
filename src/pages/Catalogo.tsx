@@ -55,7 +55,7 @@ export default function Catalogo() {
               <span className="lbl">Precios en soles · IGV incluido</span>
             </div>
             <Grilla productos={visibles} onAgregar={pedido.agregar} />
-            <p className="ph" style={{ marginTop: 28 }}>[ Precios de recarga, envase, botellas y dispensador — confirmar y cargarlos en src/data/productos.ts ]</p>
+            <p className="ph" style={{ marginTop: 28 }}>[ Precios de envase, botellas y dispensador — confirmar y cargarlos en src/data/productos.ts ]</p>
           </div>
         </div>
       </section>

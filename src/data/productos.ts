@@ -3,7 +3,7 @@
    Este archivo es el único lugar donde se editan productos y precios.
    precio: null  →  la web muestra "A cotizar" y el producto se pide igual,
                     como cotización por WhatsApp.
-   Confirmados con las redes: bidón S/30 y 2 bidones S/50. El resto, pendiente.
+   Confirmados: bidón S/30, 2 bidones S/50 y recarga S/20. El resto, pendiente.
    ========================================================================== */
 import type { Categoria, Producto } from '../types'
 
@@ -42,7 +42,7 @@ export const PRODUCTOS: Producto[] = [
     sku: 'VF-R20',
     nombre: 'Recarga 20 L',
     categoria: 'bidones',
-    precio: null,
+    precio: 20,
     unidad: 'con tu envase',
     imagen: '/producto-bidon-20l.webp',
     nota: 'Cambias envase por envase',

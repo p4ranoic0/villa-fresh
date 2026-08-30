@@ -196,7 +196,7 @@ Consulta recurrente en comentarios: **precio y cobertura por distrito** (ej. Sur
 - [ ] Dirección de la planta / punto de atención
 - [ ] Horario de atención y de reparto
 - [ ] Distritos exactos de cobertura y costo de delivery por zona
-- [ ] Precio de la recarga y del bidón vacío (venta de envase)
+- [ ] Precio del bidón vacío (venta de envase)
 - [ ] Escalas de precio por volumen (5, 10, 20+ bidones)
 - [ ] N.° de registro sanitario DIGESA
 - [ ] Correo electrónico corporativo y dominio web
@@ -229,8 +229,9 @@ Se revisó el perfil entero. Confirma lo que ya estaba y añade tres cosas.
 2. **La etiqueta real del bidón** es el logotipo circular **con la bajada**
    («Pureza que refresca tu vida»), no la versión corta. Las fotos de producto del
    catálogo se rehicieron con esa versión.
-3. **«Precio de recarga preferencial»** se comunica, pero **sin cifra**. El pendiente
-   sigue abierto.
+3. **«Precio de recarga preferencial»** se comunica en las redes, pero **sin cifra**.
+   La confirmó el negocio directamente el 29/08/2026: **S/ 20 con tu envase**. Es el
+   tercer precio de la banda, que hasta entonces tenía dos cifras y un hueco.
 
 ### Lo que las redes NO tienen
 

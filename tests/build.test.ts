@@ -52,13 +52,13 @@ test('el catálogo publica los 7 productos dentro del HTML, sin depender de Java
   }
 })
 
-test('los 5 productos sin precio se publican como "A cotizar"', async () => {
+test('los 4 productos sin precio se publican como "A cotizar"', async () => {
   // Cuenta exacta en vez de buscar "S/ 0.00": el total del cajón vacío ES "S/ 0.00",
   // y React separa textos contiguos con <!-- --> al renderizar en servidor, así que
   // afirmar sobre el fragmento "S/ 0.00 <small>" sería frágil. Se cuenta el nodo de
   // precio porque VF-EMP también conserva una etiqueta literal con el texto "A cotizar".
   const html = await readFile('dist/catalogo.html', 'utf8')
-  expect(html.split('<div class="price pending">A cotizar</div>').length - 1).toBe(5)
+  expect(html.split('<div class="price pending">A cotizar</div>').length - 1).toBe(4)
 })
 
 /* --------------------------------------------------------------------------
@@ -271,11 +271,10 @@ test('el texto secundario se aleja del titular lo mismo en los dos temas', async
 test('la banda de precio no inventa un tercer precio', async () => {
   const html = await readFile('dist/index.html', 'utf8')
   const banda = html.slice(html.indexOf('id="precio"'), html.indexOf('id="proceso"'))
-  // Los dos precios confirmados con las redes, y nada más. La tercera celda
-  // dice lo mismo que dice el catálogo cuando precio es null.
+  // Los tres precios confirmados por el negocio, y ninguno más. Si aparece
+  // una cuarta cifra en esta banda, alguien se la ha inventado.
   const cifras = [...banda.matchAll(/<b>(\d+)<\/b>/g)].map((m) => m[1])
-  expect(cifras).toEqual(['30', '50'])
-  expect(banda).toContain('A cotizar')
+  expect(cifras).toEqual(['30', '50', '20'])
 })
 
 test('sobre el envase no hay más texto que el logotipo', async () => {

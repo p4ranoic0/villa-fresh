@@ -29,14 +29,9 @@ export default function BandaPrecio() {
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Dos bidones en una sola entrega, al precio de promoción permanente.</p>
           </div>
           <div>
-            <span className="lbl">03 · Volumen y recarga</span>
-            {/* No hay un tercer precio confirmado y no se inventa. Pero la
-                celda tiene que pesar lo mismo que las otras dos o la fila se
-                rompe, así que ocupa el mismo alto y se apoya en la misma
-                línea. "A cotizar" es lo que ya dice el catálogo cuando
-                precio es null: una sola forma de decirlo en todo el sitio. */}
-            <div className="amt amt-txt"><span>A cotizar</span></div>
-            <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Oficina, negocio u obra: el precio baja según el consumo mensual. Se cotiza en el momento.</p>
+            <span className="lbl">03 · Recarga</span>
+            <div className="amt"><sup>S/</sup><b>20</b></div>
+            <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Cambias tu bidón vacío por uno lleno y sellado. Para empresa y obra, el precio baja por volumen.</p>
           </div>
         </div>
 
