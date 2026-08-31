@@ -206,6 +206,9 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .btn-ghost:hover{border-color:var(--acento);color:var(--acento)}
 .btn-sm{padding:11px 18px;min-height:40px;font-size:11.5px;letter-spacing:.1em}
 .ico{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+/* Las marcas de terceros van rellenas, no en trazo: son sus trazados
+   oficiales y aproximarlos con una línea los vuelve irreconocibles. */
+.marca-ico{width:17px;height:17px;flex:none;fill:currentColor;stroke:none}
 
 /* --- conmutador de tema --- */
 /* El boton ofrece el tema contrario al que se esta viendo. Los dos iconos

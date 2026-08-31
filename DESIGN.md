@@ -486,7 +486,18 @@ a que se invente uno. Se retiran sólo cuando el dato real ocupa su lugar.
 
 ## 10. Iconografía
 
-**SVG en línea, siempre.** Sin librerías, sin fuentes de iconos, sin emoji.
+**SVG en línea, siempre.** Sin fuentes de iconos y sin emoji.
+
+Con una excepción que se ganó a base de equivocarse: **las marcas de terceros no se
+dibujan**. WhatsApp, Facebook e Instagram usan sus trazados oficiales de
+[Simple Icons](https://simpleicons.org) (CC0), copiados al repositorio, no traídos
+de un CDN. Un icono de línea aproximando un logotipo conocido no se lee como la
+marca: se lee como un dibujo genérico, y era una de las cosas que hacían que la
+página no pareciera real. Van rellenas y con la clase `.marca-ico`, al revés que
+los iconos propios, que van en trazo.
+
+La regla, entonces: **lo que es de Villa Fresh se dibuja; lo que es de otro se usa
+tal cual.**
 
 ```css
 .ico { width:17px; height:17px; fill:none; stroke:currentColor;
