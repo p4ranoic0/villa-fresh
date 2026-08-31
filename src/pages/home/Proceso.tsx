@@ -35,7 +35,6 @@ export default function Proceso() {
       <div className="wrap">
         <div className="split">
           <div>
-            <span className="lbl lbl-cyan">El proceso</span>
             <h2 style={{ marginTop: 18 }}>Ocho pasos<br />entre el agua<br />y tu vaso.</h2>
           </div>
           <p className="lede" style={{ maxWidth: '46ch' }}>No compramos agua a terceros ni reenvasamos. Tratamos, controlamos y embotellamos nosotros mismos, y por eso podemos responder por cada bidón que sale de planta.</p>

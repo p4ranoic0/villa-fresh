@@ -1,3 +1,4 @@
+import { activo } from '../../rutas-publicas'
 import { IconoWhatsApp } from '../../components/Icono'
 import { urlWhatsApp } from '../../data/negocio'
 
@@ -33,7 +34,19 @@ export default function Hero() {
           </div>
         </div>
 
-        <aside className="ficha">
+        <div className="hero-col">
+          {/* La portada de una marca que vende un objeto no puede no
+              enseñarlo. Hasta aquí el hero era texto y una tabla, y por eso
+              se leía como un documento y no como una tienda. */}
+          <img
+            className="hero-foto"
+            src={activo('/producto-bidon-20l.webp')}
+            alt="Bidón de 20 litros de Villa Fresh, sellado"
+            width={760}
+            height={760}
+            fetchPriority="high"
+          />
+          <aside className="ficha">
           <div
             style={{
               display: 'flex',
@@ -56,7 +69,8 @@ export default function Hero() {
           <div className="spec"><span>Gremio</span><b>Asociado a la CCL</b></div>
           <div className="spec"><span>Entrega</span><b>Mismo día</b></div>
           <div className="spec"><span>Cobertura</span><b>Lima Metrop.</b></div>
-        </aside>
+          </aside>
+        </div>
       </div>
     </header>
   )

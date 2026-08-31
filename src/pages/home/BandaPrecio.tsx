@@ -5,7 +5,6 @@ export default function BandaPrecio() {
       <div className="wrap">
         <div className="split">
           <div>
-            <span className="lbl">Precio directo de planta</span>
             <h2 style={{ marginTop: 18 }}>Lo que cuesta<br />es lo que cuesta.</h2>
           </div>
           <p style={{ fontSize: '17px', lineHeight: 1.65, maxWidth: '44ch' }}>
@@ -15,20 +14,20 @@ export default function BandaPrecio() {
 
         <div className="precios">
           <div>
-            <span className="lbl">01 · Un bidón</span>
+            <span className="lbl">Un bidón</span>
             <div className="amt"><sup>S/</sup><b>30</b></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Bidón de 20 L sellado, entregado en tu puerta el mismo día.</p>
           </div>
           <div style={{ background: 'var(--inv-realce)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span className="lbl" style={{ color: 'var(--inv-ink)' }}>02 · Dos bidones</span>
+              <span className="lbl" style={{ color: 'var(--inv-ink)' }}>Dos bidones</span>
               <span className="mono" style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '.14em', background: 'var(--inv-ink)', color: 'var(--inv)', padding: '4px 8px' }}>AHORRAS S/10</span>
             </div>
             <div className="amt"><sup>S/</sup><b>50</b></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Dos bidones en una sola entrega, al precio de promoción.</p>
           </div>
           <div>
-            <span className="lbl">03 · Recarga</span>
+            <span className="lbl">Recarga</span>
             <div className="amt"><sup>S/</sup><b>20</b></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Cambias tu bidón vacío por uno lleno y sellado. Para empresa y obra, el precio baja por volumen.</p>
           </div>

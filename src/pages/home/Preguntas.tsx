@@ -2,7 +2,6 @@ export default function Preguntas() {
   return (
     <section className="band" id="preguntas" style={{ paddingTop: 0 }}>
       <div className="wrap">
-        <span className="lbl lbl-cyan">Preguntas</span>
         <h2 style={{ margin: '18px 0 40px' }}>Lo que más nos preguntan.</h2>
         <div className="qas">
           <div className="qa">

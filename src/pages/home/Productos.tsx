@@ -19,7 +19,6 @@ export default function Productos({ onAgregar }: Props) {
       <div className="wrap">
         <div className="split">
           <div>
-            <span className="lbl lbl-cyan">Qué pedir</span>
             <h2 style={{ marginTop: 18 }}>Arma tu pedido.</h2>
           </div>
           <p className="lede" style={{ maxWidth: '46ch' }}>

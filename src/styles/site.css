@@ -45,6 +45,7 @@
   --nav-fondo:rgba(242,241,236,.97);
   --ficha-fondo:rgba(214,210,199,.55);
   --velo:rgba(10,22,34,.55);
+  --foto-sombra:rgba(10,22,34,.16);
   --inv-realce:rgba(62,193,255,.12);
   --peligro:#b0202a;       /* color de estado destructivo, no de marca */
 
@@ -104,6 +105,7 @@
   --nav-fondo:rgba(4,16,29,.92);
   --ficha-fondo:rgba(10,28,48,.55);
   --velo:rgba(2,8,15,.72);
+  --foto-sombra:rgba(0,0,0,.5);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
   /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
@@ -142,6 +144,7 @@
   --nav-fondo:rgba(4,16,29,.92);
   --ficha-fondo:rgba(10,28,48,.55);
   --velo:rgba(2,8,15,.72);
+  --foto-sombra:rgba(0,0,0,.5);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
   /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
@@ -412,9 +415,14 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
    PATRONES DE PÁGINA (home)
    ========================================================================== */
 .hero{position:relative;overflow:hidden}
-    .hero .motif{position:absolute;right:-10%;top:-8%;width:min(640px,58vw);aspect-ratio:100/120;
-      fill:none;stroke:var(--acento);stroke-width:1.1;stroke-linejoin:round;opacity:.15;pointer-events:none}
+    /* Con el producto de verdad en el hero, la marca de agua pasa a segundo
+       plano: antes era el unico grafico y ahora compite con la foto. Se
+       encoge, baja de opacidad y se va al borde para no cruzar la ficha. */
+    .hero .motif{position:absolute;right:-16%;top:-4%;width:min(460px,44vw);aspect-ratio:100/120;
+      fill:none;stroke:var(--acento);stroke-width:1.1;stroke-linejoin:round;opacity:.07;pointer-events:none}
     .hero-grid{position:relative;display:grid;gap:44px;align-items:start}
+    .hero-col{display:grid;gap:22px;justify-items:center}
+    .hero-foto{width:min(300px,72vw);height:auto;filter:drop-shadow(0 26px 40px var(--foto-sombra))}
     @media(min-width:960px){.hero-grid{grid-template-columns:1fr 360px;gap:72px}}
     .ficha{border:1px solid var(--line-2);padding:24px 24px 18px;background:var(--ficha-fondo)}
     .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}

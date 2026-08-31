@@ -29,7 +29,6 @@ export default function Cobertura() {
       <div className="wrap">
         <div className="split">
           <div>
-            <span className="lbl lbl-cyan">Cobertura</span>
             <h2 style={{ marginTop: 18 }}>Repartimos<br />en Lima.</h2>
           </div>
           <p className="lede" style={{ maxWidth: '46ch' }}>Repartimos en Lima Metropolitana. Estos son distritos de referencia, no la lista cerrada: <strong style={{ fontWeight: 600 }}>consulta el tuyo por WhatsApp</strong> y te confirmamos en el momento si llegamos y en qué horario.</p>

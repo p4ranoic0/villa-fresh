@@ -4,7 +4,6 @@ export default function Planes() {
   return (
     <section className="band" id="planes" style={{ background: 'var(--panel)' }}>
       <div className="wrap">
-        <span className="lbl lbl-cyan">Para quién</span>
         <h2 style={{ margin: '18px 0 44px' }}>Tres formas de pedir.</h2>
         <div className="cols3">
           <div>
