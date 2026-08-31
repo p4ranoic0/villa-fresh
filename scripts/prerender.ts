@@ -79,13 +79,18 @@ function cabecera(ruta: MetaRuta): string {
     '<meta property="og:type" content="website">',
     `<meta property="og:url" content="${escapar(url)}">`,
     '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="robots" content="noindex, nofollow">',
     `<link rel="canonical" href="${escapar(url)}">`,
     datosEstructurados(ruta),
   ].join('\n')
 }
 
 async function escribirArchivosSeo(): Promise<void> {
-  const robots = `User-agent: *\nAllow: /\nSitemap: ${SITIO_URL}/sitemap.xml\n`
+  // El sitio existe para enseñárselo al cliente, no para captar tráfico todavía.
+  // Mientras siga habiendo datos por confirmar, robots.txt cierra el paso y la
+  // etiqueta `noindex` del <head> lo remata: robots.txt sólo evita el rastreo,
+  // no que un enlace externo acabe indexando la URL igualmente.
+  const robots = `User-agent: *\nDisallow: /\n`
   const urls = RUTAS.map(
     (ruta) => `  <url><loc>${escapar(`${SITIO_URL}${ruta.path}`)}</loc></url>`,
   ).join('\n')

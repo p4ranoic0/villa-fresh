@@ -14,7 +14,10 @@ export default function TarjetaProducto({ producto, onAgregar }: Props) {
         <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
         {producto.nota && <span className="nota">{producto.nota}</span>}
       </div>
-      <div className="sku">{producto.sku}</div>
+      {/* El SKU se quito de la cara de la tarjeta: VF-B20X2 es la
+          referencia interna del almacen, no algo que le sirva a
+          quien esta comprando agua para su casa. Sigue en los datos
+          y sigue siendo la clave del pedido. */}
       <h3>{producto.nombre}</h3>
       <p className="desc">{producto.desc}</p>
       <div className="foot-row">

@@ -32,7 +32,6 @@ export default function Productos({ onAgregar }: Props) {
           <span className="lbl">Precios en soles · IGV incluido</span>
         </div>
         <Grilla productos={PRODUCTOS} onAgregar={onAgregar} />
-        <p className="ph" style={{ marginTop: 28 }}>[ Presentaciones de botella y tarifa de pedidos con marca — confirmar y cargarlas en src/data/productos.ts ]</p>
       </div>
     </section>
   )

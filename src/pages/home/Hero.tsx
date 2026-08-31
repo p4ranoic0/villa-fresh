@@ -11,14 +11,19 @@ export default function Hero() {
       </svg>
       <div className="wrap hero-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-          <span className="lbl lbl-cyan">Planta propia · Sin intermediarios · Lima</span>
+          {/* Antes esto abría con «NO REVENDEMOS AGUA. LA FABRICAMOS.» en
+              versalitas de 100px. El dato es bueno y sigue en la página, pero
+              como primera frase abría negando algo que nadie había acusado, y
+              a ese tamaño no sonaba a alguien hablando: sonaba a pancarta.
+              Ahora la portada dice lo que la portada tiene que decir —qué
+              vendemos y cuándo llega— y el diferencial va en la bajada. */}
           <h1>
-            No revendemos<br />agua.<br />La fabricamos.
+            Hacemos el agua<br />y te la llevamos<br />el mismo día.
           </h1>
           <p className="lede" style={{ maxWidth: '46ch' }}>
-            Ósmosis inversa, alcalinización a pH 8.3 y ozonización, en nuestra propia planta
-            en Lima. De la planta a tu puerta el mismo día, sin un solo intermediario en el
-            camino.
+            No se la compramos a nadie para revenderla: sale de nuestra planta en Lima,
+            por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada. De ahí a tu puerta,
+            sin intermediarios.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <a
@@ -46,29 +51,18 @@ export default function Hero() {
             height={760}
             fetchPriority="high"
           />
+          {/* Eran once filas en monoespaciada mayúscula: PRODUCTO, TRATAMIENTO,
+              OZONIZADA, PASOS DE PURIFICACIÓN, GREMIO, COBERTURA… Una hoja de
+              inventario en el sitio donde el visitante decide si compra. Quedan
+              las cinco que alguien preguntaría de verdad antes de pedir, y en
+              castellano corriente en vez de mayúsculas espaciadas. */}
           <aside className="ficha">
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              justifyContent: 'space-between',
-              marginBottom: 18,
-            }}
-          >
-            <span className="lbl lbl-cyan">Ficha técnica</span>
-            <span className="lbl" style={{ fontSize: '9.5px' }}>Bidón 20 L</span>
-          </div>
-          <div className="spec" style={{ borderTop: 0 }}><span>Producto</span><b>Agua de mesa</b></div>
-          <div className="spec"><span>Tratamiento</span><b>Ósmosis inversa</b></div>
-          <div className="spec"><span>pH</span><b style={{ color: 'var(--acento)', fontSize: '15px' }}>8.3</b></div>
-          <div className="spec"><span>Ozonizada</span><b>Sí</b></div>
-          <div className="spec"><span>Pasos de purificación</span><b>08</b></div>
-          <div className="spec"><span>Contenido neto</span><b>20 L</b></div>
-          <div className="spec"><span>Envase</span><b>Sellado</b></div>
-          <div className="spec"><span>Registro sanitario</span><b>DIGESA</b></div>
-          <div className="spec"><span>Gremio</span><b>Asociado a la CCL</b></div>
-          <div className="spec"><span>Entrega</span><b>Mismo día</b></div>
-          <div className="spec"><span>Cobertura</span><b>Lima Metrop.</b></div>
+            <p className="ficha-titulo">El bidón de 20 litros</p>
+            <div className="spec" style={{ borderTop: 0 }}><span>Tratamiento</span><b>Ósmosis inversa</b></div>
+            <div className="spec"><span>pH</span><b style={{ color: 'var(--acento)' }}>8.3</b></div>
+            <div className="spec"><span>Envase</span><b>Sellado en planta</b></div>
+            <div className="spec"><span>Registro sanitario</span><b>DIGESA</b></div>
+            <div className="spec"><span>Entrega</span><b>El mismo día</b></div>
           </aside>
         </div>
       </div>

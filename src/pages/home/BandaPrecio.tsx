@@ -21,7 +21,7 @@ export default function BandaPrecio() {
           <div style={{ background: 'var(--inv-realce)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <span className="lbl" style={{ color: 'var(--inv-ink)' }}>Dos bidones</span>
-              <span className="mono" style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '.14em', background: 'var(--inv-ink)', color: 'var(--inv)', padding: '4px 8px' }}>AHORRAS S/10</span>
+              <span style={{ fontSize: '12.5px', fontWeight: 600, background: 'var(--inv-ink)', color: 'var(--inv)', padding: '4px 10px', borderRadius: '99px' }}>Ahorras S/ 10</span>
             </div>
             <div className="amt"><sup>S/</sup><b>50</b></div>
             <p style={{ fontSize: '15px', lineHeight: 1.6, marginTop: 18, maxWidth: '28ch' }}>Dos bidones en una sola entrega, al precio de promoción.</p>

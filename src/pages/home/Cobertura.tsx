@@ -33,7 +33,6 @@ export default function Cobertura() {
           </div>
           <p className="lede" style={{ maxWidth: '46ch' }}>Repartimos en Lima Metropolitana. Estos son distritos de referencia, no la lista cerrada: <strong style={{ fontWeight: 600 }}>consulta el tuyo por WhatsApp</strong> y te confirmamos en el momento si llegamos y en qué horario.</p>
         </div>
-        <p className="ph" style={{ marginBottom: 22 }}>[ Distritos referenciales — confirmar la ruta real de reparto ]</p>
         <div className="distritos">
           {DISTRITOS.map((distrito) => <div className="dist" key={distrito}>{distrito}</div>)}
         </div>

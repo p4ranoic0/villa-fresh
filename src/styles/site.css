@@ -1,6 +1,7 @@
 /* ==========================================================================
    VILLA FRESH — hoja de estilo del sitio
-   Dirección visual: "ficha técnica" (azul noche + tipografía de datos).
+   Dirección visual: papel templado, titulares en caja normal, el dato concreto
+   como elemento grafico. Ver DESIGN.md §2 para por que ya no es "ficha tecnica".
    Los valores nacen de design/tokens.css; aquí viven las clases del sitio.
    ========================================================================== */
 
@@ -21,17 +22,21 @@
 :root{
   color-scheme:light;
 
-  --ground:#f2f1ec;        /* el papel manda */
-  --panel:#e3e1db;         /* bandas y tarjetas */
-  --panel-2:#dedbd2;       /* tarjeta elevada */
-  --ink:#0a1622;           /* titulares */
+  /* Los grises del tema claro salian todos del mismo azul-negro del logotipo
+     y la pagina entera quedaba en temperatura fria: correcta y antipatica. Se
+     giran unos grados hacia el calido, lo justo para que el papel parezca
+     papel. El acento sigue siendo el azul literal de la marca. */
+  --ground:#f4f2ee;        /* el papel manda */
+  --panel:#e7e3dc;         /* bandas y tarjetas */
+  --panel-2:#e0dbd2;       /* tarjeta elevada */
+  --ink:#121519;           /* titulares */
   /* Medidos en L*, no a ojo. Con los valores anteriores la bajada se alejaba
      29.9 del titular en claro y sólo 12.6 en oscuro: el texto que explica la
      página se caía justo en el tema por defecto. Ahora los dos temas alejan
      lo mismo. */
-  --ink-2:#32414e;         /* parrafos */
-  --ink-3:#24303d;         /* bajadas */
-  --dim:#485662;           /* etiquetas mono, metadatos */
+  --ink-2:#3c4046;         /* parrafos */
+  --ink-3:#2c3035;         /* bajadas */
+  --dim:#525659;           /* etiquetas y metadatos */
   --line:rgba(10,22,34,.16);
   --line-2:rgba(10,22,34,.34);--line2:rgba(10,22,34,.34);
 
@@ -177,24 +182,32 @@ a:hover{color:var(--acento-alto)}
 :focus-visible{outline:2px solid var(--acento);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
-h1,h2{margin:0;font-weight:800;letter-spacing:-.035em;line-height:.94;text-transform:uppercase}
+/* Los titulares iban en versalitas de 800 a line-height .94: siete bloques
+   negros consecutivos, todos con el mismo ritmo. Leido de corrido no era una
+   voz, era un cartel repetido siete veces, y por eso el sitio se sentia
+   fabricado. En caja normal la pagina pasa a hablar en lugar de anunciar. */
+h1,h2{margin:0;font-weight:700;letter-spacing:-.022em;line-height:1.05}
 h3{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-h1{font-size:clamp(2.4rem,6.4vw,6.25rem)}
-h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
+h1{font-size:clamp(2.15rem,4.9vw,4.15rem)}
+h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 
 .wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
 .band{padding-block:var(--band)}
 .mono{font-family:var(--mono)}
-.lbl{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+/* Esta clase sola aparecia quince veces: 6 PRODUCTOS, PAGO AL RECIBIR, UN
+   BIDON, HOGAR, PEDIDOS POR WHATSAPP... Quince letreros en monoespaciada
+   mayuscula espaciada, que es la tipografia con la que se reconoce una
+   maqueta generada a ojo. Lo que etiquetan sigue siendo util; lo que sobraba
+   era el disfraz. */
+.lbl{font-size:13px;font-weight:600;letter-spacing:0;color:var(--dim)}
 .lbl-cyan{color:var(--acento)}
 .lede{font-size:clamp(16px,1.35vw,19px);line-height:1.62;color:var(--ink-3);font-weight:400}
 .dimtext{color:var(--ink-2);font-size:16px;line-height:1.62}
-.ph{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border:1px dashed var(--line-2);padding:9px 13px}
 
 /* --- botones --- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;border:0;cursor:pointer;
-  font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-  padding:17px 28px;min-height:52px;
+  font-family:var(--disp);font-size:15px;font-weight:600;letter-spacing:0;
+  padding:15px 24px;min-height:50px;border-radius:8px;
   transition:background .2s ease,color .2s ease,border-color .2s ease,transform .16s var(--sal)}
 /* Nada mas: el elemento acusa la pulsacion y con eso el sitio deja de
    parecer una imagen. Es la unica animacion que se ve decenas de veces. */
@@ -207,7 +220,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .btn-inv:hover{background:var(--inv-btn-alto);color:var(--inv-btn-ink-alto)}
 .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
 .btn-ghost:hover{border-color:var(--acento);color:var(--acento)}
-.btn-sm{padding:11px 18px;min-height:40px;font-size:11.5px;letter-spacing:.1em}
+.btn-sm{padding:10px 18px;min-height:40px;font-size:14px;letter-spacing:0;border-radius:7px}
 .ico{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 /* Las marcas de terceros van rellenas, no en trazo: son sus trazados
    oficiales y aproximarlos con una línea los vuelve irreconocibles. */
@@ -234,8 +247,8 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .brand{display:flex;align-items:center;gap:13px;color:var(--ink)}
 .brand:hover{color:var(--ink)}
 .brand-name{display:block;font-weight:800;font-size:16px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
-.brand-tag{display:block;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:4px}
-.nav-links{display:none;gap:26px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.2em;text-transform:uppercase}
+.brand-tag{display:block;font-size:12.5px;font-weight:400;letter-spacing:0;color:var(--dim);margin-top:3px}
+.nav-links{display:none;gap:28px;font-size:14.5px;font-weight:500;letter-spacing:0}
 .nav-links a{color:var(--dim)}
 .nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--acento)}
 .nav-tel{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:none}
@@ -243,13 +256,30 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 
 /* --- ficha técnica --- */
 .spec{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-top:1px solid var(--line);
-  font-family:var(--mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
-.spec b{font-weight:600;color:var(--ink);letter-spacing:.05em}
+  font-size:14px;color:var(--ink-2)}
+.spec b{font-weight:600;color:var(--ink)}
 
-/* --- cinta --- */
-.ribbon{border-block:1px solid var(--acento);background:var(--acento-suave);padding:14px 0;overflow:hidden}
-.ribbon div{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.26em;text-transform:uppercase;color:var(--acento);white-space:nowrap;animation:mq 46s linear infinite}
-@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* La cinta corriendo con PLANTA PROPIA · SIN INTERMEDIARIOS · PH 8.3 se
+   quito entera. Repetia en mayusculas lo que la pagina ya decia debajo, y el
+   marquee infinito es mobiliario de landing generada: movimiento que no
+   informa de nada y no para nunca. */
+
+/* --- ficha del hero --- */
+.ficha-titulo{margin:0 0 14px;font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+
+/* --- nota de pendientes ---------------------------------------------------
+   Deliberadamente no se parece a ninguna otra seccion: es una anotacion para
+   Villa Fresh, no contenido del sitio, y tiene que leerse como tal de un
+   vistazo. Por eso va fuera del ancho de lectura habitual y en cuerpo pequeno.
+   -------------------------------------------------------------------------- */
+.nota-band{padding-block:0 var(--band)}
+.nota-caja{max-width:62ch;border:1px solid var(--line);border-radius:12px;padding:26px 28px;background:var(--panel)}
+.nota-titulo{margin:0 0 10px;font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
+.nota-intro{margin:0 0 16px;font-size:15px;line-height:1.6;color:var(--ink-2)}
+.nota-lista{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.nota-lista li{font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.nota-lista b{color:var(--ink);font-weight:600}
 
 /* --- banda de papel --- */
 .inv{background:var(--inv);color:var(--inv-ink)}
@@ -265,16 +295,16 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .pagos{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .pagos-lista{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:12px}
 .pagos-lista li{display:flex;align-items:center}
-.pago-nombre{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.06em;
-  border:1px solid var(--line-2);padding:7px 12px;color:var(--ink)}
+.pago-nombre{font-size:14px;font-weight:600;letter-spacing:0;
+  border:1px solid var(--line-2);border-radius:7px;padding:7px 13px;color:var(--ink)}
 .inv .pago-nombre{border-color:var(--inv-line);color:var(--inv-ink)}
 .inv .pagos .lbl{color:var(--inv-dim)}
 
 /* --- redes --- */
 .redes{display:flex;gap:10px;flex-wrap:wrap}
 .redes a{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);
-  padding:11px 15px;font-family:var(--mono);font-size:11.5px;font-weight:600;
-  letter-spacing:.13em;text-transform:uppercase;color:var(--ink);
+  padding:10px 15px;border-radius:8px;font-size:14px;font-weight:500;
+  letter-spacing:0;color:var(--ink);
   transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .redes a:hover{border-color:var(--acento);color:var(--acento)}
 .redes a:active{transform:scale(.97)}
@@ -285,7 +315,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 
 /* --- pie --- */
 .foot{border-top:1px solid var(--line);padding-block:44px 48px}
-.foot a{color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.foot a{color:var(--dim);font-size:14px;letter-spacing:0}
 .foot a:hover{color:var(--acento)}
 
 .cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;
@@ -308,34 +338,33 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 
 .card{background:var(--ground);display:flex;flex-direction:column;padding:24px;transition:background .25s ease}
 .card:hover{background:var(--panel)}
-.card .shot{background:var(--panel);aspect-ratio:1/1;display:grid;place-items:center;padding:22px;position:relative;margin-bottom:20px}
+.card .shot{background:var(--panel);border-radius:10px;aspect-ratio:1/1;display:grid;place-items:center;padding:22px;position:relative;margin-bottom:20px}
 .card .shot img,.card .shot svg{max-height:100%;width:auto;transition:transform .4s var(--sal)}
 /* En una pantalla tactil el hover se dispara al tocar y se queda
    pegado: la tarjeta se agranda sola y no vuelve. */
 @media (hover:hover) and (pointer:fine){
   .card:hover .shot img,.card:hover .shot svg{transform:scale(1.04)}
 }
-.card .tag{position:absolute;top:12px;left:12px;font-family:var(--mono);font-size:9.5px;font-weight:600;
-  letter-spacing:.16em;text-transform:uppercase;background:var(--acento);color:var(--sobre-acento);padding:5px 9px}
+.card .tag{position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;
+  letter-spacing:0;background:var(--acento);color:var(--sobre-acento);padding:5px 11px;border-radius:99px}
 /* Va dentro del encuadre, sobre el fondo del panel y no sobre la foto:
    el recorte esta centrado y el borde inferior queda libre. */
-.card .nota{position:absolute;left:12px;right:12px;bottom:12px;font-family:var(--mono);font-size:9.5px;
-  font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);text-align:center}
-.card .sku{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.card .nota{position:absolute;left:12px;right:12px;bottom:12px;font-size:12.5px;
+  font-weight:400;letter-spacing:0;color:var(--dim);text-align:center}
 .card h3{font-size:21px;margin:10px 0 8px}
 .card .desc{font-size:14.5px;line-height:1.55;color:var(--ink-2);flex:1}
 .card .foot-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
 .card .price{font-family:var(--mono);font-size:20px;font-weight:600;letter-spacing:-.01em;line-height:1.25}
 .card .price small{display:block}
-.card .price small{font-size:10.5px;font-weight:400;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:3px}
-.card .price.pending{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:500;line-height:1.5}
+.card .price small{font-size:13px;font-weight:400;color:var(--dim);letter-spacing:0;margin-top:3px}
+.card .price.pending{font-size:14px;letter-spacing:0;color:var(--dim);font-weight:500;line-height:1.5}
 
-.empty{border:1px dashed var(--line-2);padding:44px;text-align:center;color:var(--dim);font-family:var(--mono);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.empty{border:1px dashed var(--line-2);border-radius:10px;padding:44px;text-align:center;color:var(--dim);font-size:15px}
 
 /* --- carrito --- */
 .cart-btn{position:relative;display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--line-2);
-  color:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);font-size:14px;font-weight:600;letter-spacing:0;
   padding:11px 16px;cursor:pointer}
 .cart-btn{transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .cart-btn:hover{border-color:var(--acento);color:var(--acento)}
@@ -375,8 +404,8 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 .line .qty button{width:32px;height:32px;background:transparent;border:0;color:var(--ink);cursor:pointer;font-size:16px;line-height:1}
 .line .qty button:hover{background:var(--acento);color:var(--sobre-acento)}
 .line .qty span{min-width:34px;text-align:center;font-family:var(--mono);font-size:13px;font-weight:600}
-.line .rm{background:none;border:0;color:var(--dim);font-family:var(--mono);font-size:10px;letter-spacing:.14em;
-  text-transform:uppercase;cursor:pointer;padding:0;justify-self:end;align-self:center}
+.line .rm{background:none;border:0;color:var(--dim);font-size:13px;
+  cursor:pointer;padding:0;justify-self:end;align-self:center}
 .line .rm:hover{color:var(--peligro)}
 
 @media(max-width:639px){
@@ -386,15 +415,19 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
 }
 
 .total{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono)}
-.total .t{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.total .t{font-size:14px;letter-spacing:0;color:var(--dim)}
 .total .v{font-size:26px;font-weight:600}
 .note{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;line-height:1.7;color:var(--dim)}
 
 /* Más pequeño que un botón de página: flota sobre el contenido y cada píxel
    suyo es texto que alguien no puede leer. */
 .wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px var(--wa-sombra);
-  padding:12px 18px;min-height:44px;font-size:11.5px;letter-spacing:.1em}
-@media(min-width:960px){.wa-float{right:28px;bottom:28px}}
+  padding:12px 18px;min-height:44px;font-size:14px;letter-spacing:0;border-radius:99px}
+/* En el movil se gana el sitio: el numero del pie queda a varias pantallas de
+   distancia y este boton es el atajo. En el escritorio no: alli el mismo
+   WhatsApp ya esta en el hero, en la banda de precio, en el cierre y en el
+   pie, y ademas se sentaba encima de la ultima fila de la ficha. */
+@media(min-width:960px){.wa-float{display:none}}
 
 
 /* --------------------------------------------------------------------------
@@ -420,11 +453,15 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
        encoge, baja de opacidad y se va al borde para no cruzar la ficha. */
     .hero .motif{position:absolute;right:-16%;top:-4%;width:min(460px,44vw);aspect-ratio:100/120;
       fill:none;stroke:var(--acento);stroke-width:1.1;stroke-linejoin:round;opacity:.07;pointer-events:none}
+    /* El texto se centra contra la columna de la foto. Alineados arriba, la
+       izquierda terminaba en los botones y quedaba un hueco muerto de media
+       pantalla debajo mientras la derecha seguia bajando. */
     .hero-grid{position:relative;display:grid;gap:44px;align-items:start}
+    @media(min-width:960px){.hero-grid{align-items:center}}
     .hero-col{display:grid;gap:22px;justify-items:center}
-    .hero-foto{width:min(300px,72vw);height:auto;filter:drop-shadow(0 26px 40px var(--foto-sombra))}
-    @media(min-width:960px){.hero-grid{grid-template-columns:1fr 360px;gap:72px}}
-    .ficha{border:1px solid var(--line-2);padding:24px 24px 18px;background:var(--ficha-fondo)}
+    .hero-foto{width:min(390px,80vw);height:auto;filter:drop-shadow(0 26px 40px var(--foto-sombra))}
+    @media(min-width:960px){.hero-grid{grid-template-columns:1fr 400px;gap:60px}}
+    .ficha{width:100%;border:1px solid var(--line);border-radius:12px;padding:22px 24px 16px;background:var(--ficha-fondo)}
     .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}
     @media(min-width:900px){.split{grid-template-columns:1.3fr 1fr;gap:72px}}
     .precios{display:grid;gap:0;border-top:2px solid var(--inv-ink)}
@@ -438,14 +475,13 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     }
     .precios .amt{display:flex;align-items:flex-start;gap:6px;margin-top:16px}
     .precios .amt sup{font-family:var(--mono);font-size:clamp(18px,2vw,26px);font-weight:500;padding-top:.5em}
-    .precios .amt b{font-size:clamp(64px,8vw,104px);font-weight:800;letter-spacing:-.05em;line-height:.86}
+    .precios .amt b{font-size:clamp(50px,5.4vw,74px);font-weight:700;letter-spacing:-.035em;line-height:.92}
     .pasos{border-top:1px solid var(--line-2)}
     .paso{display:grid;gap:10px 36px;padding:26px 0;border-bottom:1px solid var(--line)}
     @media(min-width:900px){.paso{grid-template-columns:110px 1fr 1.15fr;align-items:start}}
     .paso .k{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;
       font-weight:600;letter-spacing:.16em;color:var(--acento)}
-    .plan-etq{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:600;
-      letter-spacing:.18em;text-transform:uppercase}
+    .plan-etq{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600}
     .paso h3{font-size:clamp(20px,2.2vw,27px)}
     .cols3{display:grid;gap:0;border-top:1px solid var(--line-2)}
     @media(min-width:900px){.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}}
@@ -461,7 +497,7 @@ h2{font-size:clamp(1.9rem,4.6vw,4.25rem)}
     .lista .ico{color:var(--acento);margin-top:3px}
     .distritos{display:grid;gap:0 44px;border-top:1px solid var(--line-2);grid-template-columns:repeat(2,1fr)}
     @media(min-width:760px){.distritos{grid-template-columns:repeat(4,1fr)}}
-    .dist{font-family:var(--mono);font-size:13px;letter-spacing:.06em;padding:12px 0;border-bottom:1px solid var(--line)}
+    .dist{font-size:15px;letter-spacing:0;padding:12px 0;border-bottom:1px solid var(--line)}
     .qas{display:grid;gap:0 72px}
     @media(min-width:900px){.qas{grid-template-columns:1fr 1fr}}
     .qa{padding:26px 0;border-top:1px solid var(--line)}

@@ -57,7 +57,6 @@ export default function Proceso() {
           </div>
         </div>
 
-        <p className="ph" style={{ marginTop: 30 }}>[ Estas son las 4 etapas documentadas. El desglose completo de los 8 pasos y el N.° de registro DIGESA — confirmar con planta ]</p>
       </div>
     </section>
   )

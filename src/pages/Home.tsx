@@ -7,8 +7,8 @@ import CajonPedido from '../features/pedido/CajonPedido'
 import { usePedido } from '../features/pedido/usePedido'
 import BandaPrecio from './home/BandaPrecio'
 import Cierre from './home/Cierre'
-import Cinta from './home/Cinta'
 import Cobertura from './home/Cobertura'
+import PorConfirmar from './home/PorConfirmar'
 import Hero from './home/Hero'
 import Planes from './home/Planes'
 import Preguntas from './home/Preguntas'
@@ -26,7 +26,6 @@ export default function Home() {
       <Nav accion={<BotonCarrito unidades={pedido.unidades} onAbrir={abrirCajon} />} />
       <main>
         <Hero />
-        <Cinta />
         <BandaPrecio />
         <Productos onAgregar={pedido.agregar} />
         <Proceso />
@@ -34,6 +33,7 @@ export default function Home() {
         <Cobertura />
         <Preguntas />
         <Cierre />
+        <PorConfirmar />
       </main>
       <Footer />
       <CajonPedido abierto={abierto} onCerrar={cerrarCajon} pedido={pedido} />

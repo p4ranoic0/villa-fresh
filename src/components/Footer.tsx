@@ -32,9 +32,6 @@ export default function Footer() {
               WhatsApp
             </a>
           </div>
-          <div className="lbl" style={{ textAlign: 'right', lineHeight: 2, fontSize: '10px' }}>
-            [ RAZÓN SOCIAL Y RUC ]<br />[ DIRECCIÓN DE PLANTA ]<br />[ HORARIO DE ATENCIÓN ]
-          </div>
         </div>
         <div
           className="lbl"

@@ -51,14 +51,39 @@ hecho, probablemente no debería existir.
 
 ---
 
-## 2. Dirección visual: "ficha técnica"
+## 2. Dirección visual: del cartel a la conversación
 
 El rubro del agua embotellada se ve siempre igual: fondo blanco, azul cielo, tipografía
 ligera, botones píldora, un bidón flotando. La primera versión de este sitio caía
 exactamente ahí y se sentía como una plantilla.
 
-La dirección actual invierte el planteamiento: **el agua tratada se presenta como un
-producto técnico**. Los datos son los elementos gráficos, no la decoración.
+La respuesta fue irse al extremo contrario —**"ficha técnica"**: el agua tratada
+presentada como producto industrial, los datos como elemento gráfico, todo en
+versalitas de peso 800 y etiquetas en monoespaciada— y esa dirección resolvió el
+problema de la plantilla creando otro. El cliente lo dijo tres veces con las mismas
+palabras: *muy IA, no natural, no amigable*. Tenía razón, y las razones eran
+concretas y contables:
+
+- **Siete titulares consecutivos en versalitas negras**, todos con el mismo ritmo
+  (titular gigante a la izquierda, párrafo gris a la derecha, filete, rejilla debajo).
+  Repetido siete veces deja de ser voz y pasa a ser plantilla.
+- **Veintiuna reglas con `text-transform:uppercase`**, quince de ellas de una sola
+  clase (`.lbl`). La monoespaciada mayúscula muy espaciada es, hoy, la tipografía con
+  la que se reconoce una maqueta generada.
+- **Once filas de ficha técnica** —PRODUCTO, TRATAMIENTO, OZONIZADA, PASOS DE
+  PURIFICACIÓN, GREMIO, COBERTURA…— en el sitio exacto donde alguien decide si compra.
+- **Un titular que abría negando**: «NO REVENDEMOS AGUA. LA FABRICAMOS.» a 100 px.
+  El dato es bueno; como primera frase respondía a una acusación que nadie hizo.
+- **Una cinta corriendo** con lo que la página ya decía debajo, y **seis marcadores
+  entre corchetes** repartidos como si fueran contenido.
+
+La dirección actual conserva el rechazo a la plantilla del rubro y el respeto por el
+dato concreto, pero **cambia el registro: la página habla en vez de anunciar**. Caja
+normal en los titulares, etiquetas en castellano corriente, esquinas blandas donde
+antes había ángulo recto y grises girados unos grados al cálido. Lo que se quitó no
+fue información: fue el disfraz.
+
+Los datos siguen siendo los elementos gráficos, no la decoración.
 
 Cuatro recursos sostienen la identidad. Si se quitan, vuelve a ser una plantilla:
 
@@ -283,8 +308,9 @@ Todos los tamaños grandes son fluidos con `clamp()`; no hay saltos por breakpoi
 
 ### Reglas de titular
 
-- **Siempre en versalitas** (`text-transform: uppercase`) y con interletrado negativo.
-  El peso 800 con tracking cerrado es la firma; sin eso pierde carácter.
+- **Nunca en versalitas.** Peso 700, `letter-spacing: -.022em`, `line-height: 1.05`.
+  Era peso 800 en mayúsculas a `line-height: .94`, y una prueba lo impide ahora: es el
+  cambio que hizo que la página dejara de sonar a pancarta.
 - **Los cortes de línea se escriben a mano** con `<br>` en los titulares del hero y de
   sección. No se deja al navegador partir "No revendemos / agua. / La fabricamos."
 - Nunca más de **cuatro palabras por línea** en `h1`.
@@ -304,9 +330,13 @@ Dice **«A cotizar»**, que es exactamente lo que muestra el catálogo cuando `p
 
 ### Etiquetas mono
 
-Toda etiqueta de sección usa la clase `.lbl`: 11 px, peso 500, `letter-spacing: .2em`,
-mayúsculas, color `--dim` (o `--acento` con `.lbl-cyan` cuando abre sección).
-El interletrado de .2em es lo que las hace legibles a ese tamaño; no se reduce.
+Toda etiqueta usa `.lbl`, y ya **no es mono ni va en mayúsculas**: 13 px, peso 600,
+sin interletrado, color `--dim` (o `--acento` con `.lbl-cyan`). Aparecía quince veces
+—6 PRODUCTOS, PAGO AL RECIBIR, UN BIDÓN, HOGAR, PEDIDOS POR WHATSAPP…— y quince
+letreros iguales eran la mitad del problema. Lo que etiquetan sigue siendo útil.
+
+La monoespaciada queda para lo que de verdad es tabular: el teléfono, los precios de
+las tarjetas, el número de orden de los pasos del proceso.
 
 ---
 

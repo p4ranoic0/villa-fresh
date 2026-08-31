@@ -2,6 +2,7 @@ import { beforeAll, test, expect } from 'bun:test'
 import { existsSync } from 'node:fs'
 import { readFile } from 'node:fs/promises'
 import { SITIO_URL } from '../src/rutas'
+import { PRODUCTOS } from '../src/data/productos'
 
 const URL_PAGES = 'https://p4ranoic0.github.io/villa-fresh'
 const BASE_PAGES = '/villa-fresh/'
@@ -42,8 +43,17 @@ test('el sitio se publica en una sola página', async () => {
 
 test('el titular del hero viaja dentro del HTML publicado', async () => {
   const html = await readFile('dist/index.html', 'utf8')
-  expect(html).toContain('No revendemos')
-  expect(html).toContain('La fabricamos.')
+  expect(html).toContain('Hacemos el agua')
+  expect(html).toContain('el mismo día.')
+})
+
+test('los titulares no van en versalitas', async () => {
+  // Siete titulares en mayúsculas seguidos no eran una voz, eran un cartel
+  // repetido. La caja normal es lo que hace que la página suene a alguien
+  // hablando; si vuelve el uppercase, vuelve el cartel.
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const regla = css.match(/^h1,h2\{[^}]*\}/m)?.[0] ?? ''
+  expect(regla).not.toContain('uppercase')
 })
 
 test('la ficha técnica y el precio viajan dentro del HTML publicado', async () => {
@@ -52,16 +62,39 @@ test('la ficha técnica y el precio viajan dentro del HTML publicado', async () 
   expect(html).toContain('Ósmosis inversa')
 })
 
-test('los marcadores pendientes se publican a propósito', async () => {
+test('lo que falta se publica junto y fuera del diseño', async () => {
+  // Los seis marcadores sueltos (tres recuadros de línea discontinua dentro de
+  // las secciones, tres corchetes en el pie) leían como contenido a medio
+  // hacer. La información sigue publicada, pero en un solo bloque marcado como
+  // nota, no repartida por la página.
   const html = await readFile('dist/index.html', 'utf8')
-  expect(html).toContain('RAZÓN SOCIAL Y RUC')
-  expect(html).toContain('Distritos referenciales')
+  expect(html).toContain('Nota para Villa Fresh')
+  expect(html).toContain('Razón social, RUC')
+  expect(html).toContain('distritos que aparecen son de referencia')
+  expect(html).not.toContain('[ RAZÓN SOCIAL Y RUC ]')
+  expect(html.match(/class="ph"/g)).toBeNull()
 })
 
 test('los 6 productos viajan dentro del HTML, sin depender de JavaScript', async () => {
+  // Antes esto buscaba los SKU. Se quitaron de la cara de la tarjeta —VF-B20X2
+  // es la referencia del almacén, no algo que le sirva a quien compra agua— así
+  // que ahora se comprueba lo que el visitante ve de verdad: el nombre.
   const html = await readFile('dist/index.html', 'utf8')
-  for (const sku of ['VF-B20', 'VF-B20X2', 'VF-R20', 'VF-BOT', 'VF-MARCA', 'VF-EMP']) {
-    expect(html).toContain(sku)
+  for (const producto of PRODUCTOS) {
+    expect({ sku: producto.sku, publicado: html.includes(producto.nombre) })
+      .toEqual({ sku: producto.sku, publicado: true })
+  }
+  expect(PRODUCTOS.length).toBe(6)
+})
+
+test('el código de almacén no se le enseña a quien compra', async () => {
+  // En el JSON-LD sí corresponde: schema.org/Product define `sku` y es lo que
+  // lee un buscador. Lo que no puede aparecer es en el marcado visible.
+  const html = await readFile('dist/index.html', 'utf8')
+  const visible = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')
+  for (const producto of PRODUCTOS) {
+    expect({ sku: producto.sku, visible: visible.includes(producto.sku) })
+      .toEqual({ sku: producto.sku, visible: false })
   }
 })
 
@@ -89,7 +122,7 @@ async function cssPublicado() {
 test('la web publicada define los dos temas y deja mandar al sistema', async () => {
   const css = await cssPublicado()
   // Claro por defecto.
-  expect(css).toContain('--ground:#f2f1ec')
+  expect(css).toContain('--ground:#f4f2ee')
   // Oscuro cuando lo pide el sistema, salvo que el visitante haya elegido claro.
   // El minificador quita las comillas del selector, asi que no se asumen.
   expect(css).toContain('(prefers-color-scheme:dark)')
@@ -366,12 +399,20 @@ test('los datos estructurados no inventan información del negocio', async () =>
   }
 })
 
-test('robots y sitemap publicados apuntan al dominio configurado', async () => {
-  const [robots, sitemap] = await Promise.all([
+test('el sitio se publica cerrado a los buscadores', async () => {
+  // Es una demo para el cliente y todavía cita datos por confirmar. Se abre el
+  // día del lanzamiento real cambiando estas dos líneas a la vez.
+  const [robots, html] = await Promise.all([
     readFile('dist/robots.txt', 'utf8'),
-    readFile('dist/sitemap.xml', 'utf8'),
+    readFile('dist/index.html', 'utf8'),
   ])
-  expect(robots).toContain(SITIO_URL)
+  expect(robots).toContain('Disallow: /')
+  expect(robots).not.toContain('Allow: /')
+  expect(html).toContain('name="robots" content="noindex, nofollow"')
+})
+
+test('el sitemap sigue apuntando al dominio configurado', async () => {
+  const sitemap = await readFile('dist/sitemap.xml', 'utf8')
   expect(sitemap).toContain(SITIO_URL)
 })
 
