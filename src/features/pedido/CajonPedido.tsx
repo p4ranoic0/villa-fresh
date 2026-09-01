@@ -67,7 +67,6 @@ export default function CajonPedido({ abierto, onCerrar, pedido }: Props) {
                 <div className="line" key={linea.sku}>
                   <div className="nm">
                     {producto.nombre}
-                    <div className="sku" style={{ marginTop: '4px' }}>{producto.sku}</div>
                   </div>
                   <div className="pr">{subtotal}</div>
                   <div className="qty">

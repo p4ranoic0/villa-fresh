@@ -90,11 +90,27 @@ test('los 6 productos viajan dentro del HTML, sin depender de JavaScript', async
 test('el código de almacén no se le enseña a quien compra', async () => {
   // En el JSON-LD sí corresponde: schema.org/Product define `sku` y es lo que
   // lee un buscador. Lo que no puede aparecer es en el marcado visible.
+  //
+  // Esta prueba sola no basta y conviene saberlo: el cajón del pedido se pinta
+  // en el navegador, no en el prerenderizado, así que se le escapó el SKU que
+  // salía bajo el nombre de cada línea. Por eso debajo se revisa también el
+  // código fuente, que es donde vive lo que el HTML publicado no enseña.
   const html = await readFile('dist/index.html', 'utf8')
   const visible = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, '')
   for (const producto of PRODUCTOS) {
     expect({ sku: producto.sku, visible: visible.includes(producto.sku) })
       .toEqual({ sku: producto.sku, visible: false })
+  }
+
+  // Ningún componente lo pinta, ni siquiera los que sólo existen tras un clic.
+  // Se exige el `>` delante para mirar sólo lo que va como contenido de un
+  // elemento: `key={linea.sku}` y `onClick={() => quitar(linea.sku)}` son usos
+  // legítimos y no se ven. Es una heurística, no un análisis del JSX.
+  const fuentes = new Bun.Glob('src/**/*.tsx')
+  for await (const ruta of fuentes.scan('.')) {
+    const codigo = await readFile(ruta, 'utf8')
+    expect({ ruta, pintaElSku: />\s*\{\s*\w+\.sku\s*\}/.test(codigo) })
+      .toEqual({ ruta, pintaElSku: false })
   }
 })
 
