@@ -8,22 +8,14 @@
    contenido (contenido/verificacion.md) no encontró una sola publicación que
    respaldara que se vendan. Vuelven cuando el negocio lo confirme.
    ========================================================================== */
-import type { Categoria, Producto } from '../types'
+import type { Producto } from '../types'
 import { activo } from '../rutas-publicas'
 
-export const CATEGORIAS: Categoria[] = [
-  { id: 'bidones', nombre: 'Bidones y recarga' },
-  { id: 'envases', nombre: 'Envases' },
-  { id: 'botellas', nombre: 'Botellas' },
-  { id: 'accesorios', nombre: 'Accesorios' },
-  { id: 'empresas', nombre: 'Empresas y obra' },
-]
 
 export const PRODUCTOS: Producto[] = [
   {
     sku: 'VF-B20',
     nombre: 'Bidón 20 L',
-    categoria: 'bidones',
     precio: 30,
     unidad: 'con envase',
     imagen: activo('/producto-bidon-20l.webp'),
@@ -33,7 +25,6 @@ export const PRODUCTOS: Producto[] = [
   {
     sku: 'VF-B20X2',
     nombre: '2 Bidones 20 L',
-    categoria: 'bidones',
     precio: 50,
     unidad: 'ahorras S/ 10',
     etiqueta: 'Promoción',
@@ -44,7 +35,6 @@ export const PRODUCTOS: Producto[] = [
   {
     sku: 'VF-R20',
     nombre: 'Recarga 20 L',
-    categoria: 'bidones',
     precio: 20,
     unidad: 'con tu envase',
     imagen: activo('/producto-bidon-20l.webp'),
@@ -54,7 +44,6 @@ export const PRODUCTOS: Producto[] = [
   {
     sku: 'VF-BOT',
     nombre: 'Botella personal',
-    categoria: 'botellas',
     precio: null,
     unidad: 'presentación por confirmar',
     imagen: activo('/producto-botella.webp'),
@@ -63,7 +52,6 @@ export const PRODUCTOS: Producto[] = [
   {
     sku: 'VF-MARCA',
     nombre: 'Botellas con tu marca',
-    categoria: 'botellas',
     precio: null,
     unidad: 'pedido especial',
     imagen: activo('/producto-botella.webp'),
@@ -73,7 +61,6 @@ export const PRODUCTOS: Producto[] = [
   {
     sku: 'VF-EMP',
     nombre: 'Plan de abastecimiento',
-    categoria: 'empresas',
     precio: null,
     unidad: 'precio por volumen',
     etiqueta: 'A cotizar',

@@ -261,11 +261,16 @@ test('el revelado de los pasos nunca es lo que hace visible el texto', async () 
   expect(css).toContain('@supports (animation-timeline:view())')
 })
 
-test('la portada responde también en /index.html', async () => {
-  // Un servidor estático sirve la portada en las dos direcciones; si React
-  // sólo conoce "/", quien entre por /index.html se queda sin página.
-  const app = await readFile('src/App.tsx', 'utf8')
-  expect(app).toContain('path="/index.html"')
+test('la página no arrastra un router para una sola ruta', async () => {
+  // El alias de "/index.html" existía porque, sin él, React Router no
+  // encontraba ruta en esa dirección y vaciaba la página. Sin router no hay
+  // ruta que encontrar: el componente se pinta y ya. Lo que aquí se vigila es
+  // que no vuelva a entrar la dependencia por costumbre.
+  const paquete = JSON.parse(await readFile('package.json', 'utf8'))
+  expect(Object.keys(paquete.dependencies)).not.toContain('react-router')
+
+  const cliente = await readFile('dist/index.html', 'utf8')
+  expect(cliente).toContain('id="root"')
 })
 
 test('los iconos son SVG en línea, sin librería ni fuente', async () => {

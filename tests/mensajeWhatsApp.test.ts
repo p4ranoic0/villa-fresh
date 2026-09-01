@@ -3,13 +3,13 @@ import { mensajeWhatsApp, soles } from '../src/features/pedido/mensajeWhatsApp'
 import type { Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
-  { sku: 'VF-B20', nombre: 'Bidón 20 L', categoria: 'bidones', precio: 30, unidad: 'con envase', imagen: '/producto-bidon-20l.webp', desc: '' },
-  { sku: 'VF-R20', nombre: 'Recarga 20 L', categoria: 'bidones', precio: null, unidad: 'con tu envase', imagen: '/producto-bidon-20l.webp', desc: '' },
+  { sku: 'VF-B20', nombre: 'Bidón 20 L', precio: 30, unidad: 'con envase', imagen: '/producto-bidon-20l.webp', desc: '' },
+  { sku: 'VF-R20', nombre: 'Recarga 20 L', precio: null, unidad: 'con tu envase', imagen: '/producto-bidon-20l.webp', desc: '' },
 ]
 
 test('soles siempre lleva dos decimales', () => {
-  expect(soles(30)).toBe('S/ 30.00')
-  expect(soles(0)).toBe('S/ 0.00')
+  expect(soles(30)).toBe('S/ 30')
+  expect(soles(0)).toBe('S/ 0')
   expect(soles(52.5)).toBe('S/ 52.50')
 })
 
@@ -21,10 +21,10 @@ test('mezcla de precio y a cotizar: formato exacto', () => {
   expect(texto).toBe(
     'Hola Villa Fresh, quiero hacer este pedido:\n' +
     '\n' +
-    '• 2 x Bidón 20 L (VF-B20) — S/ 60.00\n' +
+    '• 2 x Bidón 20 L (VF-B20) — S/ 60\n' +
     '• 1 x Recarga 20 L (VF-R20) — a cotizar\n' +
     '\n' +
-    'Total de lo que tiene precio: S/ 60.00\n' +
+    'Total de lo que tiene precio: S/ 60\n' +
     'Hay productos que necesito que me coticen.\n' +
     '\n' +
     'Mi dirección: \n' +
@@ -37,9 +37,9 @@ test('sólo productos con precio: sin la línea de cotización', () => {
   expect(texto).toBe(
     'Hola Villa Fresh, quiero hacer este pedido:\n' +
     '\n' +
-    '• 1 x Bidón 20 L (VF-B20) — S/ 30.00\n' +
+    '• 1 x Bidón 20 L (VF-B20) — S/ 30\n' +
     '\n' +
-    'Total de lo que tiene precio: S/ 30.00\n' +
+    'Total de lo que tiene precio: S/ 30\n' +
     '\n' +
     'Mi dirección: \n' +
     'Distrito: ',
@@ -70,6 +70,6 @@ test('una línea con SKU inexistente se ignora sin romper el mensaje', () => {
     [{ sku: 'NO-EXISTE', cantidad: 1 }, { sku: 'VF-B20', cantidad: 1 }],
     PRODUCTOS,
   )
-  expect(texto).toContain('• 1 x Bidón 20 L (VF-B20) — S/ 30.00')
+  expect(texto).toContain('• 1 x Bidón 20 L (VF-B20) — S/ 30')
   expect(texto).not.toContain('NO-EXISTE')
 })

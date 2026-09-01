@@ -1,5 +1,5 @@
 import { test, expect } from 'bun:test'
-import { CATEGORIAS, PRODUCTOS } from '../src/data/productos'
+import { PRODUCTOS } from '../src/data/productos'
 import { NEGOCIO, urlWhatsApp } from '../src/data/negocio'
 
 test('no hay SKU repetidos', () => {
@@ -7,9 +7,14 @@ test('no hay SKU repetidos', () => {
   expect(new Set(skus).size).toBe(skus.length)
 })
 
-test('toda categoría usada por un producto existe en CATEGORIAS', () => {
-  const ids = new Set(CATEGORIAS.map((c) => c.id))
-  for (const p of PRODUCTOS) expect(ids.has(p.categoria)).toBe(true)
+test('cada producto se distingue de los demás en la parrilla', () => {
+  // Sustituye a la vieja prueba de categorías, que comparaba PRODUCTOS con
+  // CATEGORIAS y por tanto se validaba sola. Esto sí dice algo del sitio: dos
+  // tarjetas con el mismo nombre o la misma descripción son la misma tarjeta.
+  const nombres = PRODUCTOS.map((p) => p.nombre)
+  expect(new Set(nombres).size).toBe(nombres.length)
+  const descripciones = PRODUCTOS.map((p) => p.desc)
+  expect(new Set(descripciones).size).toBe(descripciones.length)
 })
 
 test('un precio es null o un número mayor que cero, nunca 0', () => {

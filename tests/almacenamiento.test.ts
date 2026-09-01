@@ -3,7 +3,7 @@ import { guardarPedido, leerPedido } from '../src/features/pedido/almacenamiento
 import type { Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
-  { sku: 'VF-B20', nombre: 'Bidón 20 L', categoria: 'bidones', precio: 30, unidad: '', imagen: '/b.svg', desc: '' },
+  { sku: 'VF-B20', nombre: 'Bidón 20 L', precio: 30, unidad: '', imagen: '/b.svg', desc: '' },
 ]
 
 function crearLocalStorage(): Storage {

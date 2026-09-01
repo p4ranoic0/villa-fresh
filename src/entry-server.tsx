@@ -1,13 +1,12 @@
 import { renderToString } from 'react-dom/server'
-import { StaticRouter } from 'react-router'
 import App from './App'
-import { activo, BASE_PUBLICA } from './rutas-publicas'
 
-/** Renderiza una ruta a HTML. La llama scripts/prerender.ts en tiempo de build. */
-export function render(url: string): string {
-  return renderToString(
-    <StaticRouter basename={BASE_PUBLICA} location={activo(url)}>
-      <App />
-    </StaticRouter>,
-  )
+/**
+ * Renderiza la página a HTML. La llama scripts/prerender.ts en tiempo de build.
+ *
+ * Recibe la url para no cambiar la firma que usa el prerender, pero ya no la
+ * mira: hay una sola página y no hay router al que decirle dónde está.
+ */
+export function render(_url: string): string {
+  return renderToString(<App />)
 }

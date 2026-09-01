@@ -3,8 +3,8 @@ import { hayPendientes, reducirPedido, totalSoles, totalUnidades } from '../src/
 import type { LineaPedido, Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
-  { sku: 'VF-B20', nombre: 'Bidón 20 L', categoria: 'bidones', precio: 30, unidad: '', imagen: '/b.svg', desc: '' },
-  { sku: 'VF-R20', nombre: 'Recarga 20 L', categoria: 'bidones', precio: null, unidad: '', imagen: '/b.svg', desc: '' },
+  { sku: 'VF-B20', nombre: 'Bidón 20 L', precio: 30, unidad: '', imagen: '/b.svg', desc: '' },
+  { sku: 'VF-R20', nombre: 'Recarga 20 L', precio: null, unidad: '', imagen: '/b.svg', desc: '' },
 ]
 
 test('agregar un SKU nuevo crea la línea con cantidad 1', () => {

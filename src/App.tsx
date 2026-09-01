@@ -1,29 +1,18 @@
-import { useEffect } from 'react'
-import { Route, Routes, useLocation } from 'react-router'
 import Home from './pages/Home'
-import { RUTAS } from './rutas'
 
-/** Mantiene el <title> al navegar en cliente; en el HTML publicado lo pone el prerender. */
-function Titulo() {
-  const { pathname } = useLocation()
-  useEffect(() => {
-    const ruta = RUTAS.find((r) => r.path === pathname)
-    if (ruta) document.title = ruta.title
-  }, [pathname])
-  return null
-}
-
+/**
+ * El sitio es una sola página.
+ *
+ * Aquí vivía React Router: dos rutas —«/» y «/index.html»— que devolvían
+ * exactamente el mismo componente, un `<Routes>` para elegir entre ellas y un
+ * `useLocation` para reponer el `<title>` al navegar. Nunca hubo dónde navegar.
+ * Ese alias de «/index.html» sólo existía porque, sin él, React no encontraba
+ * ruta en esa dirección y vaciaba la página: un problema que se creó el router
+ * a sí mismo y que sin él no puede darse.
+ *
+ * El `<title>` lo escribe scripts/prerender.ts en el HTML publicado, que es
+ * donde hace falta.
+ */
 export default function App() {
-  return (
-    <>
-      <Titulo />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* Un servidor estático sirve la misma portada en las dos direcciones.
-            Sin este alias, quien entre por /index.html carga el HTML correcto
-            y luego React no encuentra ruta y lo vacía. */}
-        <Route path="/index.html" element={<Home />} />
-      </Routes>
-    </>
-  )
+  return <Home />
 }

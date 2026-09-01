@@ -315,7 +315,10 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 
 /* --- pie --- */
 .foot{border-top:1px solid var(--line);padding-block:44px 48px}
-.foot a{color:var(--dim);font-size:14px;letter-spacing:0}
+/* Enlaces de 15px de alto en el movil: por debajo del minimo de objetivo
+   tactil. El relleno vertical los sube sin mover nada alrededor porque el
+   contenedor ya es flex con gap. */
+.foot a{color:var(--dim);font-size:14px;letter-spacing:0;display:inline-block;padding-block:6px}
 .foot a:hover{color:var(--acento)}
 
 .cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;

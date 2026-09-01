@@ -1,7 +1,12 @@
 import type { LineaPedido, Producto } from '../../types'
 
 export function soles(n: number): string {
-  return `S/ ${n.toFixed(2)}`
+  // Los precios de Villa Fresh son enteros y nadie en Lima dice «treinta soles
+  // con cero céntimos». Los céntimos sólo aparecen cuando los hay de verdad,
+  // que hoy sólo puede pasar en el total si algún día entra un precio con
+  // decimales; el formato de la lista que llega por WhatsApp cambia con esto,
+  // y por eso los tests de mensajeWhatsApp fijan las dos formas.
+  return Number.isInteger(n) ? `S/ ${n}` : `S/ ${n.toFixed(2)}`
 }
 
 /** Arma el texto del pedido. Función pura: sin React, sin DOM, sin efectos.
