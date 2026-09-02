@@ -518,15 +518,29 @@ actualiza el contador. Abrirlo en cada clic estorba cuando se agregan varios pro
 Se cierra con el botón, con el velo o con `Escape`. Mientras está abierto,
 `body { overflow: hidden }`.
 
-### Marcadores entre corchetes
+### La nota de pendientes
 
-```html
-<p class="ph">[ Distritos referenciales — confirmar la ruta real de reparto ]</p>
-```
+Lo que la web todavía no puede afirmar **se publica a propósito**: es preferible que un
+hueco se vea a que se invente un dato. Lo que cambió es dónde.
 
-Mono 11 px, mayúsculas, `--dim`, borde **punteado**. Marcan información que todavía no
-está confirmada y **se publican a propósito**: es preferible que un dato pendiente se vea
-a que se invente uno. Se retiran sólo cuando el dato real ocupa su lugar.
+Fueron seis marcadores sueltos —tres recuadros de línea discontinua metidos dentro de las
+secciones y tres corchetes más en el pie— y así leían como contenido a medio hacer, que
+era justo lo que hacía que la página pareciera un borrador generado. Ahora van **juntos,
+en un solo bloque** (`.nota-caja`), con rótulo mono explícito: «Nota para Villa Fresh · no
+forma parte de la web».
+
+**Y va fuera de `<main>`, detrás del pie.** Estuvo entre el cierre y el pie, que es
+exactamente el sitio donde va la última sección de contenido de cualquier web: por mucho
+que el rótulo dijera lo contrario, la posición decía «contenido». Detrás del pie la página
+termina donde tiene que terminar —cierre, pie— y la nota queda donde queda el andamio.
+Hay una prueba que lo comprueba.
+
+Dos detalles de forma que vinieron de verlo montado:
+
+- **Los seis pendientes van en dos columnas** a partir de 820 px. En una sola columna de
+  62ch era una losa alta a la izquierda con media pantalla vacía al lado.
+- **Respira lo mismo por arriba que por abajo.** Tenía cero de relleno superior: la caja
+  tocaba literalmente la banda azul del cierre, 0 px medidos, y colgaba de ella.
 
 ---
 
@@ -898,7 +912,8 @@ Reglas concretas:
   Afirmar lo contrario es falso y expone frente a Indecopi y a la etiqueta sanitaria.
 - Precios siempre `S/ 30` con espacio en texto corrido; en tratamiento tipográfico grande,
   el `S/` va en mono a un tamaño menor y separado del número.
-- Los pendientes se escriben en mayúsculas entre corchetes: `[ RAZÓN SOCIAL Y RUC ]`.
+- Los pendientes no se escriben dentro de la página: van juntos en la nota de §9, detrás
+  del pie y fuera de `<main>`.
 
 ---
 
@@ -977,7 +992,7 @@ Antes de publicar cualquier cambio, **en los dos temas**:
 - [ ] Cero radios redondeados nuevos
 - [ ] Un solo acento por tema; el verde sólo en botones de WhatsApp
 - [ ] Ningún dato sin verificar presentado como cierto
-- [ ] Los corchetes pendientes siguen visibles hasta que el dato exista
+- [ ] Lo que falta sigue listado en la nota de pendientes hasta que el dato exista
 - [ ] Todos los precios vienen de `src/data/productos.ts`
 - [ ] Los enlaces de WhatsApp llevan el mensaje precargado correcto
 - [ ] `prefers-reduced-motion` detiene la cinta, el revelado y la descarga del vídeo

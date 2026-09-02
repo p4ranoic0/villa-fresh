@@ -37,9 +37,14 @@ export default function Home() {
         <Cobertura />
         <Preguntas />
         <Cierre />
-        <PorConfirmar />
       </main>
       <Footer />
+      {/* Fuera de <main> y después del pie a propósito. Metida entre el cierre
+          y el pie ocupaba el sitio donde va la última sección de contenido de
+          cualquier web, así que se leía como contenido por mucho que el rótulo
+          dijera lo contrario. Aquí la página termina donde termina —cierre,
+          pie— y la nota queda detrás, que es lo que es: andamio. */}
+      <PorConfirmar />
       <CajonPedido abierto={abierto} onCerrar={cerrarCajon} pedido={pedido} />
       <WaFlotante />
     </>

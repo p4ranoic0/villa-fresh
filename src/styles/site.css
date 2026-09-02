@@ -278,13 +278,21 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    Villa Fresh, no contenido del sitio, y tiene que leerse como tal de un
    vistazo. Por eso va fuera del ancho de lectura habitual y en cuerpo pequeno.
    -------------------------------------------------------------------------- */
-.nota-band{padding-block:0 var(--band)}
-.nota-caja{max-width:62ch;border:1px solid var(--line);border-radius:12px;padding:26px 28px;background:var(--panel)}
+/* Va detrás del pie, así que abre con una línea que la separa de él, y
+   respira lo mismo por arriba que por abajo. Antes tenía cero de relleno
+   superior: la caja tocaba literalmente la banda azul del cierre —0 px
+   medidos— y colgaba de ella. */
+.nota-band{padding-block:clamp(40px,5vw,64px) clamp(44px,5.5vw,72px);border-top:1px solid var(--line)}
+/* Los seis pendientes en una sola columna de 62ch dejaban media pantalla
+   vacía a la derecha y una losa alta a la izquierda. En dos columnas la nota
+   es un bloque compacto y deja de parecer que se olvidó algo al lado. */
+.nota-caja{max-width:980px;border:1px solid var(--line);border-radius:12px;padding:26px 28px;background:var(--panel)}
 .nota-titulo{margin:0 0 10px;font-family:var(--mono);font-size:11px;font-weight:500;
   letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
 .nota-intro{margin:0 0 16px;font-size:15px;line-height:1.6;color:var(--ink-2)}
-.nota-lista{margin:0;padding:0;list-style:none;display:grid;gap:9px}
-.nota-lista li{font-size:14.5px;line-height:1.55;color:var(--ink-2)}
+.nota-lista{margin:0;padding:0;list-style:none;display:grid;gap:11px 44px}
+@media(min-width:820px){.nota-lista{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.nota-lista li{font-size:14.5px;line-height:1.55;color:var(--ink-2);max-width:48ch}
 .nota-lista b{color:var(--ink);font-weight:600}
 
 /* --- banda de papel --- */

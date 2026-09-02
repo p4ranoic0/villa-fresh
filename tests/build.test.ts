@@ -73,6 +73,15 @@ test('lo que falta se publica junto y fuera del diseño', async () => {
   expect(html).toContain('distritos que aparecen son de referencia')
   expect(html).not.toContain('[ RAZÓN SOCIAL Y RUC ]')
   expect(html.match(/class="ph"/g)).toBeNull()
+
+  // Y fuera de <main>, detrás del pie. Metida entre el cierre y el pie ocupaba
+  // el sitio donde va la última sección de contenido de cualquier web, y se
+  // leía como contenido por mucho que el rótulo dijera lo contrario.
+  const finMain = html.indexOf('</main>')
+  const pie = html.indexOf('<footer')
+  const nota = html.indexOf('Nota para Villa Fresh')
+  expect({ fueraDeMain: nota > finMain, detrasDelPie: nota > pie })
+    .toEqual({ fueraDeMain: true, detrasDelPie: true })
 })
 
 test('los 6 productos viajan dentro del HTML, sin depender de JavaScript', async () => {
