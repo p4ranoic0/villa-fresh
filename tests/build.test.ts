@@ -250,20 +250,30 @@ test('ninguna animación arranca con ease-in', async () => {
 
 test('el movimiento se apaga con prefers-reduced-motion', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
+  const ts = await readFile('src/revelado.ts', 'utf8')
   expect(css).toContain('@media (prefers-reduced-motion:reduce)')
-  // Y lo que se añade por gusto sólo existe si nadie ha pedido lo contrario.
+  // Y lo que se anade por gusto solo existe si nadie ha pedido lo contrario.
   expect(css).toContain('@media (prefers-reduced-motion:no-preference)')
+  // El revelado se apaga desde JavaScript, no desde el CSS: apagar sólo la
+  // transición dejaría el elemento escondido hasta que el observador lo
+  // enseñara de golpe. Quien pide menos movimiento no esconde nada.
+  expect(ts).toContain("matchMedia('(prefers-reduced-motion: reduce)').matches")
 })
-
-test('el revelado de los pasos nunca es lo que hace visible el texto', async () => {
+test('el revelado nunca es lo que hace visible el texto', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
-  // El estado base tiene que ser el final. Si `.paso` naciera en opacity:0,
-  // un navegador sin líneas de tiempo de scroll dejaría el proceso en blanco.
+  const ts = await readFile('src/revelado.ts', 'utf8')
+  // El estado base tiene que ser el final. Nada se esconde desde el CSS: es el
+  // observador quien pone `data-revela`, y sólo en lo que aún no se ve. Sin
+  // JavaScript no hay atributo, no hay regla que aplique y la página se lee
+  // entera.
   const regla = css.slice(css.indexOf('.pasos{'), css.indexOf('@keyframes surge'))
   expect(regla).not.toMatch(/\.paso\{[^}]*opacity:0/)
-  expect(css).toContain('@supports (animation-timeline:view())')
+  expect(css).toMatch(/:root \[data-revela\]\{opacity:0/)
+  expect(ts).toContain("setAttribute('data-revela'")
+  // Y lo que ya está en pantalla al cargar no se esconde para volver a
+  // enseñarlo: eso sería un parpadeo entre el pintado y la hidratación.
+  expect(ts).toMatch(/getBoundingClientRect\(\)\.top > alcance/)
 })
-
 test('la página no arrastra un router para una sola ruta', async () => {
   // El alias de "/index.html" existía porque, sin él, React Router no
   // encontraba ruta en esa dirección y vaciaba la página. Sin router no hay
@@ -357,25 +367,43 @@ test('el desplazamiento del revelado llega a verse', async () => {
   expect({ px, seVe: px >= 20 }).toEqual({ px, seVe: true })
 })
 
-test('el revelado empieza en cuanto el elemento asoma, no después', async () => {
+test('el revelado dura lo mismo baje quien baje como baje', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
-  // Si el rango arranca más tarde que `entry 0%`, hay un tramo en el que el
-  // elemento ya está dentro de la pantalla y todavía es invisible.
-  const rangos = [...css.matchAll(/animation-range:entry (\d+)%/g)].map((m) => Number(m[1]))
-  expect(rangos.length).toBeGreaterThan(0)
-  expect(Math.min(...rangos)).toBe(0)
+  const ts = await readFile('src/revelado.ts', 'utf8')
+  // Fue `animation-timeline: view()`, que ata el avance de la animación a la
+  // posición del dedo: de un manotazo se consumía en dos cuadros y el elemento
+  // aparecía de golpe. El reloj tiene que ser el del navegador.
+  expect(css).not.toContain('animation-timeline')
+  expect(css).not.toContain('animation-range')
+  const dur = css.match(/:root \[data-revela\]\{opacity:0;transform:translateY\((\d+)px\);\s*transition:opacity ([\d.]+)s/)
+  expect(dur).not.toBeNull()
+  const px = Number(dur![1])
+  const segundos = Number(dur![2])
+  // Lento a propósito: es contenido apareciendo, no un control respondiendo.
+  expect({ px, segundos, lento: segundos >= 0.6, seVe: px >= 20 })
+    .toEqual({ px, segundos, lento: true, seVe: true })
+  // Y se revela una sola vez: volver a esconder lo ya leído es un parpadeo.
+  expect(ts).toContain('observador.unobserve(el)')
+})
+test('ninguna clase puede pisar la transición del revelado', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // `.dist{transition:color .2s}` se llevaba por delante el revelado de los
+  // doce distritos: misma especificidad, más abajo en el archivo. El CSS era
+  // correcto leído regla a regla y sólo se veía midiendo en el navegador.
+  // El `:root` de delante sube la especificidad a (0,1,1) y ninguna clase
+  // suelta la alcanza, esté donde esté.
+  expect(css).toContain(':root [data-revela]{')
+  // Y no queda ninguna forma sin blindar rondando por la hoja.
+  const sinBlindar = [...css.matchAll(/(^|[^ ])\[data-revela\]\{/gm)]
+  expect(sinBlindar.map((m) => m[0])).toEqual([])
 })
 
 test('el revelado no puede dejar una sección en blanco sobre papel', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
-  // Al imprimir no hay scroll, la línea de tiempo no avanza y `both` deja el
-  // elemento en el primer fotograma, que es opacidad cero.
-  const bloque = css.slice(css.indexOf('@supports (animation-timeline:view())'))
-  const impresion = bloque.slice(bloque.indexOf('@media print'))
-  expect(impresion).toContain('animation:none')
-  for (const sel of ['.paso', '.qa', '.split > div > h2']) expect(impresion).toContain(sel)
+  // Al imprimir no hay observador que revele nada, y lo que quedó escondido
+  // saldría en blanco por la impresora.
+  expect(css).toMatch(/@media print\{:root \[data-revela\]\{opacity:1/)
 })
-
 test('los neutros del tema claro son agua, no papel templado', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
   const claro = css.slice(css.indexOf(':root{'), css.indexOf('/* El tema oscuro'))

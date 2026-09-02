@@ -690,7 +690,7 @@ Cada movimiento de la página contesta a una y sólo a una:
 |---|---|
 | ¿Está viva? | La **marea** de la portada. Continua, lenta, sin fin. |
 | ¿Me oye? | El hover y la pulsación de cada control, y la barra que se estrecha al bajar. |
-| ¿Por dónde voy? | El revelado de las series al entrar en pantalla. |
+| ¿Por dónde voy? | El revelado de las series al entrar en pantalla, a duración fija. |
 
 Si un movimiento nuevo no contesta a ninguna de las tres, no entra.
 
@@ -754,7 +754,7 @@ falla si aparece uno.
 | Crecida de la marea | 1,4 s | `--sal` | El agua se llena desde abajo al cargar |
 | Marea, capa de fondo | 38 s en bucle | lineal | ¿Está viva? |
 | Marea, capa de cara | 24 s en bucle | lineal | La diferencia con la de fondo es la profundidad |
-| Revelado de las series | según scroll | lineal | Pasos, precios, planes, distritos, preguntas y titulares |
+| Revelado de las series | 800 ms, +90 ms por hermano | `--sal` | Pasos, precios, planes, distritos, preguntas y titulares |
 | Secuencia de agua | según scroll | lineal | Ver abajo |
 
 Nada más. No hay parallax, ni contadores animados, ni cinta corriendo.
@@ -773,21 +773,56 @@ movimiento.
 Sólo donde hay **series**: los cuatro pasos, las tres celdas de precio, los tres planes,
 los distritos, las preguntas y los titulares de sección. Un revelado en cada elemento de
 la página deja de ser ritmo y pasa a ser un tic; ésa es la diferencia entre pacing y
-andamiaje. Se hace con `animation-timeline: view()`, sin JavaScript.
+andamiaje.
 
-**El recorrido son 26 px y el rango empieza en `entry 0%`.** Las dos cosas vienen del
-fallo descrito arriba: 12 px no se ven, y un rango que arranca en el 8 % deja un tramo
-en el que el elemento ya asoma por el borde y todavía es invisible.
+**No es `animation-timeline: view()`.** Lo fue, y estaba mal por una razón que no se ve
+leyendo el CSS: una línea de tiempo de scroll ata el avance de la animación a la
+posición del dedo. Bajando de un manotazo la animación se consume en dos cuadros y el
+elemento aparece de golpe; subiendo, se deshace y el texto se vuelve a esconder. Ningún
+valor de `animation-range` arregla eso, porque el problema no es el recorrido sino quién
+manda en el reloj.
+
+Ahora manda el reloj del navegador: un `IntersectionObserver` decide **cuándo** empieza y
+una transición CSS decide **cuánto** dura. Bajes como bajes, tarda lo mismo.
+
+| | |
+|---|---|
+| Recorrido | 30 px |
+| Duración | 800 ms |
+| Curva | `--sal` |
+| Escalonado | 90 ms entre hermanos que entran juntos, tope de 5 |
+| Repetición | Ninguna: se revela una vez y se deja de observar |
+
+800 ms es largo para un control y corto para un texto que aparece. Aquí lo que se mueve
+es contenido y se quiere ver llegar; el tope del escalonado existe porque doce distritos
+a 90 ms serían más de un segundo de espera para el último.
+
+**Transición y no fotogramas**, siguiendo a Sonner: una transición se puede interrumpir y
+retomar desde donde estaba; unos fotogramas reempiezan desde cero.
+
+Ver `src/revelado.ts`.
+
+#### La regla lleva `:root` delante, y no es decoración
+
+`:root [data-revela]` sube la especificidad a (0,1,1). Sin eso, `.dist{transition:color
+.2s}` —declarado más abajo para su hover, con la misma especificidad— se llevaba por
+delante el revelado de los doce distritos: se encendían de golpe. El CSS era correcto
+leído regla a regla y ninguna prueba estática lo veía; sólo apareció midiendo
+`transitionProperty` en el navegador. Hay una prueba que falla si vuelve a aparecer un
+`[data-revela]` sin blindar.
 
 **El estado base es el estado final**, y esto vale para la entrada y para el revelado.
 Un navegador sin líneas de tiempo de scroll, o una carga en la que el CSS llegue tarde,
 muestran el texto ya visible. La animación sólo puede quitar; nunca es lo que hace
 aparecer el contenido. Hay pruebas que lo comprueban en los dos casos.
 
-Con una excepción que hubo que cerrar a mano: **al imprimir no hay scroll**, la línea de
-tiempo no avanza nunca y `animation-fill-mode: both` deja el elemento clavado en el
-primer fotograma, que es opacidad cero. Es decir, la página salía por la impresora con
-secciones en blanco. Un `@media print` apaga el revelado entero.
+En el revelado esto se sostiene de una forma concreta: **nada se esconde desde el CSS**.
+El atributo `data-revela` lo pone el observador, y sólo en lo que todavía no se ve. Sin
+JavaScript no hay atributo, no hay regla que aplique y la página se lee entera. Y lo que
+ya está en pantalla al cargar no se esconde nunca: taparlo para volver a enseñarlo medio
+segundo después sería un parpadeo entre el pintado y la hidratación.
+
+Queda `@media print`, porque al imprimir tampoco hay observador que revele nada.
 
 ### La secuencia de agua
 
@@ -811,6 +846,10 @@ el agua pasa de agitada a asentada. Es lo que dice la sección, contado con imag
 
 `reduce` desactiva todo: la marea, la entrada, el revelado, el `scroll-behavior: smooth`
 y la descarga del vídeo, que ni siquiera se pide. Queda el póster.
+
+El revelado se apaga **desde JavaScript**, no desde el CSS. Apagar sólo la transición
+dejaría el elemento escondido hasta que el observador lo enseñara de golpe, que es peor
+que no animarlo: con `reduce` no se esconde ni un elemento.
 
 Lo que **no** se apaga es el estado de los controles: el color de hover, el borde de
 foco y la escala de pulsación siguen ahí. Quien pide menos movimiento sigue necesitando

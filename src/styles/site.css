@@ -600,35 +600,36 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
   /* El agua se llena desde abajo mientras entra la portada. */
   .marea{animation:crecida 1.4s var(--sal) both}
 
-  @supports (animation-timeline:view()){
-    /* Sólo las series y los titulares de sección. Un revelado en cada
-       elemento de la página deja de ser ritmo y pasa a ser un tic. */
-    .paso,
-    .precios > div,
-    .cols3 > div,
-    .distritos .dist,
-    .qa,
-    .split > div > h2{animation:surge .01s linear both;animation-timeline:view();
-      animation-range:entry 0% entry 50%}
-    /* El escalonado dentro de cada serie: la fila de al lado entra un poco
-       después, no a la vez. */
-    .precios > div:nth-child(2),.cols3 > div:nth-child(2){animation-range:entry 6% entry 56%}
-    .precios > div:nth-child(3),.cols3 > div:nth-child(3){animation-range:entry 12% entry 62%}
-
-    /* Al imprimir —o al capturar la página entera— no hay nada «entrando»: no
-       hay scroll que mueva la línea de tiempo, y con `both` el elemento se
-       queda en el primer fotograma, que es opacidad cero. Es decir: la página
-       saldría con secciones en blanco. Aquí se apaga el revelado entero.
-       El rango empieza en `entry 0%` por la misma razón de fondo: antes
-       empezaba en el 8%, y ese 8% es tiempo en el que el elemento ya asoma
-       por el borde y todavía está invisible. */
-    @media print{
-      .paso,.precios > div,.cols3 > div,.distritos .dist,.qa,
-      .split > div > h2{animation:none}
-    }
-  }
+  /* El revelado de las series NO vive aquí: lo monta src/revelado.ts con un
+     IntersectionObserver, porque una línea de tiempo de scroll ata la duración
+     al dedo y bajando rápido no se ve nada. Lo que queda abajo es cómo se ve
+     ese revelado; el cuándo lo decide el observador. */
 }
 @keyframes crecida{from{transform:translateY(60%)}to{transform:none}}
+
+/* --- 3. ¿POR DÓNDE VOY? el revelado de las series ------------------------
+   Sólo se esconde lo que aún no se ve; ver src/revelado.ts. La transición
+   —y no una animación de fotogramas— porque se puede interrumpir y retomar
+   desde donde estaba, mientras que unos fotogramas reempiezan desde cero.
+
+   800 ms es largo para un control y corto para un texto que aparece: aquí lo
+   que se mueve es contenido, y se quiere ver llegar. La curva es `--sal`, que
+   arranca de golpe y frena al final; con `ease-in` el elemento se quedaría
+   quieto justo en el instante en que se está mirando.
+   ---------------------------------------------------------------------- */
+/* `:root` delante no es decoración: sube la especificidad a (0,1,1) para que
+   ninguna clase suelta pueda pisar la transición. Pasó de verdad —`.dist`
+   declara abajo `transition:color .2s` para su hover, misma especificidad y
+   más adelante en el archivo, así que se llevaba por delante el revelado
+   entero de los doce distritos: se encendían de golpe y ninguna prueba lo
+   veía, porque el CSS era correcto leído regla a regla. Es la clase de fallo
+   que sólo aparece midiendo `transitionProperty` en el navegador. */
+:root [data-revela]{opacity:0;transform:translateY(30px);
+  transition:opacity .8s var(--sal),transform .8s var(--sal)}
+:root [data-revela][data-visible]{opacity:1;transform:none}
+/* Al imprimir no hay observador que revele nada, así que lo que no se hubiera
+   revelado saldría en blanco sobre el papel. */
+@media print{:root [data-revela]{opacity:1;transform:none;transition:none}}
 
 /* --- 2. ¿ME OYE? el estado de los controles ------------------------------
    Estas reglas no van dentro de prefers-reduced-motion: quien pide menos
