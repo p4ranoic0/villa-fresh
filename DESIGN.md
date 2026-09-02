@@ -166,13 +166,29 @@ archivo. **Debajo de ese bloque no hay ni un color escrito a mano**: un literal 
 abajo es un tema a medio hacer, y se vería bien en uno de los dos y mal en el otro.
 Hay una prueba que lo comprueba (`tests/build.test.ts`).
 
+### La temperatura del tema claro
+
+Durante dos versiones el tema claro fue **papel templado**: beige, `#f4f2ee`, con los
+grises girados unos grados hacia el cálido. Era coherente consigo mismo y estaba mal.
+El producto es agua fría y el material de la página decía panadería; ninguna cantidad
+de tipografía arregla que el fondo contradiga lo que se vende.
+
+Los neutros claros son ahora **el azul de marca diluido**: el mismo ángulo de matiz que
+`#0157b4` en CIELAB, con el croma bajado a ~3. No son un gris frío cualquiera (que es
+el otro sitio adonde se va por defecto) — son la misma agua, aguada.
+
+La conversión se hizo **conservando L\***, así que el contraste medido no se movió ni
+un punto al cambiar la temperatura: la tabla de §4 «Contraste» sigue siendo válida sin
+volver a medir. Hay una prueba que falla si algún neutro claro vuelve a tener más rojo
+que azul.
+
 ### Los roles
 
 | Token | Claro | Oscuro | Para qué |
 |---|---|---|---|
-| `--ground` | `#f2f1ec` | `#04101d` | fondo dominante |
-| `--panel` | `#e8e6df` | `#0a1c30` | bandas y tarjetas |
-| `--panel-2` | `#dedbd2` | `#0d2338` | tarjeta sobre panel |
+| `--ground` | `#f1f2f8` | `#04101d` | fondo dominante |
+| `--panel` | `#e2e3ea` | `#0a1c30` | bandas y tarjetas |
+| `--panel-2` | `#dadbe3` | `#0d2338` | tarjeta sobre panel |
 | `--ink` | `#0a1622` | `#eaf2f8` | titulares |
 | `--ink-2` | `#3d4c5a` | `#a6bccd` | párrafos |
 | `--ink-3` | `#4a5865` | `#bcd0e0` | bajadas (`.lede`) |
@@ -649,7 +665,53 @@ generada que muestre una etiqueta que no es la de Villa Fresh.
 
 ## 12. Movimiento
 
-Discreto. El agua se mueve; la interfaz no compite.
+Discreto no es lo mismo que invisible, y esa confusión costó una versión entera.
+
+### El fallo que había que ver
+
+La versión anterior **sí tenía animaciones** y aun así el sitio se leía como una
+captura de pantalla. Es un fallo más difícil de detectar que no tener ninguna, porque
+el inventario estaba lleno y todo pasaba las pruebas. Dos causas:
+
+1. **El recorrido no llegaba al ojo.** El revelado desplazaba las filas 12 px
+   repartidos a lo largo de media pantalla de scroll. El ojo empieza a leer
+   desplazamiento a partir de unos 20 px; por debajo, el navegador gasta cuadros en
+   algo que no llega a nadie.
+2. **Nada se movía solo.** Todo el movimiento dependía de que alguien hiciera scroll o
+   pasara el cursor. Una página que sólo se mueve cuando la mueven no contesta a la
+   primera pregunta que hace cualquiera al abrirla, que no es «¿qué vendéis?» sino
+   **«¿esto está vivo?»**.
+
+### Las tres preguntas
+
+Cada movimiento de la página contesta a una y sólo a una:
+
+| Pregunta | Qué la contesta |
+|---|---|
+| ¿Está viva? | La **marea** de la portada. Continua, lenta, sin fin. |
+| ¿Me oye? | El hover y la pulsación de cada control, y la barra que se estrecha al bajar. |
+| ¿Por dónde voy? | El revelado de las series al entrar en pantalla. |
+
+Si un movimiento nuevo no contesta a ninguna de las tres, no entra.
+
+### La marea
+
+Es lo único que se mueve sin que nadie toque nada, y existe por la causa 2 de arriba.
+No informa de nada —no tiene que hacerlo—, sólo evita que la portada parezca impresa.
+
+- **Una onda, no un degradado a la deriva.** El degradado en movimiento es mobiliario
+  de plantilla y no dice agua, dice «efecto». Una superficie ondulando dice agua y no
+  dice nada más.
+- **Dos capas a velocidades distintas** (38 s y 24 s). La diferencia entre las dos es
+  lo que da profundidad; una sola capa se lee como un adorno recortado.
+- **Lentas a propósito.** Una marea rápida es una animación; una marea lenta es agua.
+- **`linear`.** Una superficie de agua no acelera ni frena al desplazarse.
+- **El empalme.** El trazo mide el doble de ancho que su marco y contiene ocho periodos
+  completos; la animación lo desplaza exactamente la mitad, que son cuatro periodos. Al
+  reiniciar, la curva cae encima de sí misma y el ciclo no tiene costura. Si el
+  desplazamiento no cayera en un múltiplo del periodo, cada vuelta daría un salto.
+
+Ver `src/components/Marea.tsx`.
 
 ### La pregunta antes de animar
 
@@ -686,12 +748,16 @@ falla si aparece uno.
 | Cajón del pedido | 380 ms | `--cajon` | Entra por donde se va: hace legible el gesto |
 | Velo del cajón | 300 ms | `ease` | Sin él, el fondo se oscurece de golpe |
 | Pulso del carrito | 450 ms | `ease` | Confirma que la línea se añadió |
-| Entrada de la portada | 550 ms, +62 ms por pieza | `--sal` | Se ve una vez: da un orden de lectura |
-| Revelado de las series | según scroll | lineal | Pasos, precios, planes y preguntas |
+| Levantar el botón en hover | 160 ms | `--sal` | 1 px: el control se ofrece antes de pulsarlo |
+| Barra al bajar | 300 ms | `--sal` | Se estrecha y se despega: acusa que la estás recorriendo |
+| Entrada de la portada | 620 ms, +62 ms por pieza | `--sal` | Se ve una vez: da un orden de lectura |
+| Crecida de la marea | 1,4 s | `--sal` | El agua se llena desde abajo al cargar |
+| Marea, capa de fondo | 38 s en bucle | lineal | ¿Está viva? |
+| Marea, capa de cara | 24 s en bucle | lineal | La diferencia con la de fondo es la profundidad |
+| Revelado de las series | según scroll | lineal | Pasos, precios, planes, distritos, preguntas y titulares |
 | Secuencia de agua | según scroll | lineal | Ver abajo |
-| Cinta | 46 s en bucle | lineal | Movimiento constante |
 
-Nada más. No hay parallax, ni contadores animados, ni revelados en cada sección.
+Nada más. No hay parallax, ni contadores animados, ni cinta corriendo.
 
 ### La entrada de la portada
 
@@ -704,15 +770,24 @@ movimiento.
 
 ### El revelado de las series
 
-Sólo donde hay **series**: los cuatro pasos, las tres celdas de precio, los tres planes
-y las preguntas. Un revelado en cada bloque de la página deja de ser ritmo y pasa a ser
-un tic; ésa es la diferencia entre pacing y andamiaje. Se hace con
-`animation-timeline: view()`, sin JavaScript.
+Sólo donde hay **series**: los cuatro pasos, las tres celdas de precio, los tres planes,
+los distritos, las preguntas y los titulares de sección. Un revelado en cada elemento de
+la página deja de ser ritmo y pasa a ser un tic; ésa es la diferencia entre pacing y
+andamiaje. Se hace con `animation-timeline: view()`, sin JavaScript.
+
+**El recorrido son 26 px y el rango empieza en `entry 0%`.** Las dos cosas vienen del
+fallo descrito arriba: 12 px no se ven, y un rango que arranca en el 8 % deja un tramo
+en el que el elemento ya asoma por el borde y todavía es invisible.
 
 **El estado base es el estado final**, y esto vale para la entrada y para el revelado.
 Un navegador sin líneas de tiempo de scroll, o una carga en la que el CSS llegue tarde,
 muestran el texto ya visible. La animación sólo puede quitar; nunca es lo que hace
 aparecer el contenido. Hay pruebas que lo comprueban en los dos casos.
+
+Con una excepción que hubo que cerrar a mano: **al imprimir no hay scroll**, la línea de
+tiempo no avanza nunca y `animation-fill-mode: both` deja el elemento clavado en el
+primer fotograma, que es opacidad cero. Es decir, la página salía por la impresora con
+secciones en blanco. Un `@media print` apaga el revelado entero.
 
 ### La secuencia de agua
 
@@ -734,8 +809,12 @@ el agua pasa de agitada a asentada. Es lo que dice la sección, contado con imag
 
 ### `prefers-reduced-motion`
 
-`reduce` desactiva todo: la cinta, el revelado, el `scroll-behavior: smooth` y la
-descarga del vídeo, que ni siquiera se pide. Queda el póster.
+`reduce` desactiva todo: la marea, la entrada, el revelado, el `scroll-behavior: smooth`
+y la descarga del vídeo, que ni siquiera se pide. Queda el póster.
+
+Lo que **no** se apaga es el estado de los controles: el color de hover, el borde de
+foco y la escala de pulsación siguen ahí. Quien pide menos movimiento sigue necesitando
+saber qué está tocando; lo que sobra es el recorrido, no la respuesta.
 
 ---
 

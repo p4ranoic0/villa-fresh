@@ -137,8 +137,11 @@ async function cssPublicado() {
 
 test('la web publicada define los dos temas y deja mandar al sistema', async () => {
   const css = await cssPublicado()
-  // Claro por defecto.
-  expect(css).toContain('--ground:#f4f2ee')
+  // Claro por defecto. El valor va escrito a mano y no leido del fuente: si
+  // alguien cambia la temperatura de la pagina, esta prueba lo dice en voz
+  // alta en vez de dejarlo pasar. (Fue #f4f2ee, beige, hasta que se vio que
+  // el papel templado contradecia el producto; ver la prueba de los neutros.)
+  expect(css).toContain('--ground:#f1f2f8')
   // Oscuro cuando lo pide el sistema, salvo que el visitante haya elegido claro.
   // El minificador quita las comillas del selector, asi que no se asumen.
   expect(css).toContain('(prefers-color-scheme:dark)')
@@ -328,6 +331,62 @@ test('el texto secundario se aleja del titular lo mismo en los dos temas', async
     const desajuste = +Math.abs(enClaro - enOscuro).toFixed(1)
     expect({ token, desajuste, tolerable: desajuste <= 2 })
       .toEqual({ token, desajuste, tolerable: true })
+  }
+})
+
+test('la portada se mueve sola, sin que nadie toque nada', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // La versión anterior sí tenía animaciones y aun así el sitio se veía
+  // muerto: todas dependían de que alguien hiciera scroll. Una página que
+  // sólo se mueve cuando la mueven no contesta a «¿esto está vivo?».
+  expect(html).toContain('class="marea"')
+  expect(css).toMatch(/\.marea-fondo\{animation:marea [\d.]+s linear infinite\}/)
+  expect(css).toMatch(/\.marea-cara\{animation:marea [\d.]+s linear infinite\}/)
+  // Y la marea viaja en el HTML publicado, no la pinta JavaScript al hidratar.
+  expect(html).toMatch(/<svg class="marea-capa[^"]*"[^>]*>\s*<path/)
+})
+
+test('el desplazamiento del revelado llega a verse', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const surge = css.match(/@keyframes surge\{from\{opacity:0;transform:translateY\((\d+)px\)/)
+  expect(surge).not.toBeNull()
+  const px = Number(surge![1])
+  // El recorrido anterior eran 12 px repartidos a lo largo de media pantalla
+  // de scroll: el navegador gastaba cuadros en algo que nadie podía ver.
+  expect({ px, seVe: px >= 20 }).toEqual({ px, seVe: true })
+})
+
+test('el revelado empieza en cuanto el elemento asoma, no después', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Si el rango arranca más tarde que `entry 0%`, hay un tramo en el que el
+  // elemento ya está dentro de la pantalla y todavía es invisible.
+  const rangos = [...css.matchAll(/animation-range:entry (\d+)%/g)].map((m) => Number(m[1]))
+  expect(rangos.length).toBeGreaterThan(0)
+  expect(Math.min(...rangos)).toBe(0)
+})
+
+test('el revelado no puede dejar una sección en blanco sobre papel', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Al imprimir no hay scroll, la línea de tiempo no avanza y `both` deja el
+  // elemento en el primer fotograma, que es opacidad cero.
+  const bloque = css.slice(css.indexOf('@supports (animation-timeline:view())'))
+  const impresion = bloque.slice(bloque.indexOf('@media print'))
+  expect(impresion).toContain('animation:none')
+  for (const sel of ['.paso', '.qa', '.split > div > h2']) expect(impresion).toContain(sel)
+})
+
+test('los neutros del tema claro son agua, no papel templado', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const claro = css.slice(css.indexOf(':root{'), css.indexOf('/* El tema oscuro'))
+  // Durante una versión entera el tema claro fue beige: rojo por encima de
+  // azul en todos los neutros. El producto es agua fría y el material de la
+  // página decía panadería. Ahora el matiz es el del azul de marca, diluido.
+  for (const token of ['--ground', '--panel', '--panel-2', '--ink', '--ink-2', '--dim']) {
+    const h = claro.match(new RegExp(`${token}:#([0-9a-f]{6})`))![1]!
+    const r = parseInt(h.slice(0, 2), 16)
+    const b = parseInt(h.slice(4, 6), 16)
+    expect({ token, hex: `#${h}`, frio: b > r }).toEqual({ token, hex: `#${h}`, frio: true })
   }
 })
 

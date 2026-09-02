@@ -22,33 +22,37 @@
 :root{
   color-scheme:light;
 
-  /* Los grises del tema claro salian todos del mismo azul-negro del logotipo
-     y la pagina entera quedaba en temperatura fria: correcta y antipatica. Se
-     giran unos grados hacia el calido, lo justo para que el papel parezca
-     papel. El acento sigue siendo el azul literal de la marca. */
-  --ground:#f4f2ee;        /* el papel manda */
-  --panel:#e7e3dc;         /* bandas y tarjetas */
-  --panel-2:#e0dbd2;       /* tarjeta elevada */
-  --ink:#121519;           /* titulares */
+  /* Estos grises fueron papel templado (beige, calido) durante una version
+     entera, y era el error de fondo: el producto es agua frIa y el material
+     de la pagina decia panaderia. Ahora los neutros son el AZUL DE MARCA
+     diluido —mismo angulo de matiz que #0157b4, croma bajado a ~3— asi que
+     el fondo no es un gris cualquiera: es la misma agua, aguada.
+     Convertidos en CIELAB conservando L*, de modo que el contraste medido
+     no se movio ni un punto al cambiar la temperatura. */
+  --ground:#f1f2f8;        /* el papel manda */
+  --panel:#e2e3ea;         /* bandas y tarjetas */
+  --panel-2:#dadbe3;       /* tarjeta elevada */
+  --ink:#141518;           /* titulares */
   /* Medidos en L*, no a ojo. Con los valores anteriores la bajada se alejaba
      29.9 del titular en claro y sólo 12.6 en oscuro: el texto que explica la
      página se caía justo en el tema por defecto. Ahora los dos temas alejan
      lo mismo. */
-  --ink-2:#3c4046;         /* parrafos */
-  --ink-3:#2c3035;         /* bajadas */
-  --dim:#525659;           /* etiquetas y metadatos */
+  --ink-2:#3f3f44;         /* parrafos */
+  --ink-3:#2f2f33;         /* bajadas */
+  --dim:#55555a;           /* etiquetas y metadatos */
   --line:rgba(10,22,34,.16);
   --line-2:rgba(10,22,34,.34);--line2:rgba(10,22,34,.34);
 
   --acento:#0157b4;        /* acento unico: el azul literal del logotipo */
   --acento-alto:#013f80;   /* estado hover: sobre papel, el enlace se oscurece */
   --acento-suave:rgba(1,87,180,.14);
-  --sobre-acento:#f2f1ec;  /* texto sobre el acento */
-  --sobre-acento-2:rgba(242,241,236,.86);
-  --sobre-acento-3:rgba(242,241,236,.88);
+  --sobre-acento:#f0f1f7;  /* texto sobre el acento */
+  --sobre-acento-2:rgba(240,241,247,.86);
+  --sobre-acento-3:rgba(240,241,247,.88);
 
-  --nav-fondo:rgba(242,241,236,.97);
-  --ficha-fondo:rgba(214,210,199,.55);
+  --nav-fondo:rgba(240,241,247,.97);
+  --nav-sombra:rgba(10,22,34,.5);
+  --ficha-fondo:rgba(209,210,217,.55);
   --velo:rgba(10,22,34,.55);
   --foto-sombra:rgba(10,22,34,.16);
   --inv-realce:rgba(62,193,255,.12);
@@ -60,9 +64,9 @@
   --inv-p:#a6bccd;
   --inv-dim:#8ba3ba;
   --inv-line:rgba(234,242,248,.18);
-  --inv-btn:#f2f1ec;
+  --inv-btn:#f0f1f7;
   --inv-btn-ink:#04101d;
-  --inv-btn-alto:#fbfaf7;
+  --inv-btn-alto:#f9faff;
   --inv-btn-ink-alto:#04101d;
 
   --wa:#25d366;            /* color del canal WhatsApp, no de marca */
@@ -108,6 +112,7 @@
   --sobre-acento-2:rgba(4,16,29,.72);
   --sobre-acento-3:rgba(4,16,29,.78);
   --nav-fondo:rgba(4,16,29,.92);
+  --nav-sombra:rgba(0,0,0,.75);
   --ficha-fondo:rgba(10,28,48,.55);
   --velo:rgba(2,8,15,.72);
   --foto-sombra:rgba(0,0,0,.5);
@@ -118,15 +123,15 @@
   --visor-fondo:transparent;
   --visor-mezcla:screen;
   --peligro:#ff7a7a;
-  --inv:#f2f1ec;
+  --inv:#f0f1f7;
   --inv-ink:#0a1622;
   --inv-p:#3d4c5a;
   --inv-dim:#5b6a78;
   --inv-line:rgba(10,22,34,.18);
   --inv-btn:#04101d;
-  --inv-btn-ink:#f2f1ec;
+  --inv-btn-ink:#f0f1f7;
   --inv-btn-alto:#0a2136;
-  --inv-btn-ink-alto:#f7f6f2;
+  --inv-btn-ink-alto:#f5f6fc;
 }}
 
 :root[data-tema="oscuro"]{
@@ -147,6 +152,7 @@
   --sobre-acento-2:rgba(4,16,29,.72);
   --sobre-acento-3:rgba(4,16,29,.78);
   --nav-fondo:rgba(4,16,29,.92);
+  --nav-sombra:rgba(0,0,0,.75);
   --ficha-fondo:rgba(10,28,48,.55);
   --velo:rgba(2,8,15,.72);
   --foto-sombra:rgba(0,0,0,.5);
@@ -157,15 +163,15 @@
   --visor-fondo:transparent;
   --visor-mezcla:screen;
   --peligro:#ff7a7a;
-  --inv:#f2f1ec;
+  --inv:#f0f1f7;
   --inv-ink:#0a1622;
   --inv-p:#3d4c5a;
   --inv-dim:#5b6a78;
   --inv-line:rgba(10,22,34,.18);
   --inv-btn:#04101d;
-  --inv-btn-ink:#f2f1ec;
+  --inv-btn-ink:#f0f1f7;
   --inv-btn-alto:#0a2136;
-  --inv-btn-ink-alto:#f7f6f2;
+  --inv-btn-ink-alto:#f5f6fc;
 }
 
 *,*::before,*::after{box-sizing:border-box}
@@ -459,7 +465,8 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     /* El texto se centra contra la columna de la foto. Alineados arriba, la
        izquierda terminaba en los botones y quedaba un hueco muerto de media
        pantalla debajo mientras la derecha seguia bajando. */
-    .hero-grid{position:relative;display:grid;gap:44px;align-items:start}
+    /* z-index sobre la marea: el contenido va por encima del agua, no dentro. */
+    .hero-grid{position:relative;z-index:1;display:grid;gap:44px;align-items:start}
     @media(min-width:960px){.hero-grid{align-items:center}}
     .hero-col{display:grid;gap:22px;justify-items:center}
     .hero-foto{width:min(390px,80vw);height:auto;filter:drop-shadow(0 26px 40px var(--foto-sombra))}
@@ -530,42 +537,120 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 /* ==========================================================================
    MOVIMIENTO DE PÁGINA
 
-   Dos momentos y nada más: la entrada al cargar, que se ve una vez, y el
-   revelado de las filas que son series (pasos, precios, planes). Todo lo
-   demás está quieto a propósito.
+   La versión anterior sí tenía movimiento y aun así el sitio se veía muerto,
+   que es un fallo distinto y más caro de detectar: el revelado desplazaba las
+   filas 12 px repartidos a lo largo de media pantalla de scroll. Eso no es
+   una animación discreta, es una animación que nadie puede ver. Medido: el
+   ojo empieza a leer desplazamiento a partir de unos 20 px, y por debajo de
+   eso el navegador está gastando cuadros en algo que no llega a nadie.
 
-   En los dos casos **el estado base es el estado final**. La animación sólo
+   Ahora hay tres movimientos y cada uno responde a una pregunta distinta:
+
+     1. ¿ESTÁ VIVA?      La marea de la portada. Continua, lenta, sin fin. Es
+                         lo único que se mueve solo, y por eso es lo único que
+                         contesta a esta pregunta antes de que nadie toque
+                         nada.
+     2. ¿ME OYE?         El hover y la pulsación de cada control, y la barra
+                         que se estrecha al bajar. Movimiento como respuesta.
+     3. ¿POR DÓNDE VOY?  El revelado de las series al entrar en pantalla, ya
+                         con recorrido suficiente para notarse.
+
+   En los tres casos **el estado base es el estado final**. La animación sólo
    puede quitar; nunca es lo que hace aparecer el contenido. Si el navegador
    no soporta líneas de tiempo de scroll, o si el CSS llega tarde, la página
    se lee entera igual.
    ========================================================================== */
-@keyframes surge{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes surge{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+/* La marea se desplaza la mitad de su propio ancho, que son cuatro periodos
+   enteros: al reiniciar, la curva cae encima de sí misma y el ciclo no tiene
+   costura. Ver src/components/Marea.tsx. */
+@keyframes marea{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
+/* --- la marea de la portada --- */
+/* El testigo que le dice al documento que ya no estamos arriba del todo.
+   Cero de alto: no ocupa, sólo se deja observar. */
+.testigo-tope{height:1px;margin-bottom:-1px}
+
+.marea{position:absolute;left:0;right:0;bottom:0;z-index:0;pointer-events:none;
+  overflow:hidden;line-height:0;height:clamp(106px,16vh,186px)}
+/* El doble de ancho que su marco: la otra mitad es la que va entrando. */
+.marea-capa{position:absolute;left:0;bottom:0;width:200%;height:100%;display:block;fill:var(--acento)}
+.marea-fondo{opacity:.10}
+.marea-cara{opacity:.17}
 @media (prefers-reduced-motion:no-preference){
 
-  /* La entrada. Es lo único que ocurre sin que el visitante haga nada, y por
-     eso es corta y va escalonada: el ojo sigue un orden en vez de recibirlo
-     todo de golpe. 62 ms entre piezas; más y se siente lento. */
+  /* 1. VIVA. Dos capas a velocidades distintas; la diferencia entre las dos
+     es lo que da profundidad. Lentas a propósito: una marea rápida es una
+     animación, una marea lenta es agua. Y `linear`, porque una superficie de
+     agua no acelera ni frena al desplazarse. */
+  .marea-fondo{animation:marea 38s linear infinite}
+  .marea-cara{animation:marea 24s linear infinite}
+
+  /* La entrada. Es lo único que ocurre sin que el visitante haga nada además
+     de la marea, y por eso es corta y va escalonada: el ojo sigue un orden en
+     vez de recibirlo todo de golpe. */
   .hero-grid > div > *,
-  .hero .ficha{animation:surge .55s var(--sal) both}
+  .hero .ficha{animation:surge .62s var(--sal) both}
   .hero-grid > div > *:nth-child(1){animation-delay:.04s}
   .hero-grid > div > *:nth-child(2){animation-delay:.10s}
   .hero-grid > div > *:nth-child(3){animation-delay:.16s}
   .hero-grid > div > *:nth-child(4){animation-delay:.22s}
   .hero .ficha{animation-delay:.28s}
   .hero .motif{animation:surge 1.1s var(--sal) both;animation-delay:.1s}
+  /* El agua se llena desde abajo mientras entra la portada. */
+  .marea{animation:crecida 1.4s var(--sal) both}
 
   @supports (animation-timeline:view()){
-    /* Sólo las series. Un revelado en cada bloque de la página deja de ser
-       ritmo y pasa a ser un tic. */
+    /* Sólo las series y los titulares de sección. Un revelado en cada
+       elemento de la página deja de ser ritmo y pasa a ser un tic. */
     .paso,
     .precios > div,
     .cols3 > div,
-    .qa{animation:surge .01s linear both;animation-timeline:view();
-      animation-range:entry 6% entry 48%}
+    .distritos .dist,
+    .qa,
+    .split > div > h2{animation:surge .01s linear both;animation-timeline:view();
+      animation-range:entry 0% entry 50%}
     /* El escalonado dentro de cada serie: la fila de al lado entra un poco
        después, no a la vez. */
-    .precios > div:nth-child(2),.cols3 > div:nth-child(2){animation-range:entry 10% entry 52%}
-    .precios > div:nth-child(3),.cols3 > div:nth-child(3){animation-range:entry 14% entry 56%}
+    .precios > div:nth-child(2),.cols3 > div:nth-child(2){animation-range:entry 6% entry 56%}
+    .precios > div:nth-child(3),.cols3 > div:nth-child(3){animation-range:entry 12% entry 62%}
+
+    /* Al imprimir —o al capturar la página entera— no hay nada «entrando»: no
+       hay scroll que mueva la línea de tiempo, y con `both` el elemento se
+       queda en el primer fotograma, que es opacidad cero. Es decir: la página
+       saldría con secciones en blanco. Aquí se apaga el revelado entero.
+       El rango empieza en `entry 0%` por la misma razón de fondo: antes
+       empezaba en el 8%, y ese 8% es tiempo en el que el elemento ya asoma
+       por el borde y todavía está invisible. */
+    @media print{
+      .paso,.precios > div,.cols3 > div,.distritos .dist,.qa,
+      .split > div > h2{animation:none}
+    }
   }
 }
+@keyframes crecida{from{transform:translateY(60%)}to{transform:none}}
+
+/* --- 2. ¿ME OYE? el estado de los controles ------------------------------
+   Estas reglas no van dentro de prefers-reduced-motion: quien pide menos
+   movimiento sigue necesitando saber qué está tocando. Lo que se apaga arriba
+   es la transición, no el estado. -------------------------------------- */
+/* Sólo con ratón: en una pantalla táctil el hover se dispara al tocar y se
+   queda pegado, y el elemento se levanta solo sin volver a bajar. */
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{transform:translateY(-1px)}
+  .dist:hover{color:var(--acento)}
+  /* El botón de la tarjeta se enciende cuando el ratón entra en la tarjeta,
+     no cuando acierta con el botón: el objetivo real es la tarjeta entera. */
+  .card:hover .btn-cyan{background:var(--acento-alto)}
+}
+/* Después del hover, para que la pulsación gane: quien está pulsando ya no
+   necesita que le confirmen que el ratón está encima. */
+.btn:active,.cart-btn:active,.tema-btn:active{transform:scale(.97)}
+.dist{transition:color .2s ease}
+
+/* La barra al bajar: se estrecha y se despega. El atributo lo pone el
+   observador de src/components/Nav.tsx. */
+.nav{transition:box-shadow .3s ease}
+.nav-in{transition:padding-block .3s var(--sal)}
+:root[data-desplazado] .nav-in{padding-block:12px}
+:root[data-desplazado] .nav{box-shadow:0 10px 30px -22px var(--nav-sombra)}

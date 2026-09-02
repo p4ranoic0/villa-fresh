@@ -1,3 +1,4 @@
+import Marea from '../../components/Marea'
 import { activo } from '../../rutas-publicas'
 import { IconoWhatsApp } from '../../components/Icono'
 import { urlWhatsApp } from '../../data/negocio'
@@ -9,6 +10,7 @@ export default function Hero() {
         <path d="M50 5C50 5 9 52 9 78a41 41 0 0 0 82 0C91 52 50 5 50 5z" />
         <path d="M23 91L45 62l13 17 10-11 16 21" />
       </svg>
+      <Marea />
       <div className="wrap hero-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
           {/* Antes esto abría con «NO REVENDEMOS AGUA. LA FABRICAMOS.» en
