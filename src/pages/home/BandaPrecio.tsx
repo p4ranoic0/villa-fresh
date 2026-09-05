@@ -35,7 +35,7 @@ export default function BandaPrecio() {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', borderTop: '1px solid var(--inv-line)', paddingTop: 30 }}>
           <Pagos />
-          <a className="btn btn-inv" href="#productos">Ver todos los productos</a>
+          <a className="btn btn-inv" href="#productos">Ver productos</a>
         </div>
       </div>
     </section>

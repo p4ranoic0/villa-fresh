@@ -427,6 +427,68 @@ test('los neutros del tema claro son agua, no papel templado', async () => {
   }
 })
 
+test('la monoespaciada sólo viste a lo que se lee como cifra', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Llegó a haber veinte hojas de texto en Plex Mono: precios de tarjeta,
+  // «A cotizar», los números de paso, Hogar/Empresa/Obra, PRECIO POR VOLUMEN,
+  // la tira de cobertura, el kicker del cierre. Ese estrato es el que hacía
+  // que la página hablara en dos voces, una humana y otra de máquina, y la de
+  // máquina es la que se lee como generada.
+  //
+  // Lista blanca, no un tope: cada entrada tiene que poder defenderse sola.
+  const permitidos = new Set([
+    '.nav-tel',            // el teléfono de la barra: se memoriza y se marca
+    '.close .num',         // el mismo teléfono, en grande
+    '.precios .amt sup',   // el «S/» del precio grande (ver DESIGN.md §5)
+    '.line .pr',           // importes del cajón: se alinean en columna
+    '.line .qty span',     // la cantidad, entre los dos botones
+    '.total',              // el total del cajón
+    '.nota-titulo',        // la nota de pendientes, que a propósito no parece web
+  ])
+  const declaraciones = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  const usan = [...declaraciones.matchAll(/([^{}]+)\{[^}]*font-family:var\(--mono\)/g)]
+    .map((m) => m[1]!.split('\n').pop()!.trim())
+  const sobran = usan.filter((sel) => !permitidos.has(sel))
+  expect({ usan: usan.length, sobran }).toEqual({ usan: usan.length, sobran: [] })
+
+  // Y la utilidad que la repartía desde el JSX ya no existe.
+  expect(declaraciones).not.toMatch(/\.mono\{/)
+})
+
+test('ninguna versalita se cuela por estilo en línea', async () => {
+  // Cuatro `textTransform:'uppercase'` sobrevivieron a la limpieza anterior
+  // porque iban en el JSX y no en la hoja: Planes ×2, Cobertura y Cierre. Un
+  // grep del CSS no los veía.
+  const { readdir } = await import('node:fs/promises')
+  const rutas: string[] = []
+  const recorrer = async (dir: string) => {
+    for (const e of await readdir(dir, { withFileTypes: true })) {
+      const ruta = `${dir}/${e.name}`
+      if (e.isDirectory()) await recorrer(ruta)
+      else if (ruta.endsWith('.tsx')) rutas.push(ruta)
+    }
+  }
+  await recorrer('src')
+
+  const culpables: string[] = []
+  for (const ruta of rutas) {
+    const codigo = await readFile(ruta, 'utf8')
+    if (/textTransform:\s*'uppercase'/.test(codigo)) culpables.push(ruta)
+  }
+  expect(culpables).toEqual([])
+})
+
+test('cada intención tiene un solo rótulo', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  // «Ver productos» en el hero y «Ver todos los productos» en la banda de
+  // precio llevaban al mismo ancla. El visitante aprende el vocabulario de la
+  // página; cambiárselo a mitad es ruido.
+  const rotulos = [...html.matchAll(/<a class="btn[^"]*"[^>]*>([^<]*)</g)]
+    .map((m) => m[1]!.trim())
+    .filter((t) => t.startsWith('Ver '))
+  expect([...new Set(rotulos)]).toEqual(['Ver productos'])
+})
+
 test('la banda de precio no inventa un tercer precio', async () => {
   const html = await readFile('dist/index.html', 'utf8')
   const banda = html.slice(html.indexOf('id="precio"'), html.indexOf('id="proceso"'))

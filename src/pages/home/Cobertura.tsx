@@ -36,8 +36,11 @@ export default function Cobertura() {
         <div className="distritos">
           {DISTRITOS.map((distrito) => <div className="dist" key={distrito}>{distrito}</div>)}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginTop: 32 }}>
-          <span className="mono" style={{ fontSize: '12px', letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--dim)' }}>Entrega el mismo día · Consulta tu distrito</span>
+        {/* Aquí iba «ENTREGA EL MISMO DÍA · CONSULTA TU DISTRITO» en monoespaciada
+            versalita: repetía palabra por palabra lo que la bajada de esta misma
+            sección dice cinco líneas más arriba. Cero información y las tres
+            señales del disfraz juntas. Queda el botón solo. */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 24, flexWrap: 'wrap', marginTop: 32 }}>
           <a className="btn btn-cyan" href={urlWhatsApp('Hola, ¿llegan a mi distrito?')} target="_blank" rel="noopener">¿Llegan a mi distrito?</a>
         </div>
       </div>

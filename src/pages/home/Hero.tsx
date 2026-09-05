@@ -6,10 +6,11 @@ import { urlWhatsApp } from '../../data/negocio'
 export default function Hero() {
   return (
     <header className="hero band" id="inicio">
-      <svg className="motif" viewBox="0 0 100 120" aria-hidden="true">
-        <path d="M50 5C50 5 9 52 9 78a41 41 0 0 0 82 0C91 52 50 5 50 5z" />
-        <path d="M23 91L45 62l13 17 10-11 16 21" />
-      </svg>
+      {/* Aquí vivía la gota de la marca en trazo, cruzando la esquina superior
+          derecha. Cuando era el único gráfico de la portada tenía sentido; con
+          la foto del producto y la marea pasó a ser el tercero, y decía en
+          línea lo que la marea ya dice con materia. Quitar un accesorio antes
+          de salir. La marca sigue en la barra y en la etiqueta del bidón. */}
       <Marea />
       <div className="wrap hero-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>

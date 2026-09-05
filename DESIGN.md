@@ -116,6 +116,12 @@ alterna; no encadenes.
 
 ## 3. Logotipo y motivo
 
+> **Nota (2026-09):** el motivo de la gota en trazo que cruzaba la esquina del hero
+> **se retiró**. Cuando era el único gráfico de la portada tenía sentido; con la foto
+> del producto y la marea pasó a ser el tercero, y decía en línea lo que la marea ya
+> dice con materia. Quitar un accesorio antes de salir. Lo que sigue describe el
+> logotipo, que no cambia.
+
 El isotipo es una **gota que contiene una montaña**, dentro de un círculo azul.
 
 Archivos: `marca/logo-villafresh-fondo-blanco.jpg` (positivo) y
@@ -317,7 +323,7 @@ Todos los tamaños grandes son fluidos con `clamp()`; no hay saltos por breakpoi
 | Párrafo | 15–16 px | 400 | 0 | 1.55–1.65 |
 | `.lbl` (etiqueta mono) | 11 px | 500 | **.2em** | 1 |
 | SKU | 10 px mono | 400 | .18em | 1 |
-| Precio en tarjeta | 20 px mono | 600 | −.01em | 1.25 |
+| Precio en tarjeta | 20 px, cifras tabulares | 600 | −.015em | 1.25 |
 | Precio grande | `clamp(64px, 8vw, 104px)` | 800 | −.05em | .86 |
 | Precio sin cifra | `clamp(26px, 3.2vw, 42px)` mono | 600 | −.02em | 1 |
 | Cifra de cierre | `clamp(2.4rem, 6.5vw, 5.5rem)` mono | 600 | −.03em | 1 |
@@ -344,15 +350,42 @@ fingir que es un precio, y el párrafo de las tres arranca a la misma altura.
 Dice **«A cotizar»**, que es exactamente lo que muestra el catálogo cuando `precio` es
 `null`. Una sola forma de decirlo en todo el sitio.
 
-### Etiquetas mono
+### Etiquetas
 
-Toda etiqueta usa `.lbl`, y ya **no es mono ni va en mayúsculas**: 13 px, peso 600,
+Toda etiqueta usa `.lbl`, y **no es mono ni va en mayúsculas**: 13 px, peso 600,
 sin interletrado, color `--dim` (o `--acento` con `.lbl-cyan`). Aparecía quince veces
 —6 PRODUCTOS, PAGO AL RECIBIR, UN BIDÓN, HOGAR, PEDIDOS POR WHATSAPP…— y quince
 letreros iguales eran la mitad del problema. Lo que etiquetan sigue siendo útil.
 
-La monoespaciada queda para lo que de verdad es tabular: el teléfono, los precios de
-las tarjetas, el número de orden de los pasos del proceso.
+### Dónde puede ir la monoespaciada
+
+Aquella limpieza se quedó a medias. Quitó la clase `.lbl`, pero la monoespaciada
+siguió repartida por el resto de la página: quedaban **veinte hojas de texto** en Plex
+Mono —los precios de tarjeta, los tres «A cotizar», los números de paso `01`-`04`,
+las etiquetas Hogar/Empresa/Obra, `PRECIO POR VOLUMEN`, `TARIFA POR PROYECTO`, la tira
+de cobertura, el kicker del cierre—, y cuatro versalitas más metidas con
+`textTransform` en el JSX, donde ningún grep del CSS las veía.
+
+Ese estrato es el que hacía que la página **hablara en dos voces**: una humana, en
+Archivo y caja normal, y otra de máquina, en mono espaciada y versalitas. La segunda
+es la que se lee como generada. La monoespaciada no es el carácter de esta marca:
+Villa Fresh reparte agua, no vende infraestructura.
+
+**La regla:** Plex Mono viste sólo lo que se lee como cifra y no como palabra.
+
+| Dónde | Por qué |
+|---|---|
+| `.nav-tel` y `.close .num` | El teléfono. Se memoriza y se marca; los grupos de dígitos se leen mejor alineados. |
+| `.precios .amt sup` | El `S/` del precio grande, separado del número (§5). |
+| `.line .pr`, `.line .qty span`, `.total` | Los importes del cajón, que sí se alinean en columna. |
+| `.nota-titulo` | El rótulo de la nota de pendientes, que a propósito no parece parte de la web. |
+
+Nada más. Donde hay cifras que alinear y no toca mono, se usa
+`font-variant-numeric: tabular-nums`, que es lo único que se le estaba pidiendo:
+`.card .price`, `.paso .k`, `.plan-cierre`.
+
+Hay una prueba con **la lista blanca de selectores** que pueden declarar `var(--mono)`,
+y otra que falla si vuelve a aparecer un `textTransform` en línea en `src/`.
 
 ---
 

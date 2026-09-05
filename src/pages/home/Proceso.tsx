@@ -1,28 +1,29 @@
 import { IconoBurbujas, IconoFiltro, IconoMembrana, IconoNivel } from '../../components/Icono'
 import SecuenciaAgua from '../../components/SecuenciaAgua'
 
-/** Los cuatro pasos documentados. El icono distingue; el número ordena. */
+/** Los cuatro pasos documentados. El icono distingue; el número ordena.
+ *  Sin cero a la izquierda: «01» no ordena mejor que «1», sólo viste. */
 const PASOS = [
   {
-    n: '01',
+    n: '1',
     icono: <IconoFiltro />,
     titulo: 'Filtrado y sedimentación',
     texto: 'Retención de partículas, cloro y sedimentos. Es el paso que nadie ve y del que depende todo lo demás.',
   },
   {
-    n: '02',
+    n: '2',
     icono: <IconoMembrana />,
     titulo: 'Ósmosis inversa',
     texto: 'Una membrana separa sales y minerales disueltos. El corazón del proceso y la razón del sabor.',
   },
   {
-    n: '03',
+    n: '3',
     icono: <IconoNivel />,
     titulo: 'Alcalinización a pH 8.3',
     texto: 'El agua vuelve a un pH alcalino y estable de 8.3.',
   },
   {
-    n: '04',
+    n: '4',
     icono: <IconoBurbujas />,
     titulo: 'Ozonización y sellado',
     texto: 'Desinfección final sin residuo químico y sello de seguridad en el envase. Si el sello está roto, no lo recibas.',
