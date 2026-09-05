@@ -418,14 +418,31 @@ nunca al revés.
 .wrap { max-width: 1440px; margin-inline: auto; padding-inline: var(--pad); }
 ```
 
+**La retícula dice quién es quién.** La página llegó a tener tres bloques de tres
+columnas iguales (precios, planes, catálogo) y cinco cabeceras con la misma forma. El
+ojo aprendía la estructura en dos pantallas y a partir de ahí ya no miraba, recorría:
+es lo que se siente como "no natural" aunque cada bloque por separado esté bien.
+
+Dos de esos tres bloques ya no son simétricos, y en los dos casos la asimetría es
+**información real**, no variedad decorativa:
+
+- **Planes.** De los tres, sólo Hogar tiene precio confirmado (S/ 30 por bidón);
+  Empresa y Obra se cotizan. Hogar va ancho y arriba, con su lista a dos columnas y el
+  titular un punto mayor; Empresa y Obra debajo, a dos columnas.
+- **Precios.** «Dos bidones» es la única celda con promoción real (ahorras S/ 10). Ya
+  iba resaltada con `--inv-realce`; ahora además es 1,3 veces más ancha.
+
+El catálogo se queda en columnas iguales: seis tarjetas iguales **es** la forma honesta
+de un catálogo de seis.
+
 Grillas usadas, todas con `gap` (nunca márgenes por elemento ni espacios en el HTML):
 
 | Patrón | Composición | Punto de quiebre |
 |---|---|---|
 | Hero | `1fr 360px` | 960 px |
 | Titular + bajada (`.split`) | `1.3fr 1fr` | 900 px |
-| Tres columnas (`.cols3`) | `repeat(3, 1fr)` con divisores | 900 px |
-| Precios (`.precios`) | `repeat(3, 1fr)` | 820 px |
+| Planes (`.cols3`) | `repeat(2, 1fr)`; Hogar ocupa `1 / -1` | 900 px |
+| Precios (`.precios`) | `1fr 1.3fr 1fr`: la promoción manda | 820 px |
 | Catálogo (`.cat-layout`) | `230px 1fr` | 960 px |
 | Tarjetas (`.grid`) | 1 → 2 → 3 columnas | 640 / 1180 px |
 | Distritos | 2 → 4 columnas | 760 px |

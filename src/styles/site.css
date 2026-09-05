@@ -503,7 +503,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}
     @media(min-width:900px){.split{grid-template-columns:1.3fr 1fr;gap:72px}}
     .precios{display:grid;gap:0;border-top:2px solid var(--inv-ink)}
-    @media(min-width:820px){.precios{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(min-width:820px){.precios{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr)}}
     .precios > div{padding:32px 0;border-bottom:1px solid var(--inv-line)}
     @media(min-width:820px){
       .precios > div{border-bottom:0;padding:34px 34px 36px}
@@ -520,6 +520,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     .paso .k{display:flex;align-items:center;gap:10px;font-size:14px;
       font-weight:600;letter-spacing:0;color:var(--acento);font-variant-numeric:tabular-nums}
     .plan-etq{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600}
+    .cols3 h3{font-size:clamp(22px,2.4vw,30px);margin-top:14px}
     /* Los tres cierran igual aunque uno diga una cifra y dos una condicion:
        antes eran 22px en mono, 16px en versalitas y 16px en versalitas, tres
        tamanos y dos cajas para la misma fila. */
@@ -528,12 +529,14 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     .plan-cierre span{font-size:14px;font-weight:400;letter-spacing:0;color:var(--dim)}
     .paso h3{font-size:clamp(20px,2.2vw,27px)}
     .cols3{display:grid;gap:0;border-top:1px solid var(--line-2)}
-    @media(min-width:900px){.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(min-width:900px){.cols3{grid-template-columns:repeat(2,minmax(0,1fr))}}
     .cols3 > div{padding:30px 0;border-bottom:1px solid var(--line)}
     @media(min-width:900px){
       .cols3 > div{border-bottom:0;padding:32px 40px 8px}
-      .cols3 > div:first-child{padding-left:0;border-right:1px solid var(--line)}
-      .cols3 > div:nth-child(2){border-right:1px solid var(--line)}
+      .cols3 > .plan-hogar{grid-column:1 / -1;padding:36px 0 38px;border-bottom:1px solid var(--line)}
+      .cols3 > .plan-hogar h3{font-size:clamp(24px,2.7vw,34px)}
+      .cols3 > .plan-hogar .lista{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 48px;max-width:900px}
+      .cols3 > div:nth-child(2){padding-left:0;border-right:1px solid var(--line)}
       .cols3 > div:last-child{padding-right:0}
     }
     .lista{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:11px}
