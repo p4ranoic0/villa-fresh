@@ -36,7 +36,14 @@ export default function Proceso() {
       <div className="wrap">
         <div className="split">
           <div>
-            <h2 style={{ marginTop: 18 }}>Ocho pasos<br />entre el agua<br />y tu vaso.</h2>
+            {/* Decía «Ocho pasos entre el agua y tu vaso» y debajo hay cuatro.
+                Los ocho procesos están respaldados por las redes; el desglose
+                no, y la nota de pendientes lo reconoce. Era la única frase de
+                la web que prometía algo que la propia página no cumplía dos
+                centímetros más abajo, y justo en la sección que existe para
+                dar confianza. El titular deja de contar; cuando llegue el
+                desglose, los ocho podrán citarse en texto corrido. */}
+            <h2 style={{ marginTop: 18 }}>De la planta<br />a tu vaso.</h2>
           </div>
           <p className="lede" style={{ maxWidth: '46ch' }}>No compramos agua a terceros ni reenvasamos. Tratamos, controlamos y embotellamos nosotros mismos, y por eso podemos responder por cada bidón que sale de planta.</p>
         </div>

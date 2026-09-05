@@ -479,6 +479,17 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    PATRONES DE PÁGINA (home)
    ========================================================================== */
 .hero{position:relative;overflow:hidden}
+    /* La ficha se metía dentro de la ola. Medido sobre el build: 79 px de
+       solape en un móvil de 390, 108 px en una tablet de 768 y 48 px en
+       escritorio. Los 48 de escritorio se quedan a propósito —el panel es
+       traslúcido y ahí se lee como que se apoya en la línea de agua—, pero a
+       79 y 108 la última fila («Entrega · El mismo día») queda debajo del
+       agua y deja de leerse como intención para leerse como accidente.
+       Debajo de 960 la portada respira más por abajo y la marea se encoge. */
+    @media(max-width:959px){
+      .hero{padding-bottom:calc(var(--band) + 72px)}
+      .marea{height:clamp(78px,11vh,118px)}
+    }
     /* El texto se centra contra la columna de la foto. Alineados arriba, la
        izquierda terminaba en los botones y quedaba un hueco muerto de media
        pantalla debajo mientras la derecha seguia bajando. */

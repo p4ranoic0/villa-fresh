@@ -489,6 +489,46 @@ test('cada intención tiene un solo rótulo', async () => {
   expect([...new Set(rotulos)]).toEqual(['Ver productos'])
 })
 
+test('ningún titular promete un número que su sección no enseña', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  // El h2 de proceso decía «Ocho pasos entre el agua y tu vaso» y debajo había
+  // cuatro. Era la única frase de la web que prometía algo que la propia
+  // página no cumplía dos centímetros más abajo, y justo en la sección que
+  // existe para dar confianza. Un lector atento lo ve y desconfía del resto.
+  const NUMEROS: Record<string, number> = {
+    un: 1, una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6,
+    siete: 7, ocho: 8, nueve: 9, diez: 10, once: 11, doce: 12,
+  }
+  // Qué es «uno» de lo que cuenta cada sección.
+  const UNIDAD: Record<string, RegExp> = {
+    proceso: /<div class="paso"/g,
+    planes: /class="plan-etq/g,
+    productos: /class="card"/g,
+    cobertura: /<div class="dist"/g,
+    preguntas: /<div class="qa"/g,
+  }
+
+  const desajustes: { seccion: string; titular: string; promete: number; enseña: number }[] = []
+  for (const [seccion, unidad] of Object.entries(UNIDAD)) {
+    const desde = html.indexOf(`id="${seccion}"`)
+    expect({ seccion, existe: desde >= 0 }).toEqual({ seccion, existe: true })
+    const hasta = html.indexOf('</section>', desde)
+    const bloque = html.slice(desde, hasta)
+    const h2 = bloque.match(/<h2[^>]*>([\s\S]*?)<\/h2>/)
+    if (!h2) continue
+    const titular = h2[1]!.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+
+    const cifra = titular.match(/\b\d+\b/)
+    const palabra = titular.toLowerCase().match(/\b(un|una|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce)\b/)
+    const promete = cifra ? Number(cifra[0]) : palabra ? NUMEROS[palabra[1]!]! : null
+    if (promete === null) continue
+
+    const enseña = (bloque.match(unidad) ?? []).length
+    if (promete !== enseña) desajustes.push({ seccion, titular, promete, enseña })
+  }
+  expect(desajustes).toEqual([])
+})
+
 test('la banda de precio no inventa un tercer precio', async () => {
   const html = await readFile('dist/index.html', 'utf8')
   const banda = html.slice(html.indexOf('id="precio"'), html.indexOf('id="proceso"'))
