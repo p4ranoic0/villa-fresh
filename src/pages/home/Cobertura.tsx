@@ -40,7 +40,7 @@ export default function Cobertura() {
             versalita: repetía palabra por palabra lo que la bajada de esta misma
             sección dice cinco líneas más arriba. Cero información y las tres
             señales del disfraz juntas. Queda el botón solo. */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 24, flexWrap: 'wrap', marginTop: 32 }}>
+        <div className="cobertura-cierre">
           <a className="btn btn-cyan" href={urlWhatsApp('Hola, ¿llegan a mi distrito?')} target="_blank" rel="noopener">¿Llegan a mi distrito?</a>
         </div>
       </div>

@@ -50,8 +50,8 @@ export default function Hero() {
             className="hero-foto"
             src={activo('/producto-bidon-20l.webp')}
             alt="Bidón de 20 litros de Villa Fresh, sellado"
-            width={760}
-            height={760}
+            width={353}
+            height={668}
             fetchPriority="high"
           />
           {/* Eran once filas en monoespaciada mayúscula: PRODUCTO, TRATAMIENTO,

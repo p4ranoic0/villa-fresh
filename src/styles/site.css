@@ -91,6 +91,36 @@
   --pad:clamp(20px,5vw,96px);
   --max:1440px;
   --band:clamp(56px,7vw,96px);
+
+  /* FORMA Y ELEVACION — ver DESIGN.md §8.
+     La hoja llego a tener CINCO radios sueltos (7, 8, 10, 12 y 99) contra
+     cuarenta y una cajas a escuadra. Eso no era un sistema anguloso: era un
+     sistema anguloso con fugas, y las fugas eran justo las piezas que se
+     tocan con el dedo. Ahora hay tres escalones y ninguno se escribe a mano.
+     El argumento de marca se sostiene al reves de como estaba escrito: el
+     producto es agua y la pagina cortaba como vidrio. */
+  --r-s:10px;      /* botones, controles, etiquetas de pago */
+  --r-m:18px;      /* tarjetas, fichas, paneles, la placa del video */
+  --r-full:999px;  /* pildoras: el tag del catalogo y el boton flotante */
+
+  /* La superficie de un objeto APOYADO en el papel. Va mas clara que el
+     fondo, porque lo que se levanta recibe mas luz. Es exactamente al reves
+     que --panel, que es un hueco hundido en la hoja; por eso son dos tokens
+     y no uno con dos usos. */
+  --flota:#fafbfe;
+  --sombra-flota:0 1px 2px rgba(10,22,34,.05),0 10px 28px -8px rgba(10,22,34,.13);
+  --sombra-flota-alta:0 2px 4px rgba(10,22,34,.07),0 20px 44px -10px rgba(10,22,34,.19);
+
+  /* La sombra del PRODUCTO, que es otra cosa: no eleva una caja, asienta un
+     objeto recortado sobre el fondo. Vivia escrita a mano dentro de
+     .hero-foto y no existia en la tarjeta, asi que el mismo bidon flotaba en
+     la portada y estaba metido en un cajon gris cuatrocientos pixeles mas
+     abajo. Una sola, para que hable igual en los dos sitios. El color sale de
+     --foto-sombra, que ya cambia con el tema. */
+  --sombra-objeto:0 26px 40px var(--foto-sombra);
+  /* El cajon no se apoya en la pagina: se pone DELANTE. Por eso su sombra va
+     hacia el lado y no hacia abajo. */
+  --sombra-cajon:-24px 0 64px -24px rgba(10,22,34,.34);
 }
 
 /* El tema oscuro, identico al que ya estaba verificado. */
@@ -116,6 +146,13 @@
   --ficha-fondo:rgba(10,28,48,.55);
   --velo:rgba(2,8,15,.72);
   --foto-sombra:rgba(0,0,0,.5);
+  /* Sobre azul noche una sombra negra no separa nada: lo que levanta la
+     tarjeta del fondo es que su superficie sea mas clara. La sombra queda
+     como asiento, no como separador. */
+  --flota:#0a1c30;
+  --sombra-flota:0 1px 2px rgba(0,0,0,.45),0 12px 32px -10px rgba(0,0,0,.62);
+  --sombra-flota-alta:0 2px 6px rgba(0,0,0,.5),0 24px 52px -12px rgba(0,0,0,.74);
+  --sombra-cajon:-24px 0 64px -20px rgba(0,0,0,.8);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
   /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
@@ -156,6 +193,13 @@
   --ficha-fondo:rgba(10,28,48,.55);
   --velo:rgba(2,8,15,.72);
   --foto-sombra:rgba(0,0,0,.5);
+  /* Sobre azul noche una sombra negra no separa nada: lo que levanta la
+     tarjeta del fondo es que su superficie sea mas clara. La sombra queda
+     como asiento, no como separador. */
+  --flota:#0a1c30;
+  --sombra-flota:0 1px 2px rgba(0,0,0,.45),0 12px 32px -10px rgba(0,0,0,.62);
+  --sombra-flota-alta:0 2px 6px rgba(0,0,0,.5),0 24px 52px -12px rgba(0,0,0,.74);
+  --sombra-cajon:-24px 0 64px -20px rgba(0,0,0,.8);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
   /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
@@ -223,7 +267,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 /* --- botones --- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;border:0;cursor:pointer;
   font-family:var(--disp);font-size:15px;font-weight:600;letter-spacing:0;
-  padding:15px 24px;min-height:50px;border-radius:8px;
+  padding:15px 24px;min-height:50px;border-radius:var(--r-s);
   transition:background .2s ease,color .2s ease,border-color .2s ease,transform .16s var(--sal)}
 /* Nada mas: el elemento acusa la pulsacion y con eso el sitio deja de
    parecer una imagen. Es la unica animacion que se ve decenas de veces. */
@@ -236,7 +280,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .btn-inv:hover{background:var(--inv-btn-alto);color:var(--inv-btn-ink-alto)}
 .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
 .btn-ghost:hover{border-color:var(--acento);color:var(--acento)}
-.btn-sm{padding:10px 18px;min-height:40px;font-size:14px;letter-spacing:0;border-radius:7px}
+.btn-sm{padding:10px 18px;min-height:40px;font-size:14px;letter-spacing:0;border-radius:var(--r-s)}
 .ico{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 /* Las marcas de terceros van rellenas, no en trazo: son sus trazados
    oficiales y aproximarlos con una línea los vuelve irreconocibles. */
@@ -247,7 +291,8 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    viajan siempre en el HTML y es el CSS quien elige cual se ve, para que el
    pre-render y la hidratacion pinten exactamente lo mismo. */
 .tema-btn{display:inline-grid;place-items:center;width:40px;height:40px;flex:none;
-  background:transparent;border:1px solid var(--line-2);color:var(--dim);cursor:pointer;padding:0;
+  background:transparent;border:1px solid var(--line-2);border-radius:var(--r-s);
+  color:var(--dim);cursor:pointer;padding:0;
   transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .tema-btn:hover{border-color:var(--acento);color:var(--acento)}
 .tema-btn .ico{width:18px;height:18px}
@@ -296,7 +341,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 /* Los seis pendientes en una sola columna de 62ch dejaban media pantalla
    vacía a la derecha y una losa alta a la izquierda. En dos columnas la nota
    es un bloque compacto y deja de parecer que se olvidó algo al lado. */
-.nota-caja{max-width:980px;border:1px solid var(--line);border-radius:12px;padding:26px 28px;background:var(--panel)}
+.nota-caja{max-width:980px;border:1px solid var(--line);border-radius:var(--r-m);padding:26px 28px;background:var(--panel)}
 .nota-titulo{margin:0 0 10px;font-family:var(--mono);font-size:11px;font-weight:500;
   letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
 .nota-intro{margin:0 0 16px;font-size:15px;line-height:1.6;color:var(--ink-2)}
@@ -321,14 +366,14 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .pagos-lista{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:12px}
 .pagos-lista li{display:flex;align-items:center}
 .pago-nombre{font-size:14px;font-weight:600;letter-spacing:0;
-  border:1px solid var(--line-2);border-radius:7px;padding:7px 13px;color:var(--ink)}
+  border:1px solid var(--line-2);border-radius:var(--r-s);padding:7px 13px;color:var(--ink)}
 .inv .pago-nombre{border-color:var(--inv-line);color:var(--inv-ink)}
 .inv .pagos .lbl{color:var(--inv-dim)}
 
 /* --- redes --- */
 .redes{display:flex;gap:10px;flex-wrap:wrap}
 .redes a{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);
-  padding:10px 15px;border-radius:8px;font-size:14px;font-weight:500;
+  padding:10px 15px;border-radius:var(--r-s);font-size:14px;font-weight:500;
   letter-spacing:0;color:var(--ink);
   transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .redes a:hover{border-color:var(--acento);color:var(--acento)}
@@ -346,37 +391,104 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .foot a{color:var(--dim);font-size:14px;letter-spacing:0;display:inline-block;padding-block:6px}
 .foot a:hover{color:var(--acento)}
 
+/* --------------------------------------------------------------------------
+   OBJETO DE BANDA — un producto apoyado junto al titular de una seccion
+
+   Cuatro de las cinco bandas de la pagina no tenian ni una imagen: eran filas
+   de texto separadas por lineas de 1px, una detras de otra. Se puede cambiar
+   el material de las tarjetas todo lo que se quiera, que si el 76 % de la
+   altura de la pagina no tiene un solo objeto encima, la pagina no se lee
+   como un lienzo. Se lee como un documento.
+
+   El objeto va pegado al titular y sale por el margen derecho, igual que el
+   bidon de la portada.
+
+   EN EL MOVIL TAMBIEN. Durante una version estos objetos iban a display:none
+   por debajo de 900 px, y el resultado medido era que a 375 px la pagina
+   seguia teniendo 3 de 8 bandas con objeto y CERO piezas cruzando el margen:
+   exactamente los numeros de antes de empezar. Toda la composicion era de
+   escritorio, en un negocio que vende por WhatsApp. Aqui no se apagan: se
+   recolocan —debajo del titular en vez de al lado, y mas bajos.
+   -------------------------------------------------------------------------- */
+.banda-cabecera{display:grid;gap:18px;margin:18px 0 40px}
+.objeto-banda{display:block;width:auto;max-width:none;height:clamp(140px,27vw,190px);
+  justify-self:end;margin-right:calc(-1 * var(--pad));
+  filter:drop-shadow(var(--sombra-objeto))}
+/* Un bidon suelto es estrecho: con la altura de la foto de grupo quedaria
+   como un palito. Se mide por alto porque es lo que un bidon tiene. */
+.objeto-alto{height:clamp(190px,40vw,250px)}
+@media(min-width:900px){
+  .banda-cabecera{grid-template-columns:1fr auto;align-items:end;gap:40px;margin:0 0 44px}
+  .objeto-banda{height:clamp(200px,23vw,310px)}
+  /* Se probo tambien en la banda de cobertura, saliendo por el margen
+     IZQUIERDO, y se descarto con la captura delante: alli el bidon se cortaba
+     contra el borde del navegador. Un objeto recortado por el borde se lee
+     como intencion cuando lo que se corta es una lamina rectangular, y como
+     accidente cuando lo que se corta es un producto. */
+  .objeto-alto{height:clamp(280px,30vw,400px)}
+}
+
 .cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;
   border-bottom:1px solid var(--line-2);padding-bottom:18px;margin-bottom:32px}
-/* Las lineas las ponen las tarjetas, no el contenedor. Pintar el fondo de
-   la grilla con --line dejaba las celdas sobrantes de la ultima fila como
-   un bloque relleno: apenas se notaba sobre azul noche y sobre papel era
-   un hueco gris. Con la sombra en cada tarjeta, donde no hay tarjeta no
-   hay nada.
+/* LAS SEIS TARJETAS DEJARON DE SER CELDAS DE UNA TABLA.
 
-   Cada tarjeta pinta solo su derecha y su abajo: con las cuatro caras, dos
-   sombras contiguas caian en el mismo hueco de 1px y la linea salia el doble
-   de oscura. El arriba y el izquierda del marco los pone la grilla, y sus
-   otros dos lados van transparentes para reservar el sitio sin pintarlo. */
-.grid{display:grid;gap:1px;background:var(--ground);grid-template-columns:1fr;
-  border:1px solid transparent;border-top-color:var(--line);border-left-color:var(--line)}
-.card{box-shadow:1px 0 0 var(--line),0 1px 0 var(--line)}
+   Hasta aqui la grilla era una reticula continua: gap de 1px, y cada tarjeta
+   pintando su lado derecho y su lado de abajo con una sombra de 1px para que
+   dos lineas contiguas no cayeran en el mismo hueco y salieran al doble de
+   oscuras. Funcionaba, y ese era el problema: funcionaba como una hoja de
+   calculo. Ademas obligaba a la esquina viva, porque una celda que comparte
+   su linea con la vecina no se puede redondear.
+
+   Ahora cada tarjeta es un objeto apoyado en el papel: se separan con aire,
+   llevan su radio y su sombra, y el producto flota dentro sin cajon gris. La
+   profundidad ya no la da el contraste de fondo, la da la sombra —que es lo
+   que hace que la pagina se lea como un lienzo con cosas encima en vez de
+   como una cuadricula. Efecto secundario que resuelve un bug viejo: donde no
+   hay tarjeta no hay nada que pintar, asi que las celdas sobrantes de la
+   ultima fila desaparecen solas. */
+.grid{display:grid;gap:clamp(16px,1.8vw,24px);grid-template-columns:1fr}
 @media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1180px){.grid{grid-template-columns:repeat(3,1fr)}}
 
-.card{background:var(--ground);display:flex;flex-direction:column;padding:24px;transition:background .25s ease}
-.card:hover{background:var(--panel)}
-.card .shot{background:var(--panel);border-radius:10px;aspect-ratio:1/1;display:grid;place-items:center;padding:22px;position:relative;margin-bottom:20px}
-.card .shot img,.card .shot svg{max-height:100%;width:auto;transition:transform .4s var(--sal)}
+.card{background:var(--flota);border-radius:var(--r-m);box-shadow:var(--sombra-flota);
+  display:flex;flex-direction:column;padding:24px;
+  transition:box-shadow .25s ease,transform .25s var(--sal)}
+/* El encuadre ya no pinta nada: solo reserva el cuadrado y centra. El bidon
+   se apoya en la tarjeta con la MISMA sombra que lleva en la portada, que es
+   lo que faltaba —la misma foto flotaba arriba y estaba encajonada en gris
+   cuatrocientos pixeles mas abajo. El margen inferior sube de 20 a 30 porque
+   la sombra cae 26 px y se comia el titulo. */
+.card .shot{aspect-ratio:1/1;position:relative;margin-bottom:30px}
+/* La foto va absoluta y centrada, no como item de la rejilla. No es un
+   capricho: `max-height` en porcentaje no resuelve contra un alto que sale de
+   `aspect-ratio` —el navegador no puede saber el alto sin medir el contenido,
+   y no puede medir el contenido sin saber el alto— asi que se quedaba en auto
+   y la foto recortada se salia del encuadre. Puesta en absoluto, el porcentaje
+   se resuelve contra la caja del padre, que si tiene un alto definido.
+
+   --escala lo pone la tarjeta, medido sobre los archivos de marca. Ver
+   src/data/escala-fotos.ts: sin el, la foto de los tres bidones llenaria el
+   encuadre igual que la del bidon suelto y cada bidon del grupo se veria mas
+   grande que el de la tarjeta de al lado.
+
+   Se anima con `translate` y no con `transform` para que el centrado y el
+   `scale` del hover no se pisen: son dos propiedades distintas. */
+.card .shot img,.card .shot svg{position:absolute;left:50%;top:50%;translate:-50% -50%;
+  height:calc((100% - 44px) * var(--escala,1));width:auto;max-width:calc(100% - 44px);
+  filter:drop-shadow(var(--sombra-objeto));transition:transform .4s var(--sal)}
 /* En una pantalla tactil el hover se dispara al tocar y se queda
-   pegado: la tarjeta se agranda sola y no vuelve. */
+   pegado: la tarjeta se agranda sola y no vuelve.
+   La tarjeta se LEVANTA en vez de cambiar de color: es un objeto apoyado, y
+   lo que hace un objeto cuando lo senalas es subir, no tenirse. */
 @media (hover:hover) and (pointer:fine){
+  .card:hover{box-shadow:var(--sombra-flota-alta);transform:translateY(-3px)}
   .card:hover .shot img,.card:hover .shot svg{transform:scale(1.04)}
 }
 .card .tag{position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;
-  letter-spacing:0;background:var(--acento);color:var(--sobre-acento);padding:5px 11px;border-radius:99px}
-/* Va dentro del encuadre, sobre el fondo del panel y no sobre la foto:
-   el recorte esta centrado y el borde inferior queda libre. */
+  letter-spacing:0;background:var(--acento);color:var(--sobre-acento);padding:5px 11px;border-radius:var(--r-full)}
+/* Va dentro del encuadre y no sobre la foto: el recorte esta centrado y el
+   borde inferior queda libre. Antes se apoyaba en el fondo del panel; ahora
+   el panel no existe y se lee directamente sobre la tarjeta. */
 .card .nota{position:absolute;left:12px;right:12px;bottom:12px;font-size:12.5px;
   font-weight:400;letter-spacing:0;color:var(--dim);text-align:center}
 .card h3{font-size:21px;margin:10px 0 8px}
@@ -388,15 +500,16 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .card .price small{font-size:13px;font-weight:400;color:var(--dim);letter-spacing:0;margin-top:3px}
 .card .price.pending{font-size:14px;letter-spacing:0;color:var(--dim);font-weight:500;line-height:1.5}
 
-.empty{border:1px dashed var(--line-2);border-radius:10px;padding:44px;text-align:center;color:var(--dim);font-size:15px}
+.empty{border:1px dashed var(--line-2);border-radius:var(--r-m);padding:44px;text-align:center;color:var(--dim);font-size:15px}
 
 /* --- carrito --- */
 .cart-btn{position:relative;display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--line-2);
   color:var(--ink);font-size:14px;font-weight:600;letter-spacing:0;
-  padding:11px 16px;cursor:pointer}
+  padding:11px 16px;border-radius:var(--r-s);cursor:pointer}
 .cart-btn{transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
 .cart-btn:hover{border-color:var(--acento);color:var(--acento)}
-.cart-btn .count{min-width:19px;height:19px;display:grid;place-items:center;background:var(--acento);color:var(--sobre-acento);
+.cart-btn .count{min-width:19px;height:19px;display:grid;place-items:center;border-radius:var(--r-full);
+  background:var(--acento);color:var(--sobre-acento);
   font-size:11px;font-weight:600;padding-inline:5px}
 .cart-btn .count[hidden]{display:none}
 .cart-btn.pulse{animation:pulse .45s ease}
@@ -411,9 +524,18 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .drawer[open]{display:block}
 .drawer .veil{position:absolute;inset:0;background:var(--velo);backdrop-filter:blur(3px);
   opacity:1;transition:opacity .3s ease,display .3s allow-discrete}
-.drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--panel);
-  border-left:1px solid var(--line-2);display:flex;flex-direction:column;
+/* Va con --flota y no con --panel, y la diferencia no es de gusto: --panel es
+   un hueco hundido en la hoja y este cajon esta DELANTE de la pagina, tapandola.
+   Una superficie que se levanta va mas clara y trae sombra; un hueco va mas
+   oscuro y trae linea. Con el borde de 1px y el fondo hundido, el cajon se leia
+   como un trozo mas de la pagina que habia aparecido a la derecha.
+
+   El radio solo por encima de 480: por debajo el panel ocupa el ancho entero y
+   una esquina redondeada a la izquierda solo enseñaria un triangulito del velo. */
+.drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--flota);
+  box-shadow:var(--sombra-cajon);display:flex;flex-direction:column;
   transform:translateX(0);transition:transform .38s var(--cajon),display .38s allow-discrete}
+@media(min-width:480px){.drawer .panel{border-radius:var(--r-m) 0 0 var(--r-m)}}
 @media (prefers-reduced-motion:no-preference){
   @starting-style{
     .drawer[open] .veil{opacity:0}
@@ -428,7 +550,8 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .line{display:grid;grid-template-columns:1fr auto;gap:8px 14px;padding:18px 0;border-bottom:1px solid var(--line)}
 .line .nm{font-size:15px;font-weight:600;line-height:1.3}
 .line .pr{font-family:var(--mono);font-size:14px;font-weight:600;text-align:right;white-space:nowrap}
-.line .qty{display:flex;align-items:center;gap:0;border:1px solid var(--line-2);width:max-content}
+.line .qty{display:flex;align-items:center;gap:0;border:1px solid var(--line-2);
+  border-radius:var(--r-s);overflow:hidden;width:max-content}
 .line .qty button{width:32px;height:32px;background:transparent;border:0;color:var(--ink);cursor:pointer;font-size:16px;line-height:1}
 .line .qty button:hover{background:var(--acento);color:var(--sobre-acento)}
 .line .qty span{min-width:34px;text-align:center;font-family:var(--mono);font-size:13px;font-weight:600}
@@ -453,7 +576,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 /* Más pequeño que un botón de página: flota sobre el contenido y cada píxel
    suyo es texto que alguien no puede leer. */
 .wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px var(--wa-sombra);
-  padding:12px 18px;min-height:44px;font-size:14px;letter-spacing:0;border-radius:99px}
+  padding:12px 18px;min-height:44px;font-size:14px;letter-spacing:0;border-radius:var(--r-full)}
 /* En el movil se gana el sitio: el numero del pie queda a varias pantallas de
    distancia y este boton es el atajo. En el escritorio no: alli el mismo
    WhatsApp ya esta en el hero, en la banda de precio, en el cierre y en el
@@ -471,7 +594,12 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 /* Sin marco y sin barra de pie. Con ellos se leía como una figura pegada en
    un documento; sin ellos es una placa fotográfica, que es lo que es. */
 .visor{margin:0 0 clamp(30px,4vw,48px);position:relative}
+/* La placa tambien se apoya: es la imagen mas grande de la pagina y era la
+   unica que seguia plana contra el papel. En tema oscuro la sombra se va
+   sola, y esta bien que se vaya —el clip va en mix-blend-mode:screen, que
+   con negro no pinta nada, y sobre azul noche la placa no necesita asiento. */
 .visor-video{display:block;width:100%;height:clamp(240px,38vh,420px);object-fit:cover;
+  border-radius:var(--r-m);box-shadow:var(--sombra-flota-alta);
   object-position:center 14%;background:var(--visor-fondo);mix-blend-mode:var(--visor-mezcla)}
 .visor-pie{display:block;padding:11px 0 0;font-size:10px;letter-spacing:.18em}
 
@@ -496,10 +624,33 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     /* z-index sobre la marea: el contenido va por encima del agua, no dentro. */
     .hero-grid{position:relative;z-index:1;display:grid;gap:44px;align-items:start}
     @media(min-width:960px){.hero-grid{align-items:center}}
-    .hero-col{display:grid;gap:22px;justify-items:center}
-    .hero-foto{width:min(390px,80vw);height:auto;filter:drop-shadow(0 26px 40px var(--foto-sombra))}
-    @media(min-width:960px){.hero-grid{grid-template-columns:1fr 400px;gap:60px}}
-    .ficha{width:100%;border:1px solid var(--line);border-radius:12px;padding:22px 24px 16px;background:var(--ficha-fondo)}
+    .hero-col{display:grid;gap:22px;justify-items:end}
+    /* SE MIDE POR ALTO, NO POR ANCHO. El archivo venia en un lienzo cuadrado
+       de 760x760 con el bidon flotando en medio y ocupando solo el 47 % del
+       ancho: pedir 390 px de imagen daba 183 px de bidon, el 12 % de la
+       pagina. Esa era la razon de fondo por la que el producto se veia
+       pequeno por mucho que se subiera el numero —la medida mentia. Ahora el
+       archivo esta recortado al objeto (scripts/marcar-producto.py) y se mide
+       por la dimension que un bidon tiene de verdad, que es el alto. */
+    .hero-foto{width:auto;height:clamp(340px,52vh,460px);max-width:none;
+      justify-self:end;margin-right:calc(-1 * var(--pad));
+      filter:drop-shadow(var(--sombra-objeto))}
+    @media(min-width:960px){
+      .hero-grid{grid-template-columns:1fr minmax(0,460px);gap:56px}
+      /* CRUZA EL MARGEN. Todo lo demas de la pagina para en la linea de
+         --pad; esta foto la pasa. Por eso se lee como un objeto apoyado en la
+         hoja y no como una figura metida en una celda: rompe la reticula que
+         el resto respeta.
+
+         Por debajo de 1440 (--max) el margen negativo la deja tocando el
+         borde del navegador. Por encima, la reticula ya va centrada y queda
+         un canal a los lados, asi que la foto cruza el padding pero no llega
+         al borde fisico. Se deja asi a proposito: en una pantalla de 1920 la
+         pagina es una columna centrada, y una foto pegada al cristal se leeria
+         como un fallo de maquetacion, no como una decision. */
+      .hero-foto{height:clamp(440px,62vh,640px);margin-right:calc(-1 * var(--pad))}
+    }
+    .ficha{width:100%;border:1px solid var(--line);border-radius:var(--r-m);padding:22px 24px 16px;background:var(--ficha-fondo)}
     .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}
     @media(min-width:900px){.split{grid-template-columns:1.3fr 1fr;gap:72px}}
     .precios{display:grid;gap:0;border-top:2px solid var(--inv-ink)}
@@ -511,6 +662,11 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
       .precios > div:last-child{padding-right:0}
       .precios > div:nth-child(2){border-right:1px solid var(--inv-line)}
     }
+    /* Era un style inline en BandaPrecio.tsx con su propio borderRadius:99px:
+       la ultima pildora que se escapaba de la hoja. Una forma no se decide
+       desde un componente. */
+    .precios .ahorro{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:var(--r-full);
+      background:var(--inv-ink);color:var(--inv)}
     .precios .amt{display:flex;align-items:flex-start;gap:6px;margin-top:16px}
     .precios .amt sup{font-family:var(--mono);font-size:clamp(18px,2vw,26px);font-weight:500;padding-top:.5em}
     .precios .amt b{font-size:clamp(50px,5.4vw,74px);font-weight:700;letter-spacing:-.035em;line-height:.92}
@@ -542,6 +698,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     .lista{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:11px}
     .lista li{display:flex;gap:11px;font-size:15px;line-height:1.55;color:var(--ink-2)}
     .lista .ico{color:var(--acento);margin-top:3px}
+    .cobertura-cierre{display:flex;align-items:center;justify-content:flex-end;gap:24px;flex-wrap:wrap;margin-top:32px}
     .distritos{display:grid;gap:0 44px;border-top:1px solid var(--line-2);grid-template-columns:repeat(2,1fr)}
     @media(min-width:760px){.distritos{grid-template-columns:repeat(4,1fr)}}
     .dist{font-size:15px;letter-spacing:0;padding:12px 0;border-bottom:1px solid var(--line)}

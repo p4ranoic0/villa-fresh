@@ -664,3 +664,91 @@ test('canonical, og:url y sitemap citan la URL de GitHub Pages', async () => {
   expect(html).toContain(`<meta property="og:url" content="${URL_PAGES}/">`)
   expect(sitemap).toContain(`<loc>${URL_PAGES}/</loc>`)
 })
+
+
+/* --------------------------------------------------------------------------
+   Forma y elevación — que no vuelva la deriva de los cinco radios
+   -------------------------------------------------------------------------- */
+
+test('ningún radio se escribe a mano: sólo los tres escalones', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // La hoja llegó a tener CINCO radios sueltos —7, 8, 10, 12 y 99 px— repartidos
+  // en ocho excepciones a una regla que decía "radio: cero". La regla ya había
+  // perdido; lo único que quedaba de ella era la incoherencia. Ahora hay tres
+  // escalones y se piden por token, para que el sexto no pueda entrar sin que
+  // alguien lo declare arriba.
+  const declaracion = /border-radius:\s*([^;}]+)/g
+  const bloqueDeTokens = css.slice(0, css.indexOf('*,*::before'))
+  const cuerpo = css.slice(css.indexOf('*,*::before'))
+  const sueltos = [...cuerpo.matchAll(declaracion)]
+    .map(([, valor]) => valor.trim())
+    .filter((valor) => !valor.startsWith('var(--r-'))
+  expect(sueltos).toEqual([])
+  // Y los tres escalones existen de verdad, no son un var() que no resuelve.
+  for (const token of ['--r-s', '--r-m', '--r-full']) {
+    expect(bloqueDeTokens).toContain(`${token}:`)
+  }
+})
+
+test('la forma no se decide desde un componente', async () => {
+  // `border-radius: 99px` vivía dentro de un style inline de BandaPrecio.tsx:
+  // la última píldora que se escapaba de la hoja. Una forma es una decisión de
+  // sistema, y el sistema está en el CSS.
+  const componentes = new Bun.Glob('**/*.tsx')
+  for await (const ruta of componentes.scan('src')) {
+    const fuente = await readFile(`src/${ruta}`, 'utf8')
+    expect({ ruta, radio: /borderRadius/.test(fuente) }).toEqual({ ruta, radio: false })
+  }
+})
+
+test('el bidón lleva la misma sombra en la portada y en la tarjeta', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Este era el síntoma que se veía: la misma foto flotaba en el hero con un
+  // drop-shadow escrito a mano y estaba metida en un cajón gris cuatrocientos
+  // píxeles más abajo. El producto hablaba con dos voces según dónde saliera.
+  expect(css).toMatch(/\.hero-foto\{[^}]*filter:drop-shadow\(var\(--sombra-objeto\)\)/)
+  expect(css).toMatch(/\.card \.shot img[^{]*\{[^}]*filter:drop-shadow\(var\(--sombra-objeto\)\)/)
+  // Y el encuadre de la tarjeta no vuelve a ser una caja: ni fondo ni radio.
+  const shot = css.slice(css.indexOf('.card .shot{'), css.indexOf('.card .shot img'))
+  expect(shot).not.toContain('background:')
+  expect(shot).not.toContain('border-radius:')
+})
+
+
+test('la composición no se apaga en el móvil', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Los objetos de banda llegaron a ir a display:none por debajo de 900 px. El
+  // resultado medido a 375 px eran 3 de 8 bandas con objeto y cero piezas
+  // cruzando el margen: los números de antes de empezar. Toda la composición
+  // era de escritorio, en un negocio que vende por WhatsApp en Lima.
+  const regla = css.slice(css.indexOf('.objeto-banda{'), css.indexOf('.objeto-alto'))
+  expect(regla).not.toContain('display:none')
+  // Y el bidón de la portada sangra en el estado base, no sólo dentro del
+  // @media de escritorio: si el margen negativo viviera únicamente ahí, el
+  // móvil se quedaría otra vez sin ninguna pieza cruzando el margen.
+  const abre = css.indexOf('.hero-foto{')
+  const hero = css.slice(abre, css.indexOf('@media(min-width:960px)', abre))
+  expect(hero).toContain('margin-right:calc(-1 * var(--pad))')
+})
+
+test('cada foto de producto se sirve una sola vez', async () => {
+  const { readdir } = await import('node:fs/promises')
+  const fotos = (await readdir('public')).filter((f) => f.endsWith('.webp'))
+  // Durante una versión se sirvieron dos familias: `producto-*` en lienzo
+  // cuadrado para el catálogo y `objeto-*` recortada para las piezas sueltas.
+  // Funcionaba, pero el visitante se descargaba las mismas dos fotos dos veces
+  // —114 KB de más medidos en el navegador. Ahora hay un archivo por foto y el
+  // encuadre viaja como dato en src/data/escala-fotos.ts.
+  expect(fotos.filter((f) => f.startsWith('objeto-'))).toEqual([])
+
+  // Y el dato existe para toda foto que el catálogo coloque.
+  const [escalas, productos] = await Promise.all([
+    readFile('src/data/escala-fotos.ts', 'utf8'),
+    readFile('src/data/productos.ts', 'utf8'),
+  ])
+  const usadas = [...productos.matchAll(/activo\('\/([\w-]+)\.webp'\)/g)].map(([, n]) => n)
+  expect(usadas.length).toBeGreaterThan(0)
+  for (const foto of new Set(usadas)) {
+    expect({ foto, tieneEscala: escalas.includes(`'${foto}':`) }).toEqual({ foto, tieneEscala: true })
+  }
+})

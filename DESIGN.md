@@ -448,6 +448,83 @@ Grillas usadas, todas con `gap` (nunca márgenes por elemento ni espacios en el 
 | Distritos | 2 → 4 columnas | 760 px |
 | Preguntas (`.qas`) | `1fr 1fr` | 900 px |
 
+### Los objetos rompen el margen. Todo lo demás lo respeta
+
+Cambiar el material de las tarjetas no bastó, y el motivo se pudo medir: el cambio tocaba
+**el 24 % de la altura de la página** (1.717 px de 7.060) y dejaba idéntica la
+composición. Cuatro de las cinco bandas no tenían ni una imagen encima. Se puede afinar
+la sombra todo lo que se quiera, que una página sin objetos no se lee como un lienzo: se
+lee como un documento.
+
+Lo que hace lienzo son dos cosas, y ninguna es la sombra:
+
+1. **Tamaño.** La referencia (thepopp) pone láminas del 40 % y el 70 % del ancho. Aquí
+   los productos estaban al 12 % —ver más abajo por qué el número real era ese y no el
+   21 % que aparentaban.
+2. **Que crucen la retícula.** Tres piezas salen por el margen: el bidón de la portada y
+   los objetos de las bandas de planes y de preguntas. Son **las únicas tres** de la
+   página que pasan de la línea de `--pad`. Es una excepción, y funciona porque todo lo
+   demás la respeta.
+
+**En el móvil también, y esto costó una versión entera.** Los objetos de banda llegaron a
+ir a `display: none` por debajo de 900 px. Medido a 375 px, el resultado era **3 de 8
+bandas con objeto y cero piezas cruzando el margen**: exactamente los números de antes de
+empezar. Toda la composición era de escritorio, en un negocio que vende por WhatsApp en
+Lima. Ahora no se apagan: se recolocan —debajo del titular en vez de al lado, y más
+bajos— y el bidón de la portada también sangra. A 375 px la página tiene los mismos **5 de
+8 y las mismas 3 piezas cruzando** que a 1512.
+
+| Banda | Objeto |
+|---|---|
+| Portada | bidón, sale por el margen derecho |
+| Precio | — (banda invertida, es tipografía) |
+| Catálogo | seis productos, uno por tarjeta |
+| Proceso | la placa de vídeo |
+| Planes | tres bidones junto al titular, salen por la derecha |
+| Cobertura | — (ver abajo) |
+| Preguntas | bidón junto al titular, sale por la derecha |
+
+**Cobertura se quedó sin objeto, y a propósito.** Se probó: un bidón grande saliendo por
+el margen izquierdo, en el hueco entre los distritos y el botón. Con la captura delante
+se descartó, porque el bidón se cortaba contra el borde del navegador. Un objeto
+recortado por el borde se lee como intención cuando lo que se corta es una lámina
+rectangular, y como accidente cuando lo que se corta es un producto. La banda es densa
+—titular, bajada, doce distritos y un botón— y no tiene sitio para un objeto grande sin
+que estorbe. Mejor sin él que con uno pequeño de relleno.
+
+### Un archivo por foto, recortado, y el encuadre como dato
+
+Los originales de marca vienen en un lienzo cuadrado de 760×760 con el producto flotando
+en medio. Ese aire transparente hacía mentir a toda medida de la hoja: `width: 390px` de
+imagen daba **183 px de bidón**, el 12 % de la página. Por eso el producto se veía pequeño
+por mucho que se subiera el número, y por eso la portada ahora se mide **por alto**, que
+es la dimensión que un bidón tiene de verdad.
+
+`scripts/marcar-producto.py` escribe **una sola foto por producto, recortada a su caja**, y
+saca el encuadre aparte a `src/data/escala-fotos.ts`: qué fracción del lienzo común
+ocupaba de alto. La tarjeta lo aplica con `--escala`.
+
+Lo que ese número guarda es una sola cosa, y conviene no exagerarla:
+
+- Casi todas las fotos llenan el alto del lienzo (**0,879**). El bidón y la botella salen
+  **a la misma altura**; lo que cambia entre ellos es la silueta —47 % contra 24 % de
+  ancho es lo *gordo* que es cada uno, no lo *grande*.
+- La excepción es la foto de grupo (**0,720**): tres bidones en fila tienen que caber a lo
+  ancho, así que van más bajos. Ese es el número que hace falta conservar — sin él, cada
+  bidón del grupo se vería más grande que el bidón suelto de la tarjeta de al lado.
+
+> Dos intentos fallidos, por orden. **Uno:** recortar los archivos sin más. Rompía el
+> encuadre de la foto de grupo. **Dos:** servir dos familias, `producto-*` cuadrada para el
+> catálogo y `objeto-*` recortada para las piezas sueltas. Funcionaba, pero el visitante se
+> descargaba las mismas dos fotos dos veces: **114 KB de más** medidos en el navegador. La
+> tercera es la que está: un archivo, y el encuadre como dato legible en vez de como
+> píxeles vacíos.
+
+> Y una corrección de la primera versión de esta sección, que llegó a afirmar que la
+> botella se veía «la mitad de grande» que el bidón. No es cierto y se comprobó midiendo
+> los archivos: las dos ocupan el mismo 0,879 de alto. El 47 % contra 24 % que lo sugería
+> son anchos, y un bidón es más ancho que una botella sin ser más alto.
+
 **Diseño móvil primero en el resultado, aunque se escriba en escritorio.** Toda grilla
 colapsa a una columna por debajo de su quiebre. La página no debe producir scroll
 horizontal en **ningún** ancho: se verifica a 390 px antes de publicar.
@@ -459,12 +536,27 @@ teórico: cada uno está donde un contenido concreto se rompía.
 
 ## 8. Bordes, líneas y sombras
 
-### Radio: cero
+### Radio: tres escalones, ninguno a mano
 
-**Nada tiene esquinas redondeadas**, con dos excepciones: el badge de conteo del carrito
-y los botones flotantes de WhatsApp (heredan la forma del canal). Esto es deliberado —
-el radio redondeado es la marca del rubro y de la plantilla. Las esquinas rectas son
-mitad del carácter.
+> Hasta la v4 esta sección decía **«radio: cero, nada tiene esquinas redondeadas, con dos
+> excepciones»**. Medido en el navegador, la realidad eran **cinco radios distintos**
+> —7, 8, 10, 12 y 99 px— repartidos en **ocho** excepciones, contra 41 cajas a escuadra.
+> Eso no era un sistema anguloso: era un sistema anguloso con fugas, y las fugas eran
+> justo las piezas que se tocan con el dedo (botones, controles, píldoras). La regla ya
+> había perdido; lo único que quedaba de ella era la incoherencia.
+
+Tres escalones, todos en tokens, ninguno escrito a mano en una regla:
+
+| Token | Valor | Quién lo usa |
+|---|---|---|
+| `--r-s` | 10 px | botones, botón pequeño, conmutador de tema, botón de carrito, grupo de cantidad, etiquetas de pago, redes |
+| `--r-m` | 18 px | tarjetas del catálogo, ficha del hero, nota de pendientes, estado vacío, la placa del vídeo |
+| `--r-full` | 999 px | píldoras: el tag del catálogo, el contador del carrito, el botón flotante de WhatsApp |
+
+El argumento de marca que sostenía el radio cero —«el radio redondeado es la marca del
+rubro y de la plantilla»— se sostiene mejor al revés: **el producto es agua y la página
+cortaba como vidrio**. Lo que delata una plantilla no es que haya radio, es que haya
+cinco sin criterio.
 
 ### Líneas
 
@@ -475,26 +567,55 @@ La línea es el separador principal, no la sombra ni la caja.
 - `2px solid var(--inv-ink)` — sólo la apertura de la tabla de precios, dentro de la banda invertida.
 - `1px dashed var(--line-2)` — **exclusivo** de los marcadores entre corchetes.
 
-Las tarjetas del catálogo no llevan borde propio: la grilla usa `gap: 1px` y cada
-tarjeta pinta con `box-shadow` **su lado derecho y su lado de abajo**. El arriba y el
-izquierda del marco los pone la grilla; sus otros dos lados van transparentes, para
-reservar el sitio sin pintarlo dos veces. Eso da una retícula continua, no una
-colección de cajas.
+El catálogo ya no es una retícula. Hasta la v4 la grilla usaba `gap: 1px` y cada tarjeta
+pintaba con `box-shadow` su lado derecho y su lado de abajo, para que dos líneas
+contiguas no cayeran en el mismo hueco y salieran al doble de oscuras. Funcionaba, y ese
+era el problema: **funcionaba como una hoja de cálculo**. Además obligaba a la esquina
+viva, porque una celda que comparte su línea con la vecina no se puede redondear.
 
-> Hasta la v3 las líneas eran el fondo de la grilla (`--line`) asomando por los huecos.
-> Funcionaba, pero rellenaba también las celdas sobrantes de la última fila: con siete
-> productos en tres columnas quedaban dos celdas pintadas. Sobre azul noche apenas se
-> veía; sobre papel era un bloque gris. Con la sombra en la tarjeta, donde no hay
-> tarjeta no hay nada. Cada tarjeta pinta un solo lado porque con las cuatro caras dos
-> sombras contiguas caían en el mismo hueco de 1 px y la línea salía el doble de oscura.
+Ahora la grilla separa con aire (`gap: clamp(16px, 1.8vw, 24px)`) y cada tarjeta es un
+objeto: `--flota` de fondo, `--r-m` de radio y `--sombra-flota` debajo. De regalo se
+arregla el bug que la retícula arrastraba desde la v3 —donde no hay tarjeta no hay nada
+que pintar, así que las celdas sobrantes de la última fila desaparecen solas.
 
-### Sombras
+### Sombras: la página es un lienzo, no una cuadrícula
 
-Casi no hay. La profundidad viene del contraste de fondo, no del desenfoque.
-Las únicas permitidas son las del botón flotante de WhatsApp y las líneas de la
-retícula del catálogo. La del botón flotante usa `--wa-sombra`, que **sí cambia con el
-tema**: sobre azul noche el halo verde se lee como brillo, y sobre papel se leía como
-una mancha, así que en el tema claro pasa a ser una sombra neutra.
+Este es el cambio de fondo de la v4. Antes: *«casi no hay sombras; la profundidad viene
+del contraste de fondo»*. El resultado medido era **una sola sombra en toda la página**,
+y ni siquiera era una sombra: era el truco de 1 px que dibujaba las líneas de la
+retícula. Cero elevaciones reales.
+
+El síntoma que eso producía se veía en el catálogo. La misma foto del bidón **flotaba**
+en la portada con `drop-shadow` y estaba **metida en un cajón gris** (`--panel` + radio)
+cuatrocientos píxeles más abajo. El producto hablaba con dos voces según dónde
+apareciera.
+
+Dos familias de sombra, que son dos cosas distintas y por eso no comparten token:
+
+| Token | Qué hace | Dónde |
+|---|---|---|
+| `--sombra-flota` / `--sombra-flota-alta` | **eleva una caja** del papel | tarjetas del catálogo (la alta, al señalarlas), la placa del vídeo |
+| `--sombra-objeto` | **asienta un objeto recortado** sobre el fondo | el bidón: en la portada y en cada tarjeta, la misma |
+
+Y un token de superficie, `--flota`, para lo que se levanta. Va **más claro** que el
+fondo en los dos temas, porque lo que se eleva recibe más luz. Es exactamente al revés
+que `--panel`, que es un hueco hundido en la hoja: por eso son dos tokens y no uno con
+dos usos.
+
+En tema oscuro lo que separa la tarjeta del fondo no es la sombra —sobre azul noche una
+sombra negra no separa nada— sino que su superficie sea más clara. La sombra se queda
+como asiento, no como separador.
+
+Y una tercera, aparte, porque hace otra cosa: `--sombra-cajon`. El cajón del pedido no se
+apoya en la página, se pone **delante** de ella, así que su sombra va hacia el lado y no
+hacia abajo. El panel pasó de `--panel` a `--flota` por el mismo motivo: `--panel` es un
+hueco hundido en la hoja, y con él —más un borde de 1 px— el cajón se leía como un trozo
+más de la página que había aparecido a la derecha, no como algo encima. Lo que se levanta
+va más claro y trae sombra; un hueco va más oscuro y trae línea.
+
+Sigue en pie la sombra del botón flotante de WhatsApp, que usa `--wa-sombra` y **sí
+cambia con el tema**: sobre azul noche el halo verde se lee como brillo, y sobre papel se
+leía como una mancha, así que en el tema claro pasa a ser una sombra neutra.
 
 ---
 

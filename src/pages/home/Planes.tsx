@@ -1,10 +1,26 @@
 import { IconoCasa, IconoCheck, IconoCono, IconoEdificio } from '../../components/Icono'
+import { activo } from '../../rutas-publicas'
 
 export default function Planes() {
   return (
     <section className="band" id="planes" style={{ background: 'var(--panel)' }}>
       <div className="wrap">
-        <h2 style={{ margin: '18px 0 44px' }}>Tres formas de pedir.</h2>
+        {/* Tres bidones para tres formas de pedir. No es un adorno: es el
+            mismo objeto que se vende, y la foto que hay es justamente la de
+            tres. Va marcada como decorativa porque el titular de al lado ya
+            dice lo que hay que leer. */}
+        <div className="banda-cabecera">
+          <h2>Tres formas de pedir.</h2>
+          <img
+            className="objeto-banda"
+            src={activo('/producto-bidones.webp')}
+            alt=""
+            aria-hidden="true"
+            width={668}
+            height={547}
+            loading="lazy"
+          />
+        </div>
         <div className="cols3">
           <div className="plan-hogar">
             <span className="plan-etq lbl-cyan"><IconoCasa />Hogar</span>
