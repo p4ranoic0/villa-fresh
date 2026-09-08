@@ -1,8 +1,15 @@
 import { activo } from '../../rutas-publicas'
 
+/*
+ * La banda llevaba `paddingTop: 0` porque era sólo texto y la de arriba ya la
+ * separaba. Con el bidón dentro no vale: el objeto sube por encima del titular
+ * y sin relleno su borde superior caía exactamente en la línea donde acaba
+ * cobertura —medido, 0 px de holgura— y se leía como una foto cortada. Ahora
+ * respira como todas las demás.
+ */
 export default function Preguntas() {
   return (
-    <section className="band" id="preguntas" style={{ paddingTop: 0 }}>
+    <section className="band" id="preguntas">
       <div className="wrap">
         {/* La ultima banda de contenido antes del pie cerraba con el titular
             solo y setecientos pixeles de nada a su derecha. El bidon la cierra

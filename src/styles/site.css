@@ -474,20 +474,26 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    recolocan —debajo del titular en vez de al lado, y mas bajos.
    -------------------------------------------------------------------------- */
 .banda-cabecera{display:grid;gap:18px;margin:18px 0 40px}
-.objeto-banda{display:block;width:auto;max-width:none;height:clamp(140px,27vw,190px);
-  justify-self:end;margin-right:calc(-1 * var(--pad))}
+/* Va detras del titular y a su lado, no en la otra punta de la banda. Con
+   `justify-self:end` la columna de 1fr se comia todo el espacio y el objeto
+   acababa contra el borde, sin relacion visible con el texto que acompana. */
+.objeto-banda{display:block;width:auto;max-width:none;height:clamp(140px,27vw,190px)}
 /* Un bidon suelto es estrecho: con la altura de la foto de grupo quedaria
    como un palito. Se mide por alto porque es lo que un bidon tiene. */
 .objeto-alto{height:clamp(190px,40vw,250px)}
 @media(min-width:900px){
-  .banda-cabecera{grid-template-columns:1fr auto;align-items:end;gap:40px;margin:0 0 44px}
+  .banda-cabecera{grid-template-columns:auto auto;justify-content:start;
+    align-items:end;gap:clamp(28px,5vw,72px);margin:0 0 44px}
   .objeto-banda{height:clamp(200px,23vw,310px)}
   /* Se probo tambien en la banda de cobertura, saliendo por el margen
      IZQUIERDO, y se descarto con la captura delante: alli el bidon se cortaba
      contra el borde del navegador. Un objeto recortado por el borde se lee
      como intencion cuando lo que se corta es una lamina rectangular, y como
      accidente cuando lo que se corta es un producto. */
-  .objeto-alto{height:clamp(280px,30vw,400px)}
+  /* Bajado de 400 a 300: a 400 el borde de arriba del bidon caia exactamente
+     en la linea donde acaba la banda anterior —medido, 0 px de holgura— y se
+     leia como una foto cortada, no como un objeto. */
+  .objeto-alto{height:clamp(230px,26vw,300px)}
 }
 
 .cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;
@@ -535,7 +541,14 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 
    Se anima con `translate` y no con `transform` para que el centrado y el
    `scale` del hover no se pisen: son dos propiedades distintas. */
-.card .shot .objeto{position:absolute;left:50%;top:50%;translate:-50% -50%;
+/* Se centra con inset:0 + margin:auto, NO con left:50% y translate.
+   Con `left:50%` el ancho disponible de un absoluto de ancho automatico es
+   solo la mitad derecha del encuadre —183 px de 366—, y como toda imagen de
+   la hoja lleva `max-width:100%`, la foto de los tres bidones se aplastaba
+   contra ese limite: se pintaba a 183x231 cuando su proporcion pide 282x231,
+   un 35 % mas estrecha de lo que es. Con inset:0 el disponible es el encuadre
+   entero y el ancho sale de la altura, que es lo que se quiere fijar. */
+.card .shot .objeto{position:absolute;inset:0;margin:auto;
   height:calc((100% - 44px) * var(--escala,1));max-width:calc(100% - 44px);
   transition:transform .4s var(--sal)}
 /* En una pantalla tactil el hover se dispara al tocar y se queda
@@ -691,7 +704,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 /* El hueco entre el bidon y la ficha era de 22 px, y medido sobre el build la
    ficha empezaba a 20 px de la base del bidon: la sombra de suelo no tenia
    donde caer y se cortaba contra el panel. Una sombra necesita suelo. */
-    .hero-col{display:grid;gap:clamp(34px,4vw,54px);justify-items:end}
+    .hero-col{display:grid;gap:clamp(34px,4vw,54px);justify-items:center}
     /* SE MIDE POR ALTO, NO POR ANCHO. El archivo venia en un lienzo cuadrado
        de 760x760 con el bidon flotando en medio y ocupando solo el 47 % del
        ancho: pedir 390 px de imagen daba 183 px de bidon, el 12 % de la
@@ -699,22 +712,24 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
        pequeno por mucho que se subiera el numero —la medida mentia. Ahora el
        archivo esta recortado al objeto (scripts/marcar-producto.py) y se mide
        por la dimension que un bidon tiene de verdad, que es el alto. */
-    .hero-foto{width:auto;height:clamp(340px,52vh,460px);max-width:none;
-      justify-self:end;margin-right:calc(-1 * var(--pad))}
+    /* SE CENTRA SOBRE SU FICHA, NO SE PEGA AL BORDE.
+       Durante una version esta foto salia por el margen derecho. Medido a
+       1512: quedaban 309 px de vacio entre el final del titular y el
+       principio del bidon —texto a la izquierda, un hueco muerto en medio y
+       el bidon varado contra el borde. Un objeto que cruza el margen tiene
+       que parecer que ENTRA desde fuera de la pagina, y para eso hace falta
+       tamano: los de la referencia ocupan del 40 al 70 % del ancho y este
+       ocupa el 19 %. A ese tamano no entra, se queda colgado.
+       Centrado sobre la ficha el bidon se lee con ella —el producto y sus
+       datos, uno encima del otro— y el hueco baja a la tercera parte. */
+    .hero-foto{width:auto;height:clamp(340px,52vh,460px);max-width:none}
     @media(min-width:960px){
       .hero-grid{grid-template-columns:1fr minmax(0,460px);gap:56px}
-      /* CRUZA EL MARGEN. Todo lo demas de la pagina para en la linea de
-         --pad; esta foto la pasa. Por eso se lee como un objeto apoyado en la
-         hoja y no como una figura metida en una celda: rompe la reticula que
-         el resto respeta.
-
-         Por debajo de 1440 (--max) el margen negativo la deja tocando el
-         borde del navegador. Por encima, la reticula ya va centrada y queda
-         un canal a los lados, asi que la foto cruza el padding pero no llega
-         al borde fisico. Se deja asi a proposito: en una pantalla de 1920 la
-         pagina es una columna centrada, y una foto pegada al cristal se leeria
-         como un fallo de maquetacion, no como una decision. */
-      .hero-foto{height:clamp(440px,62vh,640px);margin-right:calc(-1 * var(--pad))}
+      /* Aqui vivia un `margin-right` negativo que sacaba la foto por el
+         margen derecho. Ver el comentario de arriba: a este tamano el bidon
+         no cruzaba la reticula, se quedaba varado contra el borde con 309 px
+         de vacio detras. */
+      .hero-foto{height:clamp(440px,62vh,640px)}
     }
     .ficha{width:100%;border:1px solid var(--line);border-radius:var(--r-m);padding:22px 24px 16px;background:var(--ficha-fondo)}
     .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}

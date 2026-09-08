@@ -735,12 +735,14 @@ test('la composición no se apaga en el móvil', async () => {
   // era de escritorio, en un negocio que vende por WhatsApp en Lima.
   const regla = css.slice(css.indexOf('.objeto-banda{'), css.indexOf('.objeto-alto'))
   expect(regla).not.toContain('display:none')
-  // Y el bidón de la portada sangra en el estado base, no sólo dentro del
-  // @media de escritorio: si el margen negativo viviera únicamente ahí, el
-  // móvil se quedaría otra vez sin ninguna pieza cruzando el margen.
+  // Y el objeto de banda tiene tamaño en el estado base, no sólo dentro del
+  // @media de escritorio: si la altura viviera únicamente ahí, el móvil se
+  // quedaría otra vez con la página de antes de empezar.
+  expect(regla).toMatch(/height:clamp\(/)
+  // El bidón de la portada, igual: se mide por alto en el estado base.
   const abre = css.indexOf('.hero-foto{')
   const hero = css.slice(abre, css.indexOf('@media(min-width:960px)', abre))
-  expect(hero).toContain('margin-right:calc(-1 * var(--pad))')
+  expect(hero).toMatch(/height:clamp\(/)
 })
 
 test('cada foto de producto se sirve una sola vez', async () => {

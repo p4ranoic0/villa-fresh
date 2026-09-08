@@ -448,7 +448,7 @@ Grillas usadas, todas con `gap` (nunca márgenes por elemento ni espacios en el 
 | Distritos | 2 → 4 columnas | 760 px |
 | Preguntas (`.qas`) | `1fr 1fr` | 900 px |
 
-### Los objetos rompen el margen. Todo lo demás lo respeta
+### Los objetos se anclan a su contenido. Ninguno cruza el margen
 
 Cambiar el material de las tarjetas no bastó, y el motivo se pudo medir: el cambio tocaba
 **el 24 % de la altura de la página** (1.717 px de 7.060) y dejaba idéntica la
@@ -456,41 +456,50 @@ composición. Cuatro de las cinco bandas no tenían ni una imagen encima. Se pue
 la sombra todo lo que se quiera, que una página sin objetos no se lee como un lienzo: se
 lee como un documento.
 
-Lo que hace lienzo son dos cosas, y ninguna es la sombra:
+> **Se intentó el sangrado, y se retiró.** Durante dos versiones tres piezas salían por
+> el margen derecho: el bidón de la portada y los objetos de planes y preguntas. La idea
+> era buena y es lo que hace la referencia; el problema fue el tamaño. Un objeto que cruza
+> el margen tiene que parecer que **entra desde fuera de la página**, y para eso hace
+> falta escala: los de thepopp ocupan del 40 % al 70 % del ancho y los nuestros el 19–25 %.
+> A ese tamaño no entra, se queda **varado contra el borde**. Medido en la portada a
+> 1512 px: **309 px de vacío** entre el final del titular y el principio del bidón —texto
+> a la izquierda, un hueco muerto en medio y el producto pegado al canto. Y en preguntas
+> el borde superior del bidón caía exactamente en la línea donde acaba cobertura, con 0 px
+> de holgura, así que se leía como una foto cortada.
 
-1. **Tamaño.** La referencia (thepopp) pone láminas del 40 % y el 70 % del ancho. Aquí
-   los productos estaban al 12 % —ver más abajo por qué el número real era ese y no el
-   21 % que aparentaban.
-2. **Que crucen la retícula.** Tres piezas salen por el margen: el bidón de la portada y
-   los objetos de las bandas de planes y de preguntas. Son **las únicas tres** de la
-   página que pasan de la línea de `--pad`. Es una excepción, y funciona porque todo lo
-   demás la respeta.
+Lo que hace lienzo, entonces, es una sola cosa: **que haya objetos, apoyados y anclados a
+lo que acompañan**. La portada centra el bidón sobre su propia ficha —el producto y sus
+datos, uno encima del otro— y el hueco baja de 309 a **145 px**. En las bandas el objeto
+va pegado al titular, no en la otra punta.
 
 **En el móvil también, y esto costó una versión entera.** Los objetos de banda llegaron a
 ir a `display: none` por debajo de 900 px. Medido a 375 px, el resultado era **3 de 8
-bandas con objeto y cero piezas cruzando el margen**: exactamente los números de antes de
-empezar. Toda la composición era de escritorio, en un negocio que vende por WhatsApp en
-Lima. Ahora no se apagan: se recolocan —debajo del titular en vez de al lado, y más
-bajos— y el bidón de la portada también sangra. A 375 px la página tiene los mismos **5 de
-8 y las mismas 3 piezas cruzando** que a 1512.
+bandas con objeto**: exactamente los números de antes de empezar. Toda la composición era
+de escritorio, en un negocio que vende por WhatsApp en Lima. Ahora no se apagan: se
+recolocan, debajo del titular en vez de al lado. A 375 px la página tiene las mismas **5
+de 8** que a 1512.
 
 | Banda | Objeto |
 |---|---|
-| Portada | bidón, sale por el margen derecho |
+| Portada | bidón, centrado sobre su ficha |
 | Precio | — (banda invertida, es tipografía) |
 | Catálogo | seis productos, uno por tarjeta |
 | Proceso | la placa de vídeo |
-| Planes | tres bidones junto al titular, salen por la derecha |
+| Planes | tres bidones, junto al titular |
 | Cobertura | — (ver abajo) |
-| Preguntas | bidón junto al titular, sale por la derecha |
+| Preguntas | bidón, junto al titular |
 
-**Cobertura se quedó sin objeto, y a propósito.** Se probó: un bidón grande saliendo por
-el margen izquierdo, en el hueco entre los distritos y el botón. Con la captura delante
-se descartó, porque el bidón se cortaba contra el borde del navegador. Un objeto
-recortado por el borde se lee como intención cuando lo que se corta es una lámina
-rectangular, y como accidente cuando lo que se corta es un producto. La banda es densa
-—titular, bajada, doce distritos y un botón— y no tiene sitio para un objeto grande sin
-que estorbe. Mejor sin él que con uno pequeño de relleno.
+**Cobertura se quedó sin objeto, y a propósito.** Se probó: un bidón grande en el hueco
+entre los distritos y el botón. Con la captura delante se descartó, porque se cortaba
+contra el borde del navegador. Un objeto recortado por el borde se lee como intención
+cuando lo que se corta es una lámina rectangular, y como accidente cuando lo que se corta
+es un producto. La banda es densa —titular, bajada, doce distritos y un botón— y no tiene
+sitio para un objeto grande sin que estorbe. Mejor sin él que con uno pequeño de relleno.
+
+**Y preguntas dejó de llevar `paddingTop: 0`.** Lo llevaba porque era sólo texto y la
+banda de arriba ya la separaba. Con un objeto dentro no vale: el objeto sube por encima
+del titular y sin relleno su borde superior tocaba la línea de la banda anterior. Ahora
+respira como todas las demás, con 96 px de holgura medidos.
 
 ### Un archivo por foto, recortado, y el encuadre como dato
 
