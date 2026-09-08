@@ -11,15 +11,15 @@ export default function Preguntas() {
             este ya escrita al lado. */}
         <div className="banda-cabecera">
           <h2>Lo que más nos preguntan.</h2>
-          <img
-            className="objeto-banda objeto-alto"
-            src={activo('/producto-bidon-20l.webp')}
-            alt=""
-            aria-hidden="true"
-            width={353}
-            height={668}
-            loading="lazy"
-          />
+          <span className="objeto objeto-banda objeto-alto" aria-hidden="true">
+            <img
+              src={activo('/producto-bidon-20l.webp')}
+              alt=""
+              width={353}
+              height={668}
+              loading="lazy"
+            />
+          </span>
         </div>
         <div className="qas">
           <div className="qa">

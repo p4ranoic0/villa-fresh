@@ -595,7 +595,46 @@ Dos familias de sombra, que son dos cosas distintas y por eso no comparten token
 | Token | Qué hace | Dónde |
 |---|---|---|
 | `--sombra-flota` / `--sombra-flota-alta` | **eleva una caja** del papel | tarjetas del catálogo (la alta, al señalarlas), la placa del vídeo |
-| `--sombra-objeto` | **asienta un objeto recortado** sobre el fondo | el bidón: en la portada y en cada tarjeta, la misma |
+| `--suelo-contacto` / `--suelo-nucleo` / `--suelo-medio` | **asienta un objeto** en el suelo | los nueve productos, vía `.objeto::before` |
+
+### Un producto no proyecta su silueta: proyecta una elipse
+
+La segunda familia empezó siendo un `filter: drop-shadow(0 26px 40px …)` sobre cada foto,
+y **no se veía**. Tres motivos, los tres medidos:
+
+1. **`drop-shadow` se pondera por el canal alfa**, y el bidón es plástico transparente:
+   sólo el **70,8 %** del archivo es opaco del todo. Un objeto medio translúcido proyecta
+   una sombra medio translúcida.
+2. Lo poco que quedaba, **40 px de desenfoque al 16 %** lo repartían hasta hacerlo
+   invisible sobre papel claro. Medido en producción: **0 % de oscurecimiento** bajo la
+   base del bidón.
+3. Y aunque se viera, tendría **la forma equivocada**. `drop-shadow` pinta la *silueta*:
+   la del bidón mide **347 px de ancho al 35 % de su altura y 321 px al 85 %** —igual de
+   ancha arriba que abajo. Lo que sale debajo no es una sombra, es un segundo bidón gris.
+
+Una sombra de contacto real es una **elipse aplastada**: ancha en la base, nada arriba,
+oscura donde el objeto toca. Eso no lo puede dar la silueta, así que se dibuja aparte, en
+`.objeto::before`, con **dos capas** —una elipse ancha y difusa que es la proyección, y un
+núcleo más pequeño y oscuro en la línea de contacto. Con la difusa sola se lee como una
+mancha; el núcleo es lo que la convierte en apoyo. Perfil medido bajo el bidón de la
+portada: **29,5 %** de oscurecimiento en la base, 17,5 % a 14 px, 9,7 % a 20 px, 0 % a 32.
+
+La referencia lleva esa sombra **horneada en el PNG** (`box-shadow: none`, `filter: none`,
+6,6 % del archivo en alfa parcial). Aquí va en CSS porque este sitio tiene un tema oscuro
+real y una sombra horneada asumiría fondo claro para siempre.
+
+Tres detalles que costaron una iteración cada uno:
+
+- **La envoltura `.objeto` no es un `div` de más.** Un `<img>` es un elemento reemplazado
+  y no admite `::before`: la elipse no se puede colgar de la propia foto.
+- **La elipse se mide en porcentaje del objeto**, y eso sólo funciona porque los archivos
+  van recortados a su caja. Con el lienzo cuadrado de antes, el 100 % habría sido el 100 %
+  de un cuadrado medio vacío.
+- **El centro de la elipse va *en* la línea de contacto**, no encima. Con el primer valor
+  quedaba casi entera detrás del bidón y sólo asomaban 15 px de su borde más transparente.
+  Y su ancho no pasa del 100 %: las piezas que sangran terminan justo en el borde del
+  navegador, así que una elipse más ancha que su objeto metía 3 px de scroll horizontal en
+  el móvil.
 
 Y un token de superficie, `--flota`, para lo que se levanta. Va **más claro** que el
 fondo en los dos temas, porque lo que se eleva recibe más luz. Es exactamente al revés

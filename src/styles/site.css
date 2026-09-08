@@ -111,13 +111,27 @@
   --sombra-flota:0 1px 2px rgba(10,22,34,.05),0 10px 28px -8px rgba(10,22,34,.13);
   --sombra-flota-alta:0 2px 4px rgba(10,22,34,.07),0 20px 44px -10px rgba(10,22,34,.19);
 
-  /* La sombra del PRODUCTO, que es otra cosa: no eleva una caja, asienta un
-     objeto recortado sobre el fondo. Vivia escrita a mano dentro de
-     .hero-foto y no existia en la tarjeta, asi que el mismo bidon flotaba en
-     la portada y estaba metido en un cajon gris cuatrocientos pixeles mas
-     abajo. Una sola, para que hable igual en los dos sitios. El color sale de
-     --foto-sombra, que ya cambia con el tema. */
-  --sombra-objeto:0 26px 40px var(--foto-sombra);
+  /* LA SOMBRA DEL PRODUCTO ES UNA ELIPSE EN EL SUELO, NO LA SILUETA MOVIDA.
+     Aqui vivio un `filter:drop-shadow(0 26px 40px ...)` y no se veia. Tres
+     motivos, los tres medidos:
+
+       1. drop-shadow se pondera por el canal alfa, y el bidon es plastico
+          transparente: solo el 70,8 % del archivo es opaco del todo. Un objeto
+          medio translucido proyecta una sombra medio translucida.
+       2. Lo poco que quedaba, 40 px de desenfoque al 16 % lo repartian hasta
+          hacerlo invisible sobre papel claro.
+       3. Y aunque se viera, tendria la forma equivocada. drop-shadow pinta la
+          SILUETA: la del bidon mide 347 px de ancho al 35 % de su altura y
+          321 px al 85 %, o sea igual de ancha arriba que abajo. Lo que sale
+          debajo no es una sombra, es un segundo bidon gris.
+
+     Una sombra de contacto real es una elipse aplastada: ancha en la base,
+     nada arriba, oscura donde el objeto toca y difuminandose hacia fuera. Eso
+     no lo puede dar la silueta, asi que se dibuja aparte. La referencia la
+     lleva horneada en el PNG; aqui va en CSS para que cambie con el tema. */
+  --suelo-contacto:rgba(10,22,34,.34);
+  --suelo-nucleo:rgba(10,22,34,.34);
+  --suelo-medio:rgba(10,22,34,.14);
   /* El cajon no se apoya en la pagina: se pone DELANTE. Por eso su sombra va
      hacia el lado y no hacia abajo. */
   --sombra-cajon:-24px 0 64px -24px rgba(10,22,34,.34);
@@ -153,6 +167,10 @@
   --sombra-flota:0 1px 2px rgba(0,0,0,.45),0 12px 32px -10px rgba(0,0,0,.62);
   --sombra-flota-alta:0 2px 6px rgba(0,0,0,.5),0 24px 52px -12px rgba(0,0,0,.74);
   --sombra-cajon:-24px 0 64px -20px rgba(0,0,0,.8);
+  /* Sobre azul noche el suelo no se aclara: se oscurece mas. */
+  --suelo-contacto:rgba(0,0,0,.58);
+  --suelo-nucleo:rgba(0,0,0,.55);
+  --suelo-medio:rgba(0,0,0,.24);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
   /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
@@ -200,6 +218,10 @@
   --sombra-flota:0 1px 2px rgba(0,0,0,.45),0 12px 32px -10px rgba(0,0,0,.62);
   --sombra-flota-alta:0 2px 6px rgba(0,0,0,.5),0 24px 52px -12px rgba(0,0,0,.74);
   --sombra-cajon:-24px 0 64px -20px rgba(0,0,0,.8);
+  /* Sobre azul noche el suelo no se aclara: se oscurece mas. */
+  --suelo-contacto:rgba(0,0,0,.58);
+  --suelo-nucleo:rgba(0,0,0,.55);
+  --suelo-medio:rgba(0,0,0,.24);
   --inv-realce:rgba(62,193,255,.10);
   --wa-sombra:rgba(37,211,102,.45);
   /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
@@ -392,6 +414,47 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 .foot a:hover{color:var(--acento)}
 
 /* --------------------------------------------------------------------------
+   OBJETO APOYADO — la imagen y la sombra que la asienta
+
+   Hace falta una envoltura porque un <img> es un elemento reemplazado y no
+   admite ::before: la elipse no se puede colgar de la propia foto. La
+   envoltura se ajusta al tamano de la imagen, asi que la elipse se mide en
+   PORCENTAJE del objeto y sale bien en los seis productos sin tocar nada —eso
+   solo funciona porque los archivos van recortados a su caja y la caja del
+   <img> ES el objeto. Con el lienzo cuadrado de antes, el 92 % habria sido el
+   92 % de un cuadrado medio vacio.
+
+   La elipse va con radial-gradient y no con un ovalo relleno mas blur: el
+   degradado da el nucleo oscuro del contacto y la caida hacia fuera de una
+   vez, y sale mas barato de pintar que un desenfoque.
+   -------------------------------------------------------------------------- */
+.objeto{position:relative;display:inline-block;line-height:0;vertical-align:bottom}
+/* La foto va por encima de su sombra. Los dos posicionados: si el <img> se
+   quedara en flujo, el ::before posicionado se pintaria encima de el. */
+.objeto > img,.objeto > svg{position:relative;z-index:1;display:block;width:auto;height:100%}
+/* El centro de la elipse va EN la linea de contacto, no encima: la mitad de
+   arriba queda tapada por el objeto y la de abajo es la que se ve. Con
+   translate:32% la elipse se quedaba casi entera detras del bidon y solo
+   asomaban 15 px de su borde mas transparente —o sea, nada. */
+.objeto::before{content:'';position:absolute;z-index:0;left:50%;bottom:0;
+  /* Ancho 100 % y no mas: las piezas que sangran terminan justo en el borde
+     del navegador, asi que una elipse mas ancha que su objeto asomaba por
+     fuera y metia 3 px de scroll horizontal en el movil. La anchura visible se
+     recupera empujando las paradas del degradado, que no ocupan caja. */
+  translate:-50% 52%;width:100%;aspect-ratio:3.6/1;
+  /* Dos capas, como se compone una sombra de producto de verdad: una elipse
+     ancha y difusa que es la sombra proyectada, y encima un nucleo pequeno y
+     mas oscuro justo en la linea donde el objeto toca. Con la difusa sola se
+     lee como una mancha; el nucleo es lo que la convierte en contacto. */
+  background:
+    radial-gradient(34% 42% at 50% 42%,var(--suelo-contacto) 0%,transparent 74%),
+    radial-gradient(50% 50% at 50% 50%,
+      var(--suelo-nucleo) 0%,var(--suelo-medio) 48%,transparent 88%)}
+/* Quien no quiere sombra la apaga: la placa del video ya trae la suya de caja
+   y el logotipo de la barra no se apoya en nada. */
+.objeto-sin-suelo::before{display:none}
+
+/* --------------------------------------------------------------------------
    OBJETO DE BANDA — un producto apoyado junto al titular de una seccion
 
    Cuatro de las cinco bandas de la pagina no tenian ni una imagen: eran filas
@@ -412,8 +475,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    -------------------------------------------------------------------------- */
 .banda-cabecera{display:grid;gap:18px;margin:18px 0 40px}
 .objeto-banda{display:block;width:auto;max-width:none;height:clamp(140px,27vw,190px);
-  justify-self:end;margin-right:calc(-1 * var(--pad));
-  filter:drop-shadow(var(--sombra-objeto))}
+  justify-self:end;margin-right:calc(-1 * var(--pad))}
 /* Un bidon suelto es estrecho: con la altura de la foto de grupo quedaria
    como un palito. Se mide por alto porque es lo que un bidon tiene. */
 .objeto-alto{height:clamp(190px,40vw,250px)}
@@ -473,16 +535,18 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 
    Se anima con `translate` y no con `transform` para que el centrado y el
    `scale` del hover no se pisen: son dos propiedades distintas. */
-.card .shot img,.card .shot svg{position:absolute;left:50%;top:50%;translate:-50% -50%;
-  height:calc((100% - 44px) * var(--escala,1));width:auto;max-width:calc(100% - 44px);
-  filter:drop-shadow(var(--sombra-objeto));transition:transform .4s var(--sal)}
+.card .shot .objeto{position:absolute;left:50%;top:50%;translate:-50% -50%;
+  height:calc((100% - 44px) * var(--escala,1));max-width:calc(100% - 44px);
+  transition:transform .4s var(--sal)}
 /* En una pantalla tactil el hover se dispara al tocar y se queda
    pegado: la tarjeta se agranda sola y no vuelve.
    La tarjeta se LEVANTA en vez de cambiar de color: es un objeto apoyado, y
    lo que hace un objeto cuando lo senalas es subir, no tenirse. */
 @media (hover:hover) and (pointer:fine){
   .card:hover{box-shadow:var(--sombra-flota-alta);transform:translateY(-3px)}
-  .card:hover .shot img,.card:hover .shot svg{transform:scale(1.04)}
+  /* Se agranda el conjunto, no solo la foto: si creciera la foto sola, su
+     sombra se quedaria del tamano de antes y el objeto se despegaria. */
+  .card:hover .shot .objeto{transform:scale(1.04)}
 }
 .card .tag{position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;
   letter-spacing:0;background:var(--acento);color:var(--sobre-acento);padding:5px 11px;border-radius:var(--r-full)}
@@ -624,7 +688,10 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     /* z-index sobre la marea: el contenido va por encima del agua, no dentro. */
     .hero-grid{position:relative;z-index:1;display:grid;gap:44px;align-items:start}
     @media(min-width:960px){.hero-grid{align-items:center}}
-    .hero-col{display:grid;gap:22px;justify-items:end}
+/* El hueco entre el bidon y la ficha era de 22 px, y medido sobre el build la
+   ficha empezaba a 20 px de la base del bidon: la sombra de suelo no tenia
+   donde caer y se cortaba contra el panel. Una sombra necesita suelo. */
+    .hero-col{display:grid;gap:clamp(34px,4vw,54px);justify-items:end}
     /* SE MIDE POR ALTO, NO POR ANCHO. El archivo venia en un lienzo cuadrado
        de 760x760 con el bidon flotando en medio y ocupando solo el 47 % del
        ancho: pedir 390 px de imagen daba 183 px de bidon, el 12 % de la
@@ -633,8 +700,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
        archivo esta recortado al objeto (scripts/marcar-producto.py) y se mide
        por la dimension que un bidon tiene de verdad, que es el alto. */
     .hero-foto{width:auto;height:clamp(340px,52vh,460px);max-width:none;
-      justify-self:end;margin-right:calc(-1 * var(--pad));
-      filter:drop-shadow(var(--sombra-objeto))}
+      justify-self:end;margin-right:calc(-1 * var(--pad))}
     @media(min-width:960px){
       .hero-grid{grid-template-columns:1fr minmax(0,460px);gap:56px}
       /* CRUZA EL MARGEN. Todo lo demas de la pagina para en la linea de

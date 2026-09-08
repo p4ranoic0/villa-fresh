@@ -21,7 +21,9 @@ export default function TarjetaProducto({ producto, onAgregar }: Props) {
     <article className="card">
       <div className="shot">
         {producto.etiqueta && <span className="tag">{producto.etiqueta}</span>}
-        <img src={producto.imagen} alt={producto.nombre} loading="lazy" style={encuadre} />
+        <span className="objeto" style={encuadre}>
+          <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
+        </span>
         {producto.nota && <span className="nota">{producto.nota}</span>}
       </div>
       {/* El SKU se quito de la cara de la tarjeta: VF-B20X2 es la

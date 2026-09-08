@@ -11,15 +11,15 @@ export default function Planes() {
             dice lo que hay que leer. */}
         <div className="banda-cabecera">
           <h2>Tres formas de pedir.</h2>
-          <img
-            className="objeto-banda"
-            src={activo('/producto-bidones.webp')}
-            alt=""
-            aria-hidden="true"
-            width={668}
-            height={547}
-            loading="lazy"
-          />
+          <span className="objeto objeto-banda" aria-hidden="true">
+            <img
+              src={activo('/producto-bidones.webp')}
+              alt=""
+              width={668}
+              height={547}
+              loading="lazy"
+            />
+          </span>
         </div>
         <div className="cols3">
           <div className="plan-hogar">

@@ -701,15 +701,27 @@ test('la forma no se decide desde un componente', async () => {
   }
 })
 
-test('el bidón lleva la misma sombra en la portada y en la tarjeta', async () => {
+test('el bidón se apoya igual en la portada y en la tarjeta', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
-  // Este era el síntoma que se veía: la misma foto flotaba en el hero con un
-  // drop-shadow escrito a mano y estaba metida en un cajón gris cuatrocientos
-  // píxeles más abajo. El producto hablaba con dos voces según dónde saliera.
-  expect(css).toMatch(/\.hero-foto\{[^}]*filter:drop-shadow\(var\(--sombra-objeto\)\)/)
-  expect(css).toMatch(/\.card \.shot img[^{]*\{[^}]*filter:drop-shadow\(var\(--sombra-objeto\)\)/)
+  const fuentes = await Promise.all(
+    ['pages/home/Hero', 'pages/home/Planes', 'pages/home/Preguntas', 'features/productos/TarjetaProducto']
+      .map((f) => readFile(`src/${f}.tsx`, 'utf8')),
+  )
+  // El síntoma original: la misma foto flotaba en el hero con un drop-shadow
+  // escrito a mano y estaba metida en un cajón gris cuatrocientos píxeles más
+  // abajo. El producto hablaba con dos voces según dónde saliera. Ahora todo
+  // objeto apoyado pasa por la misma envoltura, y la sombra se define una vez.
+  for (const fuente of fuentes) expect(fuente).toContain('className="objeto')
+  expect(css).toContain('.objeto::before{')
+
+  // Y no vuelve el drop-shadow de silueta. No se veía —el bidón es plástico
+  // translúcido y drop-shadow se pondera por el alfa— y de verse tendría la
+  // forma equivocada: la silueta de un cilindro es igual de ancha arriba que
+  // abajo, así que lo que sale debajo es un segundo bidón gris.
+  expect(css).not.toContain('drop-shadow(var(--sombra-objeto))')
+
   // Y el encuadre de la tarjeta no vuelve a ser una caja: ni fondo ni radio.
-  const shot = css.slice(css.indexOf('.card .shot{'), css.indexOf('.card .shot img'))
+  const shot = css.slice(css.indexOf('.card .shot{'), css.indexOf('.card .shot .objeto'))
   expect(shot).not.toContain('background:')
   expect(shot).not.toContain('border-radius:')
 })

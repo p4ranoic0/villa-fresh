@@ -46,14 +46,17 @@ export default function Hero() {
           {/* La portada de una marca que vende un objeto no puede no
               enseñarlo. Hasta aquí el hero era texto y una tabla, y por eso
               se leía como un documento y no como una tienda. */}
-          <img
-            className="hero-foto"
-            src={activo('/producto-bidon-20l.webp')}
-            alt="Bidón de 20 litros de Villa Fresh, sellado"
-            width={353}
-            height={668}
-            fetchPriority="high"
-          />
+          {/* La envoltura no es un div de más: un <img> no admite ::before, y
+              ahí es donde va la elipse que asienta el bidón. Ver `.objeto`. */}
+          <span className="objeto hero-foto">
+            <img
+              src={activo('/producto-bidon-20l.webp')}
+              alt="Bidón de 20 litros de Villa Fresh, sellado"
+              width={353}
+              height={668}
+              fetchPriority="high"
+            />
+          </span>
           {/* Eran once filas en monoespaciada mayúscula: PRODUCTO, TRATAMIENTO,
               OZONIZADA, PASOS DE PURIFICACIÓN, GREMIO, COBERTURA… Una hoja de
               inventario en el sitio donde el visitante decide si compra. Quedan
