@@ -496,6 +496,12 @@ cuando lo que se corta es una lámina rectangular, y como accidente cuando lo qu
 es un producto. La banda es densa —titular, bajada, doce distritos y un botón— y no tiene
 sitio para un objeto grande sin que estorbe. Mejor sin él que con uno pequeño de relleno.
 
+**El pie de foto de la tarjeta salió del encuadre.** «Sellado en planta» iba dentro y
+absoluto mientras hubo un panel gris donde apoyarse. Sin panel se quedó pisando la sombra
+de suelo del producto —el bidón proyecta unos 21 px por debajo de su base y el rótulo
+estaba justo ahí— y los dos se estorbaban. Ahora va debajo, pegado a su imagen y separado
+del titular, que es como se lee un pie.
+
 **Y preguntas dejó de llevar `paddingTop: 0`.** Lo llevaba porque era sólo texto y la
 banda de arriba ya la separaba. Con un objeto dentro no vale: el objeto sube por encima
 del titular y sin relleno su borde superior tocaba la línea de la banda anterior. Ahora
@@ -639,6 +645,15 @@ Tres detalles que costaron una iteración cada uno:
 - **La elipse se mide en porcentaje del objeto**, y eso sólo funciona porque los archivos
   van recortados a su caja. Con el lienzo cuadrado de antes, el 100 % habría sido el 100 %
   de un cuadrado medio vacío.
+- **Y la envoltura tiene que medir exactamente lo que la foto.** Esto se rompió dos veces
+  seguidas, de dos maneras distintas, y las dos por dejar su ancho en manos del ajuste
+  automático: con `left: 50%` el espacio disponible de un absoluto es sólo la mitad derecha
+  del encuadre y la foto ancha salía **un 35 % aplastada**; con `inset: 0` la envoltura se
+  estira al contenedor entero —**322 px contra 149 de foto**— y la elipse, que se dibuja al
+  100 % de la envoltura, aparecía **86 px a la derecha** del bidón en vez de debajo. El
+  ancho no puede salir del ajuste automático porque un `<img>` aporta a ese cálculo su
+  tamaño natural, no el alto que le hemos puesto. Sale de `aspect-ratio: var(--ratio)`, con
+  la proporción real del recorte medida por el script.
 - **El centro de la elipse va *en* la línea de contacto**, no encima. Con el primer valor
   quedaba casi entera detrás del bidón y sólo asomaban 15 px de su borde más transparente.
   Y su ancho no pasa del 100 %: las piezas que sangran terminan justo en el borde del

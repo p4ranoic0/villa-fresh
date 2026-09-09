@@ -766,3 +766,26 @@ test('cada foto de producto se sirve una sola vez', async () => {
     expect({ foto, tieneEscala: escalas.includes(`'${foto}':`) }).toEqual({ foto, tieneEscala: true })
   }
 })
+
+
+test('la envoltura de la sombra mide lo mismo que la foto', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  // Se rompió dos veces seguidas, de dos maneras distintas, y las dos por
+  // dejar el ancho de la envoltura en manos del ajuste automático:
+  //   · con `left:50%` el espacio disponible de un absoluto es sólo la mitad
+  //     derecha del encuadre, y la foto ancha salía un 35 % aplastada;
+  //   · con `inset:0` la envoltura se estira al contenedor entero —322 px
+  //     contra 149 de foto— y la elipse, que se dibuja al 100 % de la
+  //     envoltura, aparecía 86 px a la derecha del bidón en vez de debajo.
+  // La proporción la mide scripts/marcar-producto.py y viaja como --ratio.
+  const objeto = css.slice(css.indexOf('.objeto{'), css.indexOf('.objeto > img'))
+  expect(objeto).toContain('aspect-ratio:var(--ratio')
+
+  // Y todo el que coloca un objeto pasa el encuadre; sin --ratio la
+  // proporción cae al 1/1 de reserva y la envoltura vuelve a no coincidir.
+  const fuentes = await Promise.all(
+    ['pages/home/Hero', 'pages/home/Planes', 'pages/home/Preguntas', 'features/productos/TarjetaProducto']
+      .map((f) => readFile(`src/${f}.tsx`, 'utf8')),
+  )
+  for (const fuente of fuentes) expect(fuente).toContain('encuadreDe')
+})

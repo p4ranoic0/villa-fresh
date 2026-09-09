@@ -93,11 +93,24 @@ def escribir_escalas(escalas):
         '   Vivia escondido como aire transparente dentro de cada .webp. Ahora las',
         '   fotos van recortadas al objeto —una sola por foto, sin descargar la misma',
         '   imagen dos veces— y el encuadre viaja aparte, donde se puede leer.',
+        '',
+        '   `ratio` es el ancho partido por el alto del recorte. La envoltura que',
+        '   sostiene la sombra tiene que medir exactamente lo que la foto: si es mas',
+        '   ancha, la elipse se centra en la envoltura y no en el objeto, y la sombra',
+        '   sale desplazada al lado del bidon en vez de debajo.',
         '   ========================================================================== */',
-        'export const ESCALA_FOTO: Record<string, number> = {',
+        'export interface Encuadre {',
+        '  /** Fraccion del alto del lienzo comun que ocupaba el producto. */',
+        '  escala: number',
+        '  /** Ancho / alto del recorte. */',
+        '  ratio: number',
+        '}',
+        '',
+        'export const ENCUADRE: Record<string, Encuadre> = {',
     ]
     for nombre in sorted(escalas):
-        lineas.append(f"  '{nombre}': {escalas[nombre]:.4f},")
+        e = escalas[nombre]
+        lineas.append(f"  '{nombre}': {{ escala: {e['escala']:.4f}, ratio: {e['ratio']:.4f} }},")
     lineas += ['}', '']
     destino = RAIZ / 'src' / 'data' / 'escala-fotos.ts'
     destino.write_text('\n'.join(lineas), encoding='utf-8')
@@ -141,11 +154,18 @@ if __name__ == '__main__':
         # estimacion: sale de los pixeles opacos del archivo de marca. En la
         # practica solo hay dos valores, y el que importa es el de la foto de
         # grupo.
-        escalas[nombre] = (caja[3] - caja[1]) / im.height
+        escalas[nombre] = {
+            'escala': (caja[3] - caja[1]) / im.height,
+            # La proporcion del recorte. Hace falta en CSS porque la envoltura
+            # que sostiene la sombra tiene que medir EXACTAMENTE lo que la
+            # foto: si es mas ancha, la elipse se centra en la envoltura y no
+            # en el objeto, y la sombra aparece desplazada al lado del bidon.
+            'ratio': (caja[2] - caja[0]) / (caja[3] - caja[1]),
+        }
         im = im.crop(caja)
         destino = RAIZ / 'public' / f'{nombre}.webp'
         im.save(destino, 'WEBP', quality=84, method=6)
-        print(f'{nombre}  {im.width}x{im.height}  escala {escalas[nombre]:.3f}  '
-              f'{destino.stat().st_size // 1024} KB')
+        print(f'{nombre}  {im.width}x{im.height}  escala {escalas[nombre]["escala"]:.3f}  '
+              f'ratio {escalas[nombre]["ratio"]:.3f}  {destino.stat().st_size // 1024} KB')
 
     escribir_escalas(escalas)

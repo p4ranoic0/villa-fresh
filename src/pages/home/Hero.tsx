@@ -1,5 +1,6 @@
 import Marea from '../../components/Marea'
 import { activo } from '../../rutas-publicas'
+import { encuadreDe } from '../../data/encuadre'
 import { IconoWhatsApp } from '../../components/Icono'
 import { urlWhatsApp } from '../../data/negocio'
 
@@ -48,7 +49,7 @@ export default function Hero() {
               se leía como un documento y no como una tienda. */}
           {/* La envoltura no es un div de más: un <img> no admite ::before, y
               ahí es donde va la elipse que asienta el bidón. Ver `.objeto`. */}
-          <span className="objeto hero-foto">
+          <span className="objeto hero-foto" style={encuadreDe('/producto-bidon-20l.webp')}>
             <img
               src={activo('/producto-bidon-20l.webp')}
               alt="Bidón de 20 litros de Villa Fresh, sellado"

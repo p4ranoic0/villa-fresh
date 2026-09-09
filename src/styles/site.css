@@ -428,10 +428,18 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    degradado da el nucleo oscuro del contacto y la caida hacia fuera de una
    vez, y sale mas barato de pintar que un desenfoque.
    -------------------------------------------------------------------------- */
-.objeto{position:relative;display:inline-block;line-height:0;vertical-align:bottom}
+/* LA ENVOLTURA MIDE EXACTAMENTE LO QUE LA FOTO, Y ESO NO ES NEGOCIABLE.
+   La elipse se dibuja al 100 % de la envoltura; si la envoltura es mas ancha
+   que la foto, la sombra se centra donde no esta el objeto. Paso: con
+   `inset:0` la envoltura salia a 322 px y la foto a 149, y la sombra caia
+   86 px a la derecha del bidon. El ancho se fija con la proporcion real del
+   recorte —var(--ratio), medida por scripts/marcar-producto.py— para que salga
+   del alto y no del ajuste automatico, que con un <img> mira su tamano natural
+   y no el alto que le hemos puesto. */
+.objeto{position:relative;display:block;line-height:0;aspect-ratio:var(--ratio,1)}
 /* La foto va por encima de su sombra. Los dos posicionados: si el <img> se
    quedara en flujo, el ::before posicionado se pintaria encima de el. */
-.objeto > img,.objeto > svg{position:relative;z-index:1;display:block;width:auto;height:100%}
+.objeto > img,.objeto > svg{position:relative;z-index:1;display:block;width:100%;height:100%}
 /* El centro de la elipse va EN la linea de contacto, no encima: la mitad de
    arriba queda tapada por el objeto y la de abajo es la que se ve. Con
    translate:32% la elipse se quedaba casi entera detras del bidon y solo
@@ -441,7 +449,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
      del navegador, asi que una elipse mas ancha que su objeto asomaba por
      fuera y metia 3 px de scroll horizontal en el movil. La anchura visible se
      recupera empujando las paradas del degradado, que no ocupan caja. */
-  translate:-50% 52%;width:100%;aspect-ratio:3.6/1;
+  translate:-50% 52%;width:100%;aspect-ratio:3.1/1;
   /* Dos capas, como se compone una sombra de producto de verdad: una elipse
      ancha y difusa que es la sombra proyectada, y encima un nucleo pequeno y
      mas oscuro justo en la linea donde el objeto toca. Con la difusa sola se
@@ -526,7 +534,7 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    lo que faltaba —la misma foto flotaba arriba y estaba encajonada en gris
    cuatrocientos pixeles mas abajo. El margen inferior sube de 20 a 30 porque
    la sombra cae 26 px y se comia el titulo. */
-.card .shot{aspect-ratio:1/1;position:relative;margin-bottom:30px}
+.card .shot{aspect-ratio:1/1;position:relative;margin-bottom:0}
 /* La foto va absoluta y centrada, no como item de la rejilla. No es un
    capricho: `max-height` en porcentaje no resuelve contra un alto que sale de
    `aspect-ratio` —el navegador no puede saber el alto sin medir el contenido,
@@ -541,14 +549,13 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 
    Se anima con `translate` y no con `transform` para que el centrado y el
    `scale` del hover no se pisen: son dos propiedades distintas. */
-/* Se centra con inset:0 + margin:auto, NO con left:50% y translate.
-   Con `left:50%` el ancho disponible de un absoluto de ancho automatico es
-   solo la mitad derecha del encuadre —183 px de 366—, y como toda imagen de
-   la hoja lleva `max-width:100%`, la foto de los tres bidones se aplastaba
-   contra ese limite: se pintaba a 183x231 cuando su proporcion pide 282x231,
-   un 35 % mas estrecha de lo que es. Con inset:0 el disponible es el encuadre
-   entero y el ancho sale de la altura, que es lo que se quiere fijar. */
-.card .shot .objeto{position:absolute;inset:0;margin:auto;
+/* Dos intentos fallidos antes de este, los dos por el ancho de la envoltura:
+   con `left:50%` el ancho disponible de un absoluto automatico es solo la
+   mitad derecha del encuadre, y la foto ancha se aplastaba un 35 %; con
+   `inset:0` la envoltura se estiraba al encuadre entero y la sombra se iba
+   86 px a la derecha del objeto. El ancho no puede salir del ajuste
+   automatico: sale de aspect-ratio, arriba, y aqui solo se fija el alto. */
+.card .shot .objeto{position:absolute;left:50%;top:50%;translate:-50% -50%;
   height:calc((100% - 44px) * var(--escala,1));max-width:calc(100% - 44px);
   transition:transform .4s var(--sal)}
 /* En una pantalla tactil el hover se dispara al tocar y se queda
@@ -563,12 +570,15 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
 }
 .card .tag{position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;
   letter-spacing:0;background:var(--acento);color:var(--sobre-acento);padding:5px 11px;border-radius:var(--r-full)}
-/* Va dentro del encuadre y no sobre la foto: el recorte esta centrado y el
-   borde inferior queda libre. Antes se apoyaba en el fondo del panel; ahora
-   el panel no existe y se lee directamente sobre la tarjeta. */
-.card .nota{position:absolute;left:12px;right:12px;bottom:12px;font-size:12.5px;
+/* Debajo del encuadre, no dentro. Vivio dentro y absoluto mientras hubo un
+   panel gris donde apoyarse; al quitarlo se quedo pisando la sombra de suelo
+   del producto —el bidon proyecta 21 px por debajo de su base y el rotulo
+   estaba justo ahi— y los dos se estorbaban. */
+/* Pegado a su foto y lejos del titular: medido, quedaba a 28 px del h3 y a
+   65 de la imagen, asi que se leia como antetitulo y no como pie. */
+.card .nota{display:block;margin-top:4px;font-size:12.5px;
   font-weight:400;letter-spacing:0;color:var(--dim);text-align:center}
-.card h3{font-size:21px;margin:10px 0 8px}
+.card h3{font-size:21px;margin:22px 0 8px}
 .card .desc{font-size:14.5px;line-height:1.55;color:var(--ink-2);flex:1}
 .card .foot-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}

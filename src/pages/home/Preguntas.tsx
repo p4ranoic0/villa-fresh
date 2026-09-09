@@ -1,4 +1,5 @@
 import { activo } from '../../rutas-publicas'
+import { encuadreDe } from '../../data/encuadre'
 
 /*
  * La banda llevaba `paddingTop: 0` porque era sólo texto y la de arriba ya la
@@ -18,7 +19,7 @@ export default function Preguntas() {
             este ya escrita al lado. */}
         <div className="banda-cabecera">
           <h2>Lo que más nos preguntan.</h2>
-          <span className="objeto objeto-banda objeto-alto" aria-hidden="true">
+          <span className="objeto objeto-banda objeto-alto" aria-hidden="true" style={encuadreDe('/producto-bidon-20l.webp')}>
             <img
               src={activo('/producto-bidon-20l.webp')}
               alt=""

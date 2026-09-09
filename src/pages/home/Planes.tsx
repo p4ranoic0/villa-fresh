@@ -1,5 +1,6 @@
 import { IconoCasa, IconoCheck, IconoCono, IconoEdificio } from '../../components/Icono'
 import { activo } from '../../rutas-publicas'
+import { encuadreDe } from '../../data/encuadre'
 
 export default function Planes() {
   return (
@@ -11,7 +12,7 @@ export default function Planes() {
             dice lo que hay que leer. */}
         <div className="banda-cabecera">
           <h2>Tres formas de pedir.</h2>
-          <span className="objeto objeto-banda" aria-hidden="true">
+          <span className="objeto objeto-banda" aria-hidden="true" style={encuadreDe('/producto-bidones.webp')}>
             <img
               src={activo('/producto-bidones.webp')}
               alt=""
