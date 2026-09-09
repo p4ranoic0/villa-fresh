@@ -16,12 +16,16 @@ concurrency:
   # sirviendo un artefacto incompleto. Dos push seguidos se encolan.
   cancel-in-progress: false
 
+# Las acciones van a la mayor vigente. Las anteriores (checkout v4,
+# configure-pages v5, upload-pages-artifact v3, deploy-pages v4) apuntaban a
+# Node 20, que esta deprecado: GitHub ya las forzaba a correr sobre Node 24 y
+# lo avisaba en cada despliegue. Se sube antes de que deje de forzarlo.
 jobs:
   construir:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar el repositorio
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: Preparar Bun
         uses: oven-sh/setup-bun@v2
       - name: Instalar dependencias fijadas
@@ -31,9 +35,9 @@ jobs:
       - name: Ejecutar todas las pruebas
         run: bun test
       - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Preparar el artefacto
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -46,4 +50,4 @@ jobs:
     steps:
       - name: Publicar en GitHub Pages
         id: despliegue
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
