@@ -6,8 +6,8 @@ documento existe hoy en `src/styles/site.css`. Si algo cambia en el código, se 
 
 | | |
 |---|---|
-| **Versión** | 7 — fotografía de producto con la marca puesta |
-| **Fecha** | 29 de agosto de 2026 |
+| **Versión** | 8 — proceso fijado y sincronizado por scroll |
+| **Fecha** | 10 de septiembre de 2026 |
 | **Implementación** | `src/styles/site.css` · `src/components/` · `src/pages/` |
 | **Sustituye a** | `stitch_boutique_de_agua_premium/design.md` (dirección clara/premium, descartada) |
 
@@ -896,11 +896,11 @@ El encuadre es oscuro en los dos temas porque el material es oscuro. **Es una im
 dentro de un marco, no una sección invertida**: la banda de precio sigue siendo la
 única inversión de la página.
 
-A partir de 1040 px **el vídeo y los cuatro pasos comparten bloque**: el vídeo se queda
-fijo en su columna mientras los pasos le pasan por delante, así que el agua se va
-asentando conforme se lee. Antes iba suelto encima de la sección y era una caja negra
-sin relación con lo que tenía alrededor. Por debajo de ese ancho se apilan, y el vídeo
-ni se descarga.
+A partir de 900 px **el vídeo y los cuatro pasos forman una escena fijada**: durante
+2400 px de scroll, cada paso entra al comenzar el cuarto de vídeo que explica. Antes
+el vídeo se quedaba quieto mientras una lista independiente le pasaba al lado, así que
+la imagen y el texto compartían espacio pero no significado. Por debajo de ese ancho
+se apilan sin recorrido adicional, y el vídeo ni se descarga.
 
 Lleva al pie una etiqueta mono que dice lo que es: *imagen de archivo con licencia*.
 No es un crédito decorativo, es la misma honestidad que rige el resto de la
@@ -1077,8 +1077,13 @@ Queda `@media print`, porque al imprimir tampoco hay observador que revele nada.
 El vídeo de la sección de proceso avanza con el scroll: el bloque cruza la ventana y
 el agua pasa de agitada a asentada. Es lo que dice la sección, contado con imagen.
 
-- **El destino se persigue, no se copia.** El fotograma va detrás de la posición del
-  scroll con una interpolación del 18 % por cuadro. Clavado 1:1 se siente mecánico.
+- **La posición nativa manda.** Los 2400 px del recorrido producen un progreso exacto
+  y reversible; ese mismo número elige el fotograma y revela los pasos. El suavizado
+  del 18 % sigue disponible como capa opcional, pero está apagado para que volver al
+  mismo píxel siempre devuelva el mismo estado.
+- **Los pasos informan del tramo.** El primero abre la escena y los otros tres se
+  revelan al comenzar sus cuartos respectivos. Siguen siendo `h3` y `p` en el HTML;
+  sin JavaScript o si falla el vídeo, los cuatro vuelven al flujo normal y visible.
 - **Sin escuchar el scroll.** Un `requestAnimationFrame` que sólo vive mientras el
   bloque está a la vista, arrancado y parado por un `IntersectionObserver`. El scroll
   dispara muchas más veces de las que hay cuadros.

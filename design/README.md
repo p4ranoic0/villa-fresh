@@ -144,3 +144,15 @@ Lo verificado, no lo prometido:
   las páginas publicadas.
 - Ningún color se escribe a mano fuera del bloque de tokens, y hay una prueba que
   falla si alguien lo hace.
+
+---
+
+## v8 — Proceso sincronizado (10/09/2026)
+
+En escritorio, la secuencia de agua y sus cuatro pasos forman ahora una escena fijada
+durante 2400 px. La posición nativa del scroll gobierna a la vez el fotograma y el
+paso que aparece, de modo que el recorrido se deshace exactamente al subir.
+
+El modo es una mejora progresiva: por debajo de 900 px, con movimiento reducido,
+ahorro de datos, JavaScript desactivado o un error del vídeo, no añade recorrido ni
+oculta texto. En esos casos queda el póster y los cuatro `h3` + `p` en flujo normal.

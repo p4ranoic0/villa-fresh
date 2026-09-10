@@ -799,24 +799,37 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
     .qa h3{font-size:20px;margin-bottom:12px}
 
 
-/* A partir de aqui hay sitio para que el video y los pasos convivan: el
-   video se queda quieto y los cuatro pasos le pasan por delante. Debajo de
-   este ancho vuelven a ser dos bloques apilados, y el video ni se descarga. */
+/* El estado base sigue siendo la lista completa. La altura adicional y el
+   anclaje sólo existen después de que JavaScript haya confirmado escritorio,
+   movimiento permitido y cuatro pasos; así un fallo del vídeo, el ahorro de
+   datos o la ausencia de JavaScript devuelven el mismo flujo que el móvil. */
 .proceso-cuerpo{display:grid}
-@media(min-width:1040px){
-  .proceso-cuerpo{grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr);
-    gap:clamp(32px,4vw,64px);align-items:start}
-  .visor{position:sticky;top:96px;margin:0}
-  /* Alto suficiente para que sostenga la columna mientras pasan los pasos. */
+@media (min-width:900px) and (prefers-reduced-motion:no-preference){
+  .proceso-cuerpo[data-secuencia-activa]{grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr);
+    gap:clamp(32px,4vw,64px);align-items:start;
+    height:calc(100vh + var(--distancia-proceso))}
+  .proceso-cuerpo[data-secuencia-activa] > .visor,
+  .proceso-cuerpo[data-secuencia-activa] > .pasos{
+    position:sticky;top:var(--tope-proceso);margin:0}
   .visor-video{height:clamp(300px,50vh,460px);object-position:center 18%}
   /* En la columna estrecha el paso ya no cabe en tres columnas, y el titular
      tampoco a tamaño de sección: partido en tres líneas deja de ser un titular. */
-  .paso{grid-template-columns:52px 1fr;gap:8px 22px}
-  .paso .dimtext{grid-column:2}
-  .paso h3{font-size:clamp(19px,1.45vw,23px)}
-  .paso .k{gap:8px;font-size:12px;letter-spacing:.12em}
-  .pasos{border-top:0}
-  .paso:first-child{border-top:1px solid var(--line-2)}
+  .proceso-cuerpo[data-secuencia-activa] .paso{
+    grid-template-columns:52px 1fr;gap:8px 22px;padding-block:22px}
+  .proceso-cuerpo[data-secuencia-activa] .paso .dimtext{grid-column:2}
+  .proceso-cuerpo[data-secuencia-activa] .paso h3{font-size:clamp(19px,1.45vw,23px)}
+  .proceso-cuerpo[data-secuencia-activa] .paso .k{gap:8px;font-size:12px;letter-spacing:.12em}
+  .proceso-cuerpo[data-secuencia-activa] .pasos{border-top:0}
+  .proceso-cuerpo[data-secuencia-activa] .paso:first-child{border-top:1px solid var(--line-2)}
+
+  /* Cada valor sale del progreso nativo que también elige el fotograma. Sin
+     transición temporal, volver al mismo píxel devuelve exactamente el mismo
+     estado aunque se llegue desde arriba o desde abajo. El selector gana al
+     revelado general de series, que puede haberse montado en el mismo pintado. */
+  :root .proceso-cuerpo[data-secuencia-activa] .paso{
+    opacity:var(--paso-opacidad);transform:translateY(var(--paso-desplazamiento));
+    transition:none}
+  .proceso-cuerpo[data-secuencia-activa] .paso[data-paso-actual] h3{color:var(--acento)}
 }
 
 /* ==========================================================================

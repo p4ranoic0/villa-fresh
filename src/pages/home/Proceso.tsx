@@ -48,10 +48,10 @@ export default function Proceso() {
           <p className="lede" style={{ maxWidth: '46ch' }}>No compramos agua a terceros ni reenvasamos. Tratamos, controlamos y embotellamos nosotros mismos, y por eso podemos responder por cada bidón que sale de planta.</p>
         </div>
 
-        {/* El vídeo y los pasos comparten bloque a propósito: el vídeo se queda
-            fijo mientras los cuatro pasos pasan por delante, así que el agua se
-            va asentando conforme se lee. Suelto encima de la sección era una
-            caja negra que no tenía que ver con lo que había alrededor. */}
+        {/* El vídeo y los pasos comparten bloque a propósito: en escritorio se
+            fijan como una sola escena y cada paso entra en el cuarto de vídeo
+            que explica. Suelto encima de la sección era una caja negra que no
+            tenía que ver con lo que había alrededor. */}
         <div className="proceso-cuerpo">
           <SecuenciaAgua />
           <div className="pasos">

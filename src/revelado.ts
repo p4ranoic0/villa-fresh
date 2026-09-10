@@ -46,7 +46,9 @@ export function revelar(): () => void {
   // Se miden todos ANTES de tocar ninguno: leer y escribir alternando obliga al
   // navegador a recalcular la maqueta en cada vuelta.
   const alcance = window.innerHeight * 0.92
-  const porEsconder = elementos.filter((el) => el.getBoundingClientRect().top > alcance)
+  const porEsconder = elementos.filter(
+    (el) => el.getBoundingClientRect().top > alcance && !el.closest('[data-secuencia-activa]'),
+  )
 
   // Lo que ya se ve al cargar no se esconde nunca. Si se escondiera, habría un
   // parpadeo entre el primer pintado y la hidratación: el HTML publicado ya

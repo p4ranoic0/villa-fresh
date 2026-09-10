@@ -234,6 +234,7 @@ test('toda imagen referida existe en lo publicado', async () => {
 
 test('la secuencia publica el póster, no el vídeo', async () => {
   const html = await readFile('dist/index.html', 'utf8')
+  const secuencia = await readFile('src/components/SecuenciaAgua.tsx', 'utf8')
   // El póster (17 KB) viaja en el HTML y ya cuenta lo mismo.
   expect(html).toContain(`poster="${BASE_PAGES}proceso-agua.webp"`)
   // El vídeo (570 KB) no. Lo pide el navegador solo si la pantalla es ancha,
@@ -241,6 +242,9 @@ test('la secuencia publica el póster, no el vídeo', async () => {
   // Un src aquí lo descargaría siempre, incluso en un móvil con datos contados.
   expect(html).not.toContain('proceso-agua.mp4')
   expect(html).toContain('preload="none"')
+  expect(secuencia).toContain("escritorio: '(min-width: 900px)'")
+  expect(secuencia).toContain("conexion?.saveData !== true")
+  expect(secuencia).toContain("margenPrecarga: '50% 0px'")
 })
 
 test('la secuencia no reclama ser la planta de Villa Fresh', async () => {
@@ -260,6 +264,7 @@ test('ninguna animación arranca con ease-in', async () => {
 test('el movimiento se apaga con prefers-reduced-motion', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
   const ts = await readFile('src/revelado.ts', 'utf8')
+  const secuencia = await readFile('src/components/SecuenciaAgua.tsx', 'utf8')
   expect(css).toContain('@media (prefers-reduced-motion:reduce)')
   // Y lo que se anade por gusto solo existe si nadie ha pedido lo contrario.
   expect(css).toContain('@media (prefers-reduced-motion:no-preference)')
@@ -267,16 +272,23 @@ test('el movimiento se apaga con prefers-reduced-motion', async () => {
   // transición dejaría el elemento escondido hasta que el observador lo
   // enseñara de golpe. Quien pide menos movimiento no esconde nada.
   expect(ts).toContain("matchMedia('(prefers-reduced-motion: reduce)').matches")
+  expect(secuencia).toContain("movimientoReducido: '(prefers-reduced-motion: reduce)'")
+  expect(css).toContain('@media (min-width:900px) and (prefers-reduced-motion:no-preference)')
 })
 test('el revelado nunca es lo que hace visible el texto', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
   const ts = await readFile('src/revelado.ts', 'utf8')
+  const secuencia = await readFile('src/components/SecuenciaAgua.tsx', 'utf8')
   // El estado base tiene que ser el final. Nada se esconde desde el CSS: es el
   // observador quien pone `data-revela`, y sólo en lo que aún no se ve. Sin
   // JavaScript no hay atributo, no hay regla que aplique y la página se lee
   // entera.
   const regla = css.slice(css.indexOf('.pasos{'), css.indexOf('@keyframes surge'))
   expect(regla).not.toMatch(/\.paso\{[^}]*opacity:0/)
+  expect(regla).toContain('.proceso-cuerpo[data-secuencia-activa]')
+  expect(regla).toContain('opacity:var(--paso-opacidad)')
+  expect(secuencia).toContain("cuerpo.removeAttribute('data-secuencia-activa')")
+  expect(secuencia).toContain("v.addEventListener('error', alFallarVideo)")
   expect(css).toMatch(/:root \[data-revela\]\{opacity:0/)
   expect(ts).toContain("setAttribute('data-revela'")
   // Y lo que ya está en pantalla al cargar no se esconde para volver a
