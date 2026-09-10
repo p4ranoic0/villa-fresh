@@ -242,7 +242,10 @@ test('la secuencia publica el póster, no el vídeo', async () => {
   // Un src aquí lo descargaría siempre, incluso en un móvil con datos contados.
   expect(html).not.toContain('proceso-agua.mp4')
   expect(html).toContain('preload="none"')
-  expect(secuencia).toContain("escritorio: '(min-width: 900px)'")
+  // El alto forma parte de la condicion: fijar una escena que no cabe esconde
+  // contenido sin dejar forma de alcanzarlo. Medido a 912x570 se perdian 4 px
+  // del cuarto paso.
+  expect(secuencia).toContain("escritorio: '(min-width: 900px) and (min-height: 640px)'")
   expect(secuencia).toContain("conexion?.saveData !== true")
   expect(secuencia).toContain("margenPrecarga: '50% 0px'")
 })
@@ -273,7 +276,7 @@ test('el movimiento se apaga con prefers-reduced-motion', async () => {
   // enseñara de golpe. Quien pide menos movimiento no esconde nada.
   expect(ts).toContain("matchMedia('(prefers-reduced-motion: reduce)').matches")
   expect(secuencia).toContain("movimientoReducido: '(prefers-reduced-motion: reduce)'")
-  expect(css).toContain('@media (min-width:900px) and (prefers-reduced-motion:no-preference)')
+  expect(css).toContain('@media (min-width:900px) and (min-height:640px) and (prefers-reduced-motion:no-preference)')
 })
 test('el revelado nunca es lo que hace visible el texto', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')

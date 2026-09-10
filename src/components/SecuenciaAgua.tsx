@@ -6,7 +6,11 @@ import { activo } from '../rutas-publicas'
  * una distancia en CSS separaría el fotograma del paso que pretende explicar.
  */
 const SECUENCIA = {
-  escritorio: '(min-width: 900px)',
+  // Ancho Y ALTO. Fijar una escena que no cabe de alto esconde contenido sin
+  // dejar forma de alcanzarlo: medido a 912x570 se perdian 4 px del cuarto
+  // paso, y en una ventana mas baja se perderia el paso entero. A 900 px de
+  // ancho la escena necesita 589 px desde el borde superior; 640 deja aire.
+  escritorio: '(min-width: 900px) and (min-height: 640px)',
   movimientoReducido: '(prefers-reduced-motion: reduce)',
   distanciaScroll: 2400,
   numeroPasos: 4,

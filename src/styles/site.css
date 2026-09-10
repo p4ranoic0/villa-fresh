@@ -804,7 +804,9 @@ h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
    movimiento permitido y cuatro pasos; así un fallo del vídeo, el ahorro de
    datos o la ausencia de JavaScript devuelven el mismo flujo que el móvil. */
 .proceso-cuerpo{display:grid}
-@media (min-width:900px) and (prefers-reduced-motion:no-preference){
+/* El alto va en la condicion junto al ancho: una escena fijada que no cabe
+   recorta contenido y no deja como alcanzarlo. Ver SECUENCIA.escritorio. */
+@media (min-width:900px) and (min-height:640px) and (prefers-reduced-motion:no-preference){
   .proceso-cuerpo[data-secuencia-activa]{grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr);
     gap:clamp(32px,4vw,64px);align-items:start;
     height:calc(100vh + var(--distancia-proceso))}
