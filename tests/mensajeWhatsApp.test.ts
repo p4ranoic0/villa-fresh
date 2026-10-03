@@ -1,13 +1,15 @@
 import { test, expect } from 'bun:test'
 import { mensajeWhatsApp, soles } from '../src/features/pedido/mensajeWhatsApp'
-import type { Producto } from '../src/types'
+import type { Entrega, Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
   { sku: 'VF-B20', nombre: 'Bidón 20 L', precio: 30, unidad: 'con envase', imagen: '/producto-bidon-20l.webp', desc: '' },
   { sku: 'VF-R20', nombre: 'Recarga 20 L', precio: null, unidad: 'con tu envase', imagen: '/producto-bidon-20l.webp', desc: '' },
 ]
 
-test('soles siempre lleva dos decimales', () => {
+const ENTREGA: Entrega = { direccion: 'Av. Larco 123', distrito: 'Miraflores', referencia: '', pago: 'Yape' }
+
+test('soles sólo lleva céntimos cuando los hay', () => {
   expect(soles(30)).toBe('S/ 30')
   expect(soles(0)).toBe('S/ 0')
   expect(soles(52.5)).toBe('S/ 52.50')
@@ -17,59 +19,47 @@ test('mezcla de precio y a cotizar: formato exacto', () => {
   const texto = mensajeWhatsApp(
     [{ sku: 'VF-B20', cantidad: 2 }, { sku: 'VF-R20', cantidad: 1 }],
     PRODUCTOS,
+    ENTREGA,
   )
   expect(texto).toBe(
-    'Hola Villa Fresh, quiero hacer este pedido:\n' +
+    'Hola Villa Fresh, quiero hacer un pedido:\n' +
     '\n' +
-    '• 2 x Bidón 20 L (VF-B20) — S/ 60\n' +
-    '• 1 x Recarga 20 L (VF-R20) — a cotizar\n' +
+    '• 2 × Bidón 20 L — S/ 60\n' +
+    '• 1 × Recarga 20 L — a cotizar\n' +
     '\n' +
-    'Total de lo que tiene precio: S/ 60\n' +
-    'Hay productos que necesito que me coticen.\n' +
+    'Total: S/ 60 + productos a cotizar\n' +
     '\n' +
-    'Mi dirección: \n' +
-    'Distrito: ',
+    'Dirección: Av. Larco 123\n' +
+    'Distrito: Miraflores\n' +
+    'Pago: Yape',
   )
 })
 
-test('sólo productos con precio: sin la línea de cotización', () => {
-  const texto = mensajeWhatsApp([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS)
-  expect(texto).toBe(
-    'Hola Villa Fresh, quiero hacer este pedido:\n' +
-    '\n' +
-    '• 1 x Bidón 20 L (VF-B20) — S/ 30\n' +
-    '\n' +
-    'Total de lo que tiene precio: S/ 30\n' +
-    '\n' +
-    'Mi dirección: \n' +
-    'Distrito: ',
-  )
+test('sólo productos con precio: el total va sin cotización', () => {
+  const texto = mensajeWhatsApp([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS, ENTREGA)
+  expect(texto).toContain('Total: S/ 30\n')
+  expect(texto).not.toContain('a cotizar')
 })
 
-test('sólo productos a cotizar: sin la línea de total', () => {
-  const texto = mensajeWhatsApp([{ sku: 'VF-R20', cantidad: 1 }], PRODUCTOS)
-  expect(texto).toBe(
-    'Hola Villa Fresh, quiero hacer este pedido:\n' +
-    '\n' +
-    '• 1 x Recarga 20 L (VF-R20) — a cotizar\n' +
-    '\n' +
-    'Hay productos que necesito que me coticen.\n' +
-    '\n' +
-    'Mi dirección: \n' +
-    'Distrito: ',
-  )
+test('la referencia sólo aparece si se escribió, y sin espacios sobrantes', () => {
+  const sin = mensajeWhatsApp([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS, { ...ENTREGA, referencia: '   ' })
+  expect(sin).not.toContain('Referencia')
+  const con = mensajeWhatsApp([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS, { ...ENTREGA, referencia: ' Portón azul, después de las 3 ', pago: 'Efectivo' })
+  expect(con.endsWith('Distrito: Miraflores\nReferencia: Portón azul, después de las 3\nPago: Efectivo')).toBe(true)
 })
 
-test('las dos últimas líneas terminan en espacio, para que el cliente escriba encima', () => {
-  const texto = mensajeWhatsApp([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS)
-  expect(texto.endsWith('Mi dirección: \nDistrito: ')).toBe(true)
+test('sin dirección, las líneas quedan para completarlas en el chat', () => {
+  const texto = mensajeWhatsApp([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS, { ...ENTREGA, direccion: '', distrito: '' })
+  expect(texto).toContain('Dirección: \nDistrito: \nPago: Yape')
 })
 
-test('una línea con SKU inexistente se ignora sin romper el mensaje', () => {
+test('las líneas salen en el orden del catálogo y sin SKU', () => {
   const texto = mensajeWhatsApp(
-    [{ sku: 'NO-EXISTE', cantidad: 1 }, { sku: 'VF-B20', cantidad: 1 }],
+    [{ sku: 'VF-R20', cantidad: 1 }, { sku: 'NO-EXISTE', cantidad: 1 }, { sku: 'VF-B20', cantidad: 1 }],
     PRODUCTOS,
+    ENTREGA,
   )
-  expect(texto).toContain('• 1 x Bidón 20 L (VF-B20) — S/ 30')
+  expect(texto.indexOf('Bidón 20 L')).toBeLessThan(texto.indexOf('Recarga 20 L'))
   expect(texto).not.toContain('NO-EXISTE')
+  expect(texto).not.toContain('VF-')
 })

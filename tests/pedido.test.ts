@@ -1,5 +1,5 @@
 import { test, expect } from 'bun:test'
-import { hayPendientes, reducirPedido, totalSoles, totalUnidades } from '../src/features/pedido/pedido'
+import { CANTIDAD_MAXIMA, hayPendientes, lineasConProducto, productosACotizar, reducirPedido, totalSoles, totalUnidades } from '../src/features/pedido/pedido'
 import type { LineaPedido, Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
@@ -71,4 +71,22 @@ test('las unidades cuentan todo, tenga precio o no', () => {
 test('hayPendientes detecta productos sin precio', () => {
   expect(hayPendientes([{ sku: 'VF-R20', cantidad: 1 }], PRODUCTOS)).toBe(true)
   expect(hayPendientes([{ sku: 'VF-B20', cantidad: 1 }], PRODUCTOS)).toBe(false)
+})
+
+test('ninguna cantidad pasa del tope de 99', () => {
+  const estado: LineaPedido[] = [{ sku: 'VF-B20', cantidad: CANTIDAD_MAXIMA }]
+  expect(reducirPedido(estado, { tipo: 'agregar', sku: 'VF-B20' })).toEqual(estado)
+})
+
+test('las líneas se listan en el orden del catálogo, no en el de agregado', () => {
+  const estado: LineaPedido[] = [
+    { sku: 'VF-R20', cantidad: 1 },
+    { sku: 'VF-B20', cantidad: 2 },
+    { sku: 'VF-RETIRADO', cantidad: 1 },
+  ]
+  expect(lineasConProducto(estado, PRODUCTOS).map(({ producto }) => producto.sku)).toEqual(['VF-B20', 'VF-R20'])
+})
+
+test('productosACotizar cuenta productos distintos, no unidades', () => {
+  expect(productosACotizar([{ sku: 'VF-R20', cantidad: 4 }, { sku: 'VF-B20', cantidad: 1 }], PRODUCTOS)).toBe(1)
 })

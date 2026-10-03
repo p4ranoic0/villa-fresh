@@ -1,956 +1,344 @@
 /* ==========================================================================
    VILLA FRESH — hoja de estilo del sitio
-   Dirección visual: papel templado, titulares en caja normal, el dato concreto
-   como elemento grafico. Ver DESIGN.md §2 para por que ya no es "ficha tecnica".
-   Los valores nacen de design/tokens.css; aquí viven las clases del sitio.
+   Rediseño con movimiento al estilo Apple: escenas fijas que avanzan con el
+   scroll (portada, frase, proceso), tipografía grande y el azul del logotipo
+   como único acento. El movimiento lo escribe src/animaciones.ts en dos
+   variables, --p (avance de una escena) y --z (acercamiento de una foto);
+   aquí sólo se dice qué hace cada elemento con ellas.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   TOKENS — dos temas sobre los mismos nombres
-
-   Claro por defecto. Oscuro cuando el sistema lo pide (prefers-color-scheme)
-   y cuando el visitante lo elige (data-tema en <html>, que gana siempre).
-
-   Un token nombra el ROL, no el color: --acento es azul profundo en claro y
-   cian en oscuro. Por eso ningun literal hexadecimal vive fuera de este bloque:
-   si aparece un #hex mas abajo, es un tema a medio hacer.
-
-   La banda invertida (--inv-*) es la unica seccion que va contra el fondo
-   dominante: papel sobre azul noche en el tema oscuro, azul noche sobre papel
-   en el claro. Se invierte el material, no la idea.
-   -------------------------------------------------------------------------- */
 :root{
   color-scheme:light;
+  --fondo:#f1f2f8;          /* el agua, aguada: fondo principal */
+  --blanco:#fafbfe;         /* bandas claras */
+  --tarjeta:#ffffff;
+  --gris:#e2e3ea;           /* control segmentado */
+  --tinta:#141518;          /* titulares */
+  --tinta-2:#3f3f44;        /* párrafos */
+  --tenue:#55555a;          /* rótulos y metadatos */
+  --linea:rgba(10,22,34,.16);
+  --linea-suave:rgba(10,22,34,.1);
+  --hover:rgba(10,22,34,.06);
 
-  /* Estos grises fueron papel templado (beige, calido) durante una version
-     entera, y era el error de fondo: el producto es agua frIa y el material
-     de la pagina decia panaderia. Ahora los neutros son el AZUL DE MARCA
-     diluido —mismo angulo de matiz que #0157b4, croma bajado a ~3— asi que
-     el fondo no es un gris cualquiera: es la misma agua, aguada.
-     Convertidos en CIELAB conservando L*, de modo que el contraste medido
-     no se movio ni un punto al cambiar la temperatura. */
-  --ground:#f1f2f8;        /* el papel manda */
-  --panel:#e2e3ea;         /* bandas y tarjetas */
-  --panel-2:#dadbe3;       /* tarjeta elevada */
-  --ink:#141518;           /* titulares */
-  /* Medidos en L*, no a ojo. Con los valores anteriores la bajada se alejaba
-     29.9 del titular en claro y sólo 12.6 en oscuro: el texto que explica la
-     página se caía justo en el tema por defecto. Ahora los dos temas alejan
-     lo mismo. */
-  --ink-2:#3f3f44;         /* parrafos */
-  --ink-3:#2f2f33;         /* bajadas */
-  --dim:#55555a;           /* etiquetas y metadatos */
-  --line:rgba(10,22,34,.16);
-  --line-2:rgba(10,22,34,.34);--line2:rgba(10,22,34,.34);
+  --acento:#0157b4;         /* el azul literal del logotipo */
+  --acento-alto:#013f80;
+  --sobre-acento:#f0f1f7;
+  --sobre-acento-2:rgba(240,241,247,.88);
+  --sobre-acento-3:rgba(240,241,247,.86);
+  --sobre-acento-borde:rgba(240,241,247,.5);
 
-  --acento:#0157b4;        /* acento unico: el azul literal del logotipo */
-  --acento-alto:#013f80;   /* estado hover: sobre papel, el enlace se oscurece */
-  --acento-suave:rgba(1,87,180,.14);
-  --sobre-acento:#f0f1f7;  /* texto sobre el acento */
-  --sobre-acento-2:rgba(240,241,247,.86);
-  --sobre-acento-3:rgba(240,241,247,.88);
+  --noche:#04101d;          /* bandas oscuras */
+  --noche-tarjeta:#0a1c30;
+  --noche-tinta:#eaf2f8;
+  --noche-tinta-2:#a6bccd;
+  --noche-tenue:#8ba3ba;
+  --noche-linea:rgba(139,163,186,.22);
+  --celeste:#3ec1ff;        /* acento sobre la noche */
 
-  --nav-fondo:rgba(240,241,247,.97);
-  --nav-sombra:rgba(10,22,34,.5);
-  --ficha-fondo:rgba(209,210,217,.55);
   --velo:rgba(10,22,34,.55);
-  --foto-sombra:rgba(10,22,34,.16);
-  --inv-realce:rgba(62,193,255,.12);
-  --peligro:#b0202a;       /* color de estado destructivo, no de marca */
+  --nav-fondo:rgba(241,242,248,.78);
+  --nav-borde:rgba(10,22,34,.08);
+  --cristal:rgba(250,251,254,.82);
 
-  /* banda invertida: aqui es azul noche sobre papel */
-  --inv:#04101d;
-  --inv-ink:#eaf2f8;
-  --inv-p:#a6bccd;
-  --inv-dim:#8ba3ba;
-  --inv-line:rgba(234,242,248,.18);
-  --inv-btn:#f0f1f7;
-  --inv-btn-ink:#04101d;
-  --inv-btn-alto:#f9faff;
-  --inv-btn-ink-alto:#04101d;
-
-  --wa:#25d366;            /* color del canal WhatsApp, no de marca */
-  --wa-alto:#43e07d;
-  --wa-sombra:rgba(10,22,34,.20);
-  --sobre-wa:#04101d;
-  --visor-fondo:#04101d;   /* el encuadre del video */
-  --visor-mezcla:normal;
-  --brand-deep:#0157b4;    /* azules literales del logotipo, para piezas graficas */
-  --brand-bright:#02b5ff;
-
-  --disp:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-
-  /* Curvas propias. Las de serie de CSS son demasiado blandas: ease-out
-     apenas se nota y ease-in arranca lento justo en el instante que el
-     visitante esta mirando. Ninguna animacion de esta hoja usa ease-in. */
-  --sal:cubic-bezier(.23,1,.32,1);        /* entradas y salidas */
-  --vaiven:cubic-bezier(.77,0,.175,1);    /* movimiento dentro de la pantalla */
-  --cajon:cubic-bezier(.32,.72,0,1);      /* el cajon del pedido */
-
-  --pad:clamp(20px,5vw,96px);
-  --max:1440px;
-  --band:clamp(56px,7vw,96px);
-
-  /* FORMA Y ELEVACION — ver DESIGN.md §8.
-     La hoja llego a tener CINCO radios sueltos (7, 8, 10, 12 y 99) contra
-     cuarenta y una cajas a escuadra. Eso no era un sistema anguloso: era un
-     sistema anguloso con fugas, y las fugas eran justo las piezas que se
-     tocan con el dedo. Ahora hay tres escalones y ninguno se escribe a mano.
-     El argumento de marca se sostiene al reves de como estaba escrito: el
-     producto es agua y la pagina cortaba como vidrio. */
-  --r-s:10px;      /* botones, controles, etiquetas de pago */
-  --r-m:18px;      /* tarjetas, fichas, paneles, la placa del video */
-  --r-full:999px;  /* pildoras: el tag del catalogo y el boton flotante */
-
-  /* La superficie de un objeto APOYADO en el papel. Va mas clara que el
-     fondo, porque lo que se levanta recibe mas luz. Es exactamente al reves
-     que --panel, que es un hueco hundido en la hoja; por eso son dos tokens
-     y no uno con dos usos. */
-  --flota:#fafbfe;
-  --sombra-flota:0 1px 2px rgba(10,22,34,.05),0 10px 28px -8px rgba(10,22,34,.13);
-  --sombra-flota-alta:0 2px 4px rgba(10,22,34,.07),0 20px 44px -10px rgba(10,22,34,.19);
-
-  /* LA SOMBRA DEL PRODUCTO ES UNA ELIPSE EN EL SUELO, NO LA SILUETA MOVIDA.
-     Aqui vivio un `filter:drop-shadow(0 26px 40px ...)` y no se veia. Tres
-     motivos, los tres medidos:
-
-       1. drop-shadow se pondera por el canal alfa, y el bidon es plastico
-          transparente: solo el 70,8 % del archivo es opaco del todo. Un objeto
-          medio translucido proyecta una sombra medio translucida.
-       2. Lo poco que quedaba, 40 px de desenfoque al 16 % lo repartian hasta
-          hacerlo invisible sobre papel claro.
-       3. Y aunque se viera, tendria la forma equivocada. drop-shadow pinta la
-          SILUETA: la del bidon mide 347 px de ancho al 35 % de su altura y
-          321 px al 85 %, o sea igual de ancha arriba que abajo. Lo que sale
-          debajo no es una sombra, es un segundo bidon gris.
-
-     Una sombra de contacto real es una elipse aplastada: ancha en la base,
-     nada arriba, oscura donde el objeto toca y difuminandose hacia fuera. Eso
-     no lo puede dar la silueta, asi que se dibuja aparte. La referencia la
-     lleva horneada en el PNG; aqui va en CSS para que cambie con el tema. */
-  --suelo-contacto:rgba(10,22,34,.34);
-  --suelo-nucleo:rgba(10,22,34,.34);
-  --suelo-medio:rgba(10,22,34,.14);
-  /* El cajon no se apoya en la pagina: se pone DELANTE. Por eso su sombra va
-     hacia el lado y no hacia abajo. */
-  --sombra-cajon:-24px 0 64px -24px rgba(10,22,34,.34);
-}
-
-/* El tema oscuro, identico al que ya estaba verificado. */
-@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]){
-  color-scheme:dark;
-  --ground:#04101d;
-  --panel:#0a1c30;
-  --panel-2:#0d2338;
-  --ink:#eaf2f8;
-  --ink-2:#a6bccd;
-  --ink-3:#bcd0e0;
-  --dim:#8ba3ba;
-  --line:rgba(139,163,186,.22);
-  --line-2:rgba(139,163,186,.42);--line2:rgba(139,163,186,.42);
-  --acento:#3ec1ff;
-  --acento-alto:#8ed8ff;
-  --acento-suave:rgba(62,193,255,.10);
-  --sobre-acento:#04101d;
-  --sobre-acento-2:rgba(4,16,29,.72);
-  --sobre-acento-3:rgba(4,16,29,.78);
-  --nav-fondo:rgba(4,16,29,.92);
-  --nav-sombra:rgba(0,0,0,.75);
-  --ficha-fondo:rgba(10,28,48,.55);
-  --velo:rgba(2,8,15,.72);
-  --foto-sombra:rgba(0,0,0,.5);
-  /* Sobre azul noche una sombra negra no separa nada: lo que levanta la
-     tarjeta del fondo es que su superficie sea mas clara. La sombra queda
-     como asiento, no como separador. */
-  --flota:#0a1c30;
-  --sombra-flota:0 1px 2px rgba(0,0,0,.45),0 12px 32px -10px rgba(0,0,0,.62);
-  --sombra-flota-alta:0 2px 6px rgba(0,0,0,.5),0 24px 52px -12px rgba(0,0,0,.74);
-  --sombra-cajon:-24px 0 64px -20px rgba(0,0,0,.8);
-  /* Sobre azul noche el suelo no se aclara: se oscurece mas. */
-  --suelo-contacto:rgba(0,0,0,.58);
-  --suelo-nucleo:rgba(0,0,0,.55);
-  --suelo-medio:rgba(0,0,0,.24);
-  --inv-realce:rgba(62,193,255,.10);
-  --wa-sombra:rgba(37,211,102,.45);
-  /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
-     el rectangulo: queda el agua sola sobre la pagina. */
-  --visor-fondo:transparent;
-  --visor-mezcla:screen;
-  --peligro:#ff7a7a;
-  --inv:#f0f1f7;
-  --inv-ink:#0a1622;
-  --inv-p:#3d4c5a;
-  --inv-dim:#5b6a78;
-  --inv-line:rgba(10,22,34,.18);
-  --inv-btn:#04101d;
-  --inv-btn-ink:#f0f1f7;
-  --inv-btn-alto:#0a2136;
-  --inv-btn-ink-alto:#f5f6fc;
-}}
-
-:root[data-tema="oscuro"]{
-  color-scheme:dark;
-  --ground:#04101d;
-  --panel:#0a1c30;
-  --panel-2:#0d2338;
-  --ink:#eaf2f8;
-  --ink-2:#a6bccd;
-  --ink-3:#bcd0e0;
-  --dim:#8ba3ba;
-  --line:rgba(139,163,186,.22);
-  --line-2:rgba(139,163,186,.42);--line2:rgba(139,163,186,.42);
-  --acento:#3ec1ff;
-  --acento-alto:#8ed8ff;
-  --acento-suave:rgba(62,193,255,.10);
-  --sobre-acento:#04101d;
-  --sobre-acento-2:rgba(4,16,29,.72);
-  --sobre-acento-3:rgba(4,16,29,.78);
-  --nav-fondo:rgba(4,16,29,.92);
-  --nav-sombra:rgba(0,0,0,.75);
-  --ficha-fondo:rgba(10,28,48,.55);
-  --velo:rgba(2,8,15,.72);
-  --foto-sombra:rgba(0,0,0,.5);
-  /* Sobre azul noche una sombra negra no separa nada: lo que levanta la
-     tarjeta del fondo es que su superficie sea mas clara. La sombra queda
-     como asiento, no como separador. */
-  --flota:#0a1c30;
-  --sombra-flota:0 1px 2px rgba(0,0,0,.45),0 12px 32px -10px rgba(0,0,0,.62);
-  --sombra-flota-alta:0 2px 6px rgba(0,0,0,.5),0 24px 52px -12px rgba(0,0,0,.74);
-  --sombra-cajon:-24px 0 64px -20px rgba(0,0,0,.8);
-  /* Sobre azul noche el suelo no se aclara: se oscurece mas. */
-  --suelo-contacto:rgba(0,0,0,.58);
-  --suelo-nucleo:rgba(0,0,0,.55);
-  --suelo-medio:rgba(0,0,0,.24);
-  --inv-realce:rgba(62,193,255,.10);
-  --wa-sombra:rgba(37,211,102,.45);
-  /* Sobre azul noche el negro del clip se funde con el fondo y desaparece
-     el rectangulo: queda el agua sola sobre la pagina. */
-  --visor-fondo:transparent;
-  --visor-mezcla:screen;
-  --peligro:#ff7a7a;
-  --inv:#f0f1f7;
-  --inv-ink:#0a1622;
-  --inv-p:#3d4c5a;
-  --inv-dim:#5b6a78;
-  --inv-line:rgba(10,22,34,.18);
-  --inv-btn:#04101d;
-  --inv-btn-ink:#f0f1f7;
-  --inv-btn-alto:#0a2136;
-  --inv-btn-ink-alto:#f5f6fc;
+  --sans:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --suave:cubic-bezier(.23,1,.32,1);
+  --cajon:cubic-bezier(.32,.72,0,1);
+  --gutter:clamp(24px,5vw,72px);
+  --alto-nav:52px;
 }
 
 *,*::before,*::after{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;padding-bottom:0;background:var(--ground);color:var(--ink);
-  font-family:var(--disp);-webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-}
-img{max-width:100%;display:block}
-p{margin:0}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto !important}
+.lenis.lenis-stopped{overflow:hidden}
+body{margin:0;background:var(--fondo);color:var(--tinta);font-family:var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 a{color:var(--acento);text-decoration:none}
 a:hover{color:var(--acento-alto)}
-:focus-visible{outline:2px solid var(--acento);outline-offset:3px}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-
-/* Los titulares iban en versalitas de 800 a line-height .94: siete bloques
-   negros consecutivos, todos con el mismo ritmo. Leido de corrido no era una
-   voz, era un cartel repetido siete veces, y por eso el sitio se sentia
-   fabricado. En caja normal la pagina pasa a hablar en lugar de anunciar. */
-h1,h2{margin:0;font-weight:700;letter-spacing:-.022em;line-height:1.05}
-h3{margin:0;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-h1{font-size:clamp(2.15rem,4.9vw,4.15rem)}
-h2{font-size:clamp(1.7rem,3.3vw,2.9rem)}
-
-.wrap{max-width:var(--max);margin-inline:auto;padding-inline:var(--pad)}
-.band{padding-block:var(--band)}
-/* Aqui vivia la utilidad `.mono`, que el JSX repartia a mano. Se quedo sin
-   usuarios y por eso ya no esta: la monoespaciada no es algo que se ponga
-   desde una plantilla, es una decision de tres sitios concretos.
-
-   LA REGLA. Plex Mono viste solo lo que se lee como cifra y no como palabra:
-   el telefono (se memoriza y se marca), los importes del cajon (se alinean en
-   columna) y el rotulo de la nota de pendientes (que a proposito no parece
-   parte de la web). Nada mas. Habia veinte hojas de texto en monoespaciada
-   —precios de tarjeta, «A cotizar», los numeros de paso, Hogar/Empresa/Obra,
-   PRECIO POR VOLUMEN, la tira de cobertura, el kicker del cierre— y ese es el
-   estrato que hacia que la pagina hablara en dos voces: una humana en Archivo
-   y otra de maquina en mono espaciada. La segunda es la que se lee como
-   generada. Donde hay cifras que alinear y no toca mono, se usa
-   `font-variant-numeric:tabular-nums`, que es lo unico que se le pedia.
-
-   Hay una prueba con la lista blanca de selectores que pueden usar var(--mono). */
-.lbl{font-size:13px;font-weight:600;letter-spacing:0;color:var(--dim)}
-.lbl-cyan{color:var(--acento)}
-.lede{font-size:clamp(16px,1.35vw,19px);line-height:1.62;color:var(--ink-3);font-weight:400}
-.dimtext{color:var(--ink-2);font-size:16px;line-height:1.62}
-
-/* --- botones --- */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:11px;border:0;cursor:pointer;
-  font-family:var(--disp);font-size:15px;font-weight:600;letter-spacing:0;
-  padding:15px 24px;min-height:50px;border-radius:var(--r-s);
-  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .16s var(--sal)}
-/* Nada mas: el elemento acusa la pulsacion y con eso el sitio deja de
-   parecer una imagen. Es la unica animacion que se ve decenas de veces. */
-.btn:active,.cart-btn:active,.tema-btn:active{transform:scale(.97)}
-.btn-cyan{background:var(--acento);color:var(--sobre-acento)}
-.btn-cyan:hover{background:var(--acento-alto);color:var(--sobre-acento)}
-.btn-wa{background:var(--wa);color:var(--sobre-wa)}
-.btn-wa:hover{background:var(--wa-alto);color:var(--sobre-wa)}
-.btn-inv{background:var(--inv-btn);color:var(--inv-btn-ink)}
-.btn-inv:hover{background:var(--inv-btn-alto);color:var(--inv-btn-ink-alto)}
-.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line-2)}
-.btn-ghost:hover{border-color:var(--acento);color:var(--acento)}
-.btn-sm{padding:10px 18px;min-height:40px;font-size:14px;letter-spacing:0;border-radius:var(--r-s)}
-.ico{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-/* Las marcas de terceros van rellenas, no en trazo: son sus trazados
-   oficiales y aproximarlos con una línea los vuelve irreconocibles. */
-.marca-ico{width:17px;height:17px;flex:none;fill:currentColor;stroke:none}
-
-/* --- conmutador de tema --- */
-/* El boton ofrece el tema contrario al que se esta viendo. Los dos iconos
-   viajan siempre en el HTML y es el CSS quien elige cual se ve, para que el
-   pre-render y la hidratacion pinten exactamente lo mismo. */
-.tema-btn{display:inline-grid;place-items:center;width:40px;height:40px;flex:none;
-  background:transparent;border:1px solid var(--line-2);border-radius:var(--r-s);
-  color:var(--dim);cursor:pointer;padding:0;
-  transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
-.tema-btn:hover{border-color:var(--acento);color:var(--acento)}
-.tema-btn .ico{width:18px;height:18px}
-.tema-btn .ico-sol{display:none}
-@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]) .tema-btn .ico-sol{display:block}
-  :root:not([data-tema="claro"]) .tema-btn .ico-luna{display:none}}
-:root[data-tema="oscuro"] .tema-btn .ico-sol{display:block}
-:root[data-tema="oscuro"] .tema-btn .ico-luna{display:none}
-
-/* --- barra superior --- */
-.nav{position:sticky;top:0;z-index:50;background:var(--nav-fondo);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav-in{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:20px}
-.brand{display:flex;align-items:center;gap:13px;color:var(--ink)}
-.brand:hover{color:var(--ink)}
-.brand-name{display:block;font-weight:800;font-size:16px;letter-spacing:.02em;text-transform:uppercase;line-height:1}
-.brand-tag{display:block;font-size:12.5px;font-weight:400;letter-spacing:0;color:var(--dim);margin-top:3px}
-.nav-links{display:none;gap:28px;font-size:14.5px;font-weight:500;letter-spacing:0}
-.nav-links a{color:var(--dim)}
-.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--acento)}
-.nav-tel{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--ink);display:none}
-@media(min-width:1000px){.nav-links{display:flex}.nav-tel{display:block}}
-
-/* --- ficha técnica --- */
-.spec{display:grid;grid-template-columns:1fr auto;gap:14px;padding:12px 0;border-top:1px solid var(--line);
-  font-size:14px;color:var(--ink-2)}
-.spec b{font-weight:600;color:var(--ink)}
-
-/* La cinta corriendo con PLANTA PROPIA · SIN INTERMEDIARIOS · PH 8.3 se
-   quito entera. Repetia en mayusculas lo que la pagina ya decia debajo, y el
-   marquee infinito es mobiliario de landing generada: movimiento que no
-   informa de nada y no para nunca. */
-
-/* --- ficha del hero --- */
-.ficha-titulo{margin:0 0 14px;font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
-
-/* --- nota de pendientes ---------------------------------------------------
-   Deliberadamente no se parece a ninguna otra seccion: es una anotacion para
-   Villa Fresh, no contenido del sitio, y tiene que leerse como tal de un
-   vistazo. Por eso va fuera del ancho de lectura habitual y en cuerpo pequeno.
-   -------------------------------------------------------------------------- */
-/* Va detrás del pie, así que abre con una línea que la separa de él, y
-   respira lo mismo por arriba que por abajo. Antes tenía cero de relleno
-   superior: la caja tocaba literalmente la banda azul del cierre —0 px
-   medidos— y colgaba de ella. */
-.nota-band{padding-block:clamp(40px,5vw,64px) clamp(44px,5.5vw,72px);border-top:1px solid var(--line)}
-/* Los seis pendientes en una sola columna de 62ch dejaban media pantalla
-   vacía a la derecha y una losa alta a la izquierda. En dos columnas la nota
-   es un bloque compacto y deja de parecer que se olvidó algo al lado. */
-.nota-caja{max-width:980px;border:1px solid var(--line);border-radius:var(--r-m);padding:26px 28px;background:var(--panel)}
-.nota-titulo{margin:0 0 10px;font-family:var(--mono);font-size:11px;font-weight:500;
-  letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
-.nota-intro{margin:0 0 16px;font-size:15px;line-height:1.6;color:var(--ink-2)}
-.nota-lista{margin:0;padding:0;list-style:none;display:grid;gap:11px 44px}
-@media(min-width:820px){.nota-lista{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.nota-lista li{font-size:14.5px;line-height:1.55;color:var(--ink-2);max-width:48ch}
-.nota-lista b{color:var(--ink);font-weight:600}
-
-/* --- banda de papel --- */
-.inv{background:var(--inv);color:var(--inv-ink)}
-.inv h2{color:var(--inv-ink)}
-.inv .lbl{color:var(--inv-dim)}
-.inv p{color:var(--inv-p)}
-
-/* --- cierre --- */
-.close{background:var(--acento);color:var(--sobre-acento)}
-.close .lbl{color:var(--sobre-acento-2)}
-.close .num{font-family:var(--mono);font-size:clamp(2.4rem,6.5vw,5.5rem);font-weight:600;letter-spacing:-.03em;line-height:1}
-
-/* --- medios de pago --- */
-.pagos{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.pagos-lista{list-style:none;margin:0;padding:0;display:flex;align-items:center;gap:12px}
-.pagos-lista li{display:flex;align-items:center}
-.pago-nombre{font-size:14px;font-weight:600;letter-spacing:0;
-  border:1px solid var(--line-2);border-radius:var(--r-s);padding:7px 13px;color:var(--ink)}
-.inv .pago-nombre{border-color:var(--inv-line);color:var(--inv-ink)}
-.inv .pagos .lbl{color:var(--inv-dim)}
-
-/* --- redes --- */
-.redes{display:flex;gap:10px;flex-wrap:wrap}
-.redes a{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line-2);
-  padding:10px 15px;border-radius:var(--r-s);font-size:14px;font-weight:500;
-  letter-spacing:0;color:var(--ink);
-  transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
-.redes a:hover{border-color:var(--acento);color:var(--acento)}
-.redes a:active{transform:scale(.97)}
-/* Sobre la banda de acento el texto y el borde vienen del mismo juego que la
-   banda, no del de la página. */
-.close .redes a{border-color:var(--sobre-acento-2);color:var(--sobre-acento)}
-.close .redes a:hover{border-color:var(--sobre-acento);color:var(--sobre-acento)}
-
-/* --- pie --- */
-.foot{border-top:1px solid var(--line);padding-block:44px 48px}
-/* Enlaces de 15px de alto en el movil: por debajo del minimo de objetivo
-   tactil. El relleno vertical los sube sin mover nada alrededor porque el
-   contenedor ya es flex con gap. */
-.foot a{color:var(--dim);font-size:14px;letter-spacing:0;display:inline-block;padding-block:6px}
-.foot a:hover{color:var(--acento)}
+button{font-family:inherit}
+img{display:block}
 
 /* --------------------------------------------------------------------------
-   OBJETO APOYADO — la imagen y la sombra que la asienta
-
-   Hace falta una envoltura porque un <img> es un elemento reemplazado y no
-   admite ::before: la elipse no se puede colgar de la propia foto. La
-   envoltura se ajusta al tamano de la imagen, asi que la elipse se mide en
-   PORCENTAJE del objeto y sale bien en los seis productos sin tocar nada —eso
-   solo funciona porque los archivos van recortados a su caja y la caja del
-   <img> ES el objeto. Con el lienzo cuadrado de antes, el 92 % habria sido el
-   92 % de un cuadrado medio vacio.
-
-   La elipse va con radial-gradient y no con un ovalo relleno mas blur: el
-   degradado da el nucleo oscuro del contacto y la caida hacia fuera de una
-   vez, y sale mas barato de pintar que un desenfoque.
+   Piezas comunes
    -------------------------------------------------------------------------- */
-/* LA ENVOLTURA MIDE EXACTAMENTE LO QUE LA FOTO, Y ESO NO ES NEGOCIABLE.
-   La elipse se dibuja al 100 % de la envoltura; si la envoltura es mas ancha
-   que la foto, la sombra se centra donde no esta el objeto. Paso: con
-   `inset:0` la envoltura salia a 322 px y la foto a 149, y la sombra caia
-   86 px a la derecha del bidon. El ancho se fija con la proporcion real del
-   recorte —var(--ratio), medida por scripts/marcar-producto.py— para que salga
-   del alto y no del ajuste automatico, que con un <img> mira su tamano natural
-   y no el alto que le hemos puesto. */
-.objeto{position:relative;display:block;line-height:0;aspect-ratio:var(--ratio,1)}
-/* La foto va por encima de su sombra. Los dos posicionados: si el <img> se
-   quedara en flujo, el ::before posicionado se pintaria encima de el. */
-.objeto > img,.objeto > svg{position:relative;z-index:1;display:block;width:100%;height:100%}
-/* El centro de la elipse va EN la linea de contacto, no encima: la mitad de
-   arriba queda tapada por el objeto y la de abajo es la que se ve. Con
-   translate:32% la elipse se quedaba casi entera detras del bidon y solo
-   asomaban 15 px de su borde mas transparente —o sea, nada. */
-.objeto::before{content:'';position:absolute;z-index:0;left:50%;bottom:0;
-  /* Ancho 100 % y no mas: las piezas que sangran terminan justo en el borde
-     del navegador, asi que una elipse mas ancha que su objeto asomaba por
-     fuera y metia 3 px de scroll horizontal en el movil. La anchura visible se
-     recupera empujando las paradas del degradado, que no ocupan caja. */
-  translate:-50% 52%;width:100%;aspect-ratio:3.1/1;
-  /* Dos capas, como se compone una sombra de producto de verdad: una elipse
-     ancha y difusa que es la sombra proyectada, y encima un nucleo pequeno y
-     mas oscuro justo en la linea donde el objeto toca. Con la difusa sola se
-     lee como una mancha; el nucleo es lo que la convierte en contacto. */
-  background:
-    radial-gradient(34% 42% at 50% 42%,var(--suelo-contacto) 0%,transparent 74%),
-    radial-gradient(50% 50% at 50% 50%,
-      var(--suelo-nucleo) 0%,var(--suelo-medio) 48%,transparent 88%)}
-/* Quien no quiere sombra la apaga: la placa del video ya trae la suya de caja
-   y el logotipo de la barra no se apoya en nada. */
-.objeto-sin-suelo::before{display:none}
+.rotulo{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--tenue)}
+.rotulo-sm{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tenue)}
+.rotulo-oscuro{color:var(--noche-tenue)}
+.rotulo-sobre-acento{color:var(--sobre-acento-3)}
+.tenue{color:var(--tenue)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;background:var(--acento);color:#fff;border-radius:999px;white-space:nowrap;transition:transform .2s var(--suave)}
+.btn:hover{color:#fff}
+.btn:active{transform:scale(.95)}
+.btn-sm{font-size:13px;font-weight:500;padding:7px 15px}
+.btn-md{font-size:15px;padding:10px 20px}
+.btn-lg{font-size:17px;padding:12px 24px}
+.btn-claro{background:var(--sobre-acento);color:var(--acento);font-weight:500}
+.btn-claro:hover{color:var(--acento)}
+.btn-borde{background:transparent;border:1px solid var(--sobre-acento-borde);color:var(--sobre-acento)}
+.btn-borde:hover{color:var(--sobre-acento)}
+.enlace-lg{font-size:17px;color:var(--acento)}
+
+.seccion{background:var(--fondo);padding:clamp(96px,12vw,160px) var(--gutter)}
+.seccion-blanca{background:var(--blanco)}
+.seccion-oscura{background:var(--noche);color:var(--noche-tinta)}
+.contenedor{max-width:1200px;margin:0 auto}
+.contenedor-angosto{max-width:860px}
+.encabezado-centro{text-align:center;max-width:760px;margin:0 auto}
+.titulo-seccion{margin:0;font-size:clamp(40px,5.6vw,80px);font-weight:700;line-height:1;letter-spacing:-0.045em}
+.titulo-con-rotulo{margin-top:14px}
+.bajada{margin:24px 0 0;max-width:40ch;font-size:clamp(17px,1.5vw,21px);line-height:1.47;color:var(--tinta-2);text-wrap:pretty}
+.bajada-centro{margin-left:auto;margin-right:auto;max-width:46ch}
+
+/* Las escenas fijas: la sección es alta y su interior se queda pegado arriba
+   mientras se recorre. El alto de cada sección es el «ritmo» Normal del
+   diseño; más alto, más pausado. */
+.escena-fija{position:sticky;top:0;height:100vh}
 
 /* --------------------------------------------------------------------------
-   OBJETO DE BANDA — un producto apoyado junto al titular de una seccion
-
-   Cuatro de las cinco bandas de la pagina no tenian ni una imagen: eran filas
-   de texto separadas por lineas de 1px, una detras de otra. Se puede cambiar
-   el material de las tarjetas todo lo que se quiera, que si el 76 % de la
-   altura de la pagina no tiene un solo objeto encima, la pagina no se lee
-   como un lienzo. Se lee como un documento.
-
-   El objeto va pegado al titular y sale por el margen derecho, igual que el
-   bidon de la portada.
-
-   EN EL MOVIL TAMBIEN. Durante una version estos objetos iban a display:none
-   por debajo de 900 px, y el resultado medido era que a 375 px la pagina
-   seguia teniendo 3 de 8 bandas con objeto y CERO piezas cruzando el margen:
-   exactamente los numeros de antes de empezar. Toda la composicion era de
-   escritorio, en un negocio que vende por WhatsApp. Aqui no se apagan: se
-   recolocan —debajo del titular en vez de al lado, y mas bajos.
+   Barra de navegación
    -------------------------------------------------------------------------- */
-.banda-cabecera{display:grid;gap:18px;margin:18px 0 40px}
-/* Va detras del titular y a su lado, no en la otra punta de la banda. Con
-   `justify-self:end` la columna de 1fr se comia todo el espacio y el objeto
-   acababa contra el borde, sin relacion visible con el texto que acompana. */
-.objeto-banda{display:block;width:auto;max-width:none;height:clamp(140px,27vw,190px)}
-/* Un bidon suelto es estrecho: con la altura de la foto de grupo quedaria
-   como un palito. Se mide por alto porque es lo que un bidon tiene. */
-.objeto-alto{height:clamp(190px,40vw,250px)}
-@media(min-width:900px){
-  .banda-cabecera{grid-template-columns:auto auto;justify-content:start;
-    align-items:end;gap:clamp(28px,5vw,72px);margin:0 0 44px}
-  .objeto-banda{height:clamp(200px,23vw,310px)}
-  /* Se probo tambien en la banda de cobertura, saliendo por el margen
-     IZQUIERDO, y se descarto con la captura delante: alli el bidon se cortaba
-     contra el borde del navegador. Un objeto recortado por el borde se lee
-     como intencion cuando lo que se corta es una lamina rectangular, y como
-     accidente cuando lo que se corta es un producto. */
-  /* Bajado de 400 a 300: a 400 el borde de arriba del bidon caia exactamente
-     en la linea donde acaba la banda anterior —medido, 0 px de holgura— y se
-     leia como una foto cortada, no como un objeto. */
-  .objeto-alto{height:clamp(230px,26vw,300px)}
-}
-
-.cat-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;
-  border-bottom:1px solid var(--line-2);padding-bottom:18px;margin-bottom:32px}
-/* LAS SEIS TARJETAS DEJARON DE SER CELDAS DE UNA TABLA.
-
-   Hasta aqui la grilla era una reticula continua: gap de 1px, y cada tarjeta
-   pintando su lado derecho y su lado de abajo con una sombra de 1px para que
-   dos lineas contiguas no cayeran en el mismo hueco y salieran al doble de
-   oscuras. Funcionaba, y ese era el problema: funcionaba como una hoja de
-   calculo. Ademas obligaba a la esquina viva, porque una celda que comparte
-   su linea con la vecina no se puede redondear.
-
-   Ahora cada tarjeta es un objeto apoyado en el papel: se separan con aire,
-   llevan su radio y su sombra, y el producto flota dentro sin cajon gris. La
-   profundidad ya no la da el contraste de fondo, la da la sombra —que es lo
-   que hace que la pagina se lea como un lienzo con cosas encima en vez de
-   como una cuadricula. Efecto secundario que resuelve un bug viejo: donde no
-   hay tarjeta no hay nada que pintar, asi que las celdas sobrantes de la
-   ultima fila desaparecen solas. */
-.grid{display:grid;gap:clamp(16px,1.8vw,24px);grid-template-columns:1fr}
-@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1180px){.grid{grid-template-columns:repeat(3,1fr)}}
-
-.card{background:var(--flota);border-radius:var(--r-m);box-shadow:var(--sombra-flota);
-  display:flex;flex-direction:column;padding:24px;
-  transition:box-shadow .25s ease,transform .25s var(--sal)}
-/* El encuadre ya no pinta nada: solo reserva el cuadrado y centra. El bidon
-   se apoya en la tarjeta con la MISMA sombra que lleva en la portada, que es
-   lo que faltaba —la misma foto flotaba arriba y estaba encajonada en gris
-   cuatrocientos pixeles mas abajo. El margen inferior sube de 20 a 30 porque
-   la sombra cae 26 px y se comia el titulo. */
-.card .shot{aspect-ratio:1/1;position:relative;margin-bottom:0}
-/* La foto va absoluta y centrada, no como item de la rejilla. No es un
-   capricho: `max-height` en porcentaje no resuelve contra un alto que sale de
-   `aspect-ratio` —el navegador no puede saber el alto sin medir el contenido,
-   y no puede medir el contenido sin saber el alto— asi que se quedaba en auto
-   y la foto recortada se salia del encuadre. Puesta en absoluto, el porcentaje
-   se resuelve contra la caja del padre, que si tiene un alto definido.
-
-   --escala lo pone la tarjeta, medido sobre los archivos de marca. Ver
-   src/data/escala-fotos.ts: sin el, la foto de los tres bidones llenaria el
-   encuadre igual que la del bidon suelto y cada bidon del grupo se veria mas
-   grande que el de la tarjeta de al lado.
-
-   Se anima con `translate` y no con `transform` para que el centrado y el
-   `scale` del hover no se pisen: son dos propiedades distintas. */
-/* Dos intentos fallidos antes de este, los dos por el ancho de la envoltura:
-   con `left:50%` el ancho disponible de un absoluto automatico es solo la
-   mitad derecha del encuadre, y la foto ancha se aplastaba un 35 %; con
-   `inset:0` la envoltura se estiraba al encuadre entero y la sombra se iba
-   86 px a la derecha del objeto. El ancho no puede salir del ajuste
-   automatico: sale de aspect-ratio, arriba, y aqui solo se fija el alto. */
-.card .shot .objeto{position:absolute;left:50%;top:50%;translate:-50% -50%;
-  height:calc((100% - 44px) * var(--escala,1));max-width:calc(100% - 44px);
-  transition:transform .4s var(--sal)}
-/* En una pantalla tactil el hover se dispara al tocar y se queda
-   pegado: la tarjeta se agranda sola y no vuelve.
-   La tarjeta se LEVANTA en vez de cambiar de color: es un objeto apoyado, y
-   lo que hace un objeto cuando lo senalas es subir, no tenirse. */
-@media (hover:hover) and (pointer:fine){
-  .card:hover{box-shadow:var(--sombra-flota-alta);transform:translateY(-3px)}
-  /* Se agranda el conjunto, no solo la foto: si creciera la foto sola, su
-     sombra se quedaria del tamano de antes y el objeto se despegaria. */
-  .card:hover .shot .objeto{transform:scale(1.04)}
-}
-.card .tag{position:absolute;top:12px;left:12px;font-size:12px;font-weight:600;
-  letter-spacing:0;background:var(--acento);color:var(--sobre-acento);padding:5px 11px;border-radius:var(--r-full)}
-/* Debajo del encuadre, no dentro. Vivio dentro y absoluto mientras hubo un
-   panel gris donde apoyarse; al quitarlo se quedo pisando la sombra de suelo
-   del producto —el bidon proyecta 21 px por debajo de su base y el rotulo
-   estaba justo ahi— y los dos se estorbaban. */
-/* Pegado a su foto y lejos del titular: medido, quedaba a 28 px del h3 y a
-   65 de la imagen, asi que se leia como antetitulo y no como pie. */
-.card .nota{display:block;margin-top:4px;font-size:12.5px;
-  font-weight:400;letter-spacing:0;color:var(--dim);text-align:center}
-.card h3{font-size:21px;margin:22px 0 8px}
-.card .desc{font-size:14.5px;line-height:1.55;color:var(--ink-2);flex:1}
-.card .foot-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
-.card .price{font-size:20px;font-weight:600;letter-spacing:-.015em;line-height:1.25;font-variant-numeric:tabular-nums}
-.card .price small{display:block}
-.card .price small{font-size:13px;font-weight:400;color:var(--dim);letter-spacing:0;margin-top:3px}
-.card .price.pending{font-size:14px;letter-spacing:0;color:var(--dim);font-weight:500;line-height:1.5}
-
-.empty{border:1px dashed var(--line-2);border-radius:var(--r-m);padding:44px;text-align:center;color:var(--dim);font-size:15px}
-
-/* --- carrito --- */
-.cart-btn{position:relative;display:inline-flex;align-items:center;gap:9px;background:transparent;border:1px solid var(--line-2);
-  color:var(--ink);font-size:14px;font-weight:600;letter-spacing:0;
-  padding:11px 16px;border-radius:var(--r-s);cursor:pointer}
-.cart-btn{transition:border-color .2s ease,color .2s ease,transform .16s var(--sal)}
-.cart-btn:hover{border-color:var(--acento);color:var(--acento)}
-.cart-btn .count{min-width:19px;height:19px;display:grid;place-items:center;border-radius:var(--r-full);
-  background:var(--acento);color:var(--sobre-acento);
-  font-size:11px;font-weight:600;padding-inline:5px}
-.cart-btn .count[hidden]{display:none}
-.cart-btn.pulse{animation:pulse .45s ease}
-@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.07);border-color:var(--acento)}100%{transform:scale(1)}}
-
-/* El cajon aparecia y desaparecia de golpe. Un panel que se materializa sin
-   recorrido no se lee como que llega desde un lado, se lee como un fallo, y
-   ademas rompe el gesto de deslizar para cerrarlo: entra por donde se va.
-   `allow-discrete` y `@starting-style` permiten animar algo que alterna
-   `display`; donde no existan, el cajon sigue funcionando, sin transicion. */
-.drawer{position:fixed;inset:0;z-index:100;display:none}
-.drawer[open]{display:block}
-.drawer .veil{position:absolute;inset:0;background:var(--velo);backdrop-filter:blur(3px);
-  opacity:1;transition:opacity .3s ease,display .3s allow-discrete}
-/* Va con --flota y no con --panel, y la diferencia no es de gusto: --panel es
-   un hueco hundido en la hoja y este cajon esta DELANTE de la pagina, tapandola.
-   Una superficie que se levanta va mas clara y trae sombra; un hueco va mas
-   oscuro y trae linea. Con el borde de 1px y el fondo hundido, el cajon se leia
-   como un trozo mas de la pagina que habia aparecido a la derecha.
-
-   El radio solo por encima de 480: por debajo el panel ocupa el ancho entero y
-   una esquina redondeada a la izquierda solo enseñaria un triangulito del velo. */
-.drawer .panel{position:absolute;right:0;top:0;bottom:0;width:min(420px,100%);background:var(--flota);
-  box-shadow:var(--sombra-cajon);display:flex;flex-direction:column;
-  transform:translateX(0);transition:transform .38s var(--cajon),display .38s allow-discrete}
-@media(min-width:480px){.drawer .panel{border-radius:var(--r-m) 0 0 var(--r-m)}}
-@media (prefers-reduced-motion:no-preference){
-  @starting-style{
-    .drawer[open] .veil{opacity:0}
-    /* Porcentaje y no pixeles: se mueve su propio ancho, mida lo que mida. */
-    .drawer[open] .panel{transform:translateX(100%)}
-  }
-}
-.drawer .head{display:flex;align-items:center;justify-content:space-between;padding:22px 24px;border-bottom:1px solid var(--line)}
-.drawer .body{flex:1;overflow-y:auto;padding:8px 24px 24px}
-.drawer .foot2{border-top:1px solid var(--line);padding:22px 24px;display:grid;gap:14px}
-
-.line{display:grid;grid-template-columns:1fr auto;gap:8px 14px;padding:18px 0;border-bottom:1px solid var(--line)}
-.line .nm{font-size:15px;font-weight:600;line-height:1.3}
-.line .pr{font-family:var(--mono);font-size:14px;font-weight:600;text-align:right;white-space:nowrap}
-.line .qty{display:flex;align-items:center;gap:0;border:1px solid var(--line-2);
-  border-radius:var(--r-s);overflow:hidden;width:max-content}
-.line .qty button{width:32px;height:32px;background:transparent;border:0;color:var(--ink);cursor:pointer;font-size:16px;line-height:1}
-.line .qty button:hover{background:var(--acento);color:var(--sobre-acento)}
-.line .qty span{min-width:34px;text-align:center;font-family:var(--mono);font-size:13px;font-weight:600}
-.line .rm{background:none;border:0;color:var(--dim);font-size:13px;
-  cursor:pointer;padding:0;justify-self:end;align-self:center}
-.line .rm:hover{color:var(--peligro)}
-
-@media(max-width:639px){
-  .btn-sm,.cart-btn,.line .rm{min-height:44px}
-  .tema-btn{width:44px;height:44px}
-  .line .qty button{width:44px;height:44px}
-}
-
-.total{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono)}
-.total .t{font-size:14px;letter-spacing:0;color:var(--dim)}
-.total .v{font-size:26px;font-weight:600}
-/* Es una frase, no una cifra: no hay nada que alinear y la monoespaciada
-   espaciada solo la hacia mas dificil de leer en el sitio donde alguien esta
-   a punto de enviar un pedido. */
-.note{font-size:13px;letter-spacing:0;line-height:1.55;color:var(--dim)}
-
-/* Más pequeño que un botón de página: flota sobre el contenido y cada píxel
-   suyo es texto que alguien no puede leer. */
-.wa-float{position:fixed;right:20px;bottom:20px;z-index:60;box-shadow:0 12px 30px -6px var(--wa-sombra);
-  padding:12px 18px;min-height:44px;font-size:14px;letter-spacing:0;border-radius:var(--r-full)}
-/* En el movil se gana el sitio: el numero del pie queda a varias pantallas de
-   distancia y este boton es el atajo. En el escritorio no: alli el mismo
-   WhatsApp ya esta en el hero, en la banda de precio, en el cierre y en el
-   pie, y ademas se sentaba encima de la ultima fila de la ficha. */
-@media(min-width:960px){.wa-float{display:none}}
-
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;height:var(--alto-nav);background:var(--nav-fondo);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--nav-borde)}
+.nav-in{max-width:1200px;height:100%;margin:0 auto;padding:0 clamp(20px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-marca{display:flex;align-items:center;gap:10px;color:var(--tinta)}
+.nav-marca:hover{color:var(--tinta)}
+.nav-marca span{font-weight:700;font-size:17px;letter-spacing:-0.02em}
+.ico-gota{width:18px;height:22px;fill:none;stroke:var(--acento);stroke-width:8;stroke-linejoin:round}
+.nav-enlaces{display:flex;align-items:center;gap:28px;font-size:13px}
+.nav-enlaces a{color:var(--tinta-2)}
+.nav-enlaces a:hover{color:var(--tinta)}
+.nav-acciones{display:flex;align-items:center;gap:12px}
+.nav-bolsa{position:relative;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:0;padding:0;border-radius:999px;background:transparent;cursor:pointer;color:var(--tinta)}
+.nav-bolsa:hover{background:var(--hover)}
+.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.nav-contador{position:absolute;top:2px;right:0;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:var(--acento);color:#fff;font-size:10.5px;font-weight:600;display:flex;align-items:center;justify-content:center}
 
 /* --------------------------------------------------------------------------
-   VISOR — el vídeo de proceso sincronizado con el scroll
-
-   El encuadre es oscuro en los dos temas porque el material es oscuro: es una
-   imagen, no una sección invertida. La banda de precio sigue siendo la única
-   inversión de la página.
+   Portada
    -------------------------------------------------------------------------- */
-/* Sin marco y sin barra de pie. Con ellos se leía como una figura pegada en
-   un documento; sin ellos es una placa fotográfica, que es lo que es. */
-.visor{margin:0 0 clamp(30px,4vw,48px);position:relative}
-/* La placa tambien se apoya: es la imagen mas grande de la pagina y era la
-   unica que seguia plana contra el papel. En tema oscuro la sombra se va
-   sola, y esta bien que se vaya —el clip va en mix-blend-mode:screen, que
-   con negro no pinta nada, y sobre azul noche la placa no necesita asiento. */
-.visor-video{display:block;width:100%;height:clamp(240px,38vh,420px);object-fit:cover;
-  border-radius:var(--r-m);box-shadow:var(--sombra-flota-alta);
-  object-position:center 14%;background:var(--visor-fondo);mix-blend-mode:var(--visor-mezcla)}
-.visor-pie{display:block;padding:11px 0 0;font-size:10px;letter-spacing:.18em}
+.hero{position:relative;height:260vh;background:var(--fondo)}
+.hero-fija{overflow:hidden}
+.hero-texto{position:absolute;left:0;right:0;top:calc(var(--alto-nav) + 9vh);display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 24px;opacity:calc(1 - var(--p, 0) * 2.6);transform:translateY(calc(var(--p, 0) * -80px)) scale(calc(1 - var(--p, 0) * .06))}
+.hero-titulo{margin:18px 0 0;font-size:clamp(44px,7.2vw,104px);font-weight:700;line-height:1;letter-spacing:-0.045em;color:var(--tinta);text-wrap:balance}
+.hero-titulo span{display:block}
+.hero-titulo .hero-titulo-2{margin-top:4px;color:var(--acento)}
+.hero-bajada{margin:26px 0 0;max-width:42ch;font-size:clamp(17px,1.5vw,21px);line-height:1.45;color:var(--tinta-2);text-wrap:pretty}
+.hero-acciones{margin-top:28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:center}
+.hero-bidon{position:absolute;left:50%;top:50%;height:min(66vh,640px);aspect-ratio:353/668;transform:translate(-50%, calc(-50% + (1 - var(--p, 0)) * 44vh + 26px)) scale(calc(.8 + var(--p, 0) * .26))}
+.hero-bidon-in{width:100%;height:100%;position:relative}
+.hero-sombra{position:absolute;left:8%;right:8%;bottom:-3%;height:7%;border-radius:50%;background:radial-gradient(closest-side,rgba(10,22,34,.32),rgba(10,22,34,0))}
+.hero-bidon img{position:relative;width:100%;height:100%;object-fit:contain}
+.hero-datos{position:absolute;inset:0;pointer-events:none}
+.hero-dato{position:absolute;opacity:calc((var(--p, 0) - var(--inicio)) * 4)}
+.hero-dato-izq{right:calc(50% + min(24vw,240px));text-align:right;transform:translateX(calc((1 - var(--p, 0)) * -60px))}
+.hero-dato-der{left:calc(50% + min(24vw,240px));transform:translateX(calc((1 - var(--p, 0)) * 60px))}
+.hero-dato-valor{margin-top:6px;font-size:clamp(22px,2.4vw,34px);font-weight:700;letter-spacing:-0.03em}
+.hero-dato-valor.acento{color:var(--acento)}
 
-/* ==========================================================================
-   PATRONES DE PÁGINA (home)
-   ========================================================================== */
-.hero{position:relative;overflow:hidden}
-    /* La ficha se metía dentro de la ola. Medido sobre el build: 79 px de
-       solape en un móvil de 390, 108 px en una tablet de 768 y 48 px en
-       escritorio. Los 48 de escritorio se quedan a propósito —el panel es
-       traslúcido y ahí se lee como que se apoya en la línea de agua—, pero a
-       79 y 108 la última fila («Entrega · El mismo día») queda debajo del
-       agua y deja de leerse como intención para leerse como accidente.
-       Debajo de 960 la portada respira más por abajo y la marea se encoge. */
-    @media(max-width:959px){
-      .hero{padding-bottom:calc(var(--band) + 72px)}
-      .marea{height:clamp(78px,11vh,118px)}
-    }
-    /* El texto se centra contra la columna de la foto. Alineados arriba, la
-       izquierda terminaba en los botones y quedaba un hueco muerto de media
-       pantalla debajo mientras la derecha seguia bajando. */
-    /* z-index sobre la marea: el contenido va por encima del agua, no dentro. */
-    .hero-grid{position:relative;z-index:1;display:grid;gap:44px;align-items:start}
-    @media(min-width:960px){.hero-grid{align-items:center}}
-/* El hueco entre el bidon y la ficha era de 22 px, y medido sobre el build la
-   ficha empezaba a 20 px de la base del bidon: la sombra de suelo no tenia
-   donde caer y se cortaba contra el panel. Una sombra necesita suelo. */
-    .hero-col{display:grid;gap:clamp(34px,4vw,54px);justify-items:center}
-    /* SE MIDE POR ALTO, NO POR ANCHO. El archivo venia en un lienzo cuadrado
-       de 760x760 con el bidon flotando en medio y ocupando solo el 47 % del
-       ancho: pedir 390 px de imagen daba 183 px de bidon, el 12 % de la
-       pagina. Esa era la razon de fondo por la que el producto se veia
-       pequeno por mucho que se subiera el numero —la medida mentia. Ahora el
-       archivo esta recortado al objeto (scripts/marcar-producto.py) y se mide
-       por la dimension que un bidon tiene de verdad, que es el alto. */
-    /* SE CENTRA SOBRE SU FICHA, NO SE PEGA AL BORDE.
-       Durante una version esta foto salia por el margen derecho. Medido a
-       1512: quedaban 309 px de vacio entre el final del titular y el
-       principio del bidon —texto a la izquierda, un hueco muerto en medio y
-       el bidon varado contra el borde. Un objeto que cruza el margen tiene
-       que parecer que ENTRA desde fuera de la pagina, y para eso hace falta
-       tamano: los de la referencia ocupan del 40 al 70 % del ancho y este
-       ocupa el 19 %. A ese tamano no entra, se queda colgado.
-       Centrado sobre la ficha el bidon se lee con ella —el producto y sus
-       datos, uno encima del otro— y el hueco baja a la tercera parte. */
-    .hero-foto{width:auto;height:clamp(340px,52vh,460px);max-width:none}
-    @media(min-width:960px){
-      .hero-grid{grid-template-columns:1fr minmax(0,460px);gap:56px}
-      /* Aqui vivia un `margin-right` negativo que sacaba la foto por el
-         margen derecho. Ver el comentario de arriba: a este tamano el bidon
-         no cruzaba la reticula, se quedaba varado contra el borde con 309 px
-         de vacio detras. */
-      .hero-foto{height:clamp(440px,62vh,640px)}
-    }
-    .ficha{width:100%;border:1px solid var(--line);border-radius:var(--r-m);padding:22px 24px 16px;background:var(--ficha-fondo)}
-    .split{display:grid;gap:32px;align-items:end;margin-bottom:clamp(32px,5vw,60px)}
-    @media(min-width:900px){.split{grid-template-columns:1.3fr 1fr;gap:72px}}
-    .precios{display:grid;gap:0;border-top:2px solid var(--inv-ink)}
-    @media(min-width:820px){.precios{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr)}}
-    .precios > div{padding:32px 0;border-bottom:1px solid var(--inv-line)}
-    @media(min-width:820px){
-      .precios > div{border-bottom:0;padding:34px 34px 36px}
-      .precios > div:first-child{padding-left:0;border-right:1px solid var(--inv-line)}
-      .precios > div:last-child{padding-right:0}
-      .precios > div:nth-child(2){border-right:1px solid var(--inv-line)}
-    }
-    /* Era un style inline en BandaPrecio.tsx con su propio borderRadius:99px:
-       la ultima pildora que se escapaba de la hoja. Una forma no se decide
-       desde un componente. */
-    .precios .ahorro{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:var(--r-full);
-      background:var(--inv-ink);color:var(--inv)}
-    .precios .amt{display:flex;align-items:flex-start;gap:6px;margin-top:16px}
-    .precios .amt sup{font-family:var(--mono);font-size:clamp(18px,2vw,26px);font-weight:500;padding-top:.5em}
-    .precios .amt b{font-size:clamp(50px,5.4vw,74px);font-weight:700;letter-spacing:-.035em;line-height:.92}
-    .pasos{border-top:1px solid var(--line-2)}
-    .paso{display:grid;gap:10px 36px;padding:26px 0;border-bottom:1px solid var(--line)}
-    @media(min-width:900px){.paso{grid-template-columns:110px 1fr 1.15fr;align-items:start}}
-    .paso .k{display:flex;align-items:center;gap:10px;font-size:14px;
-      font-weight:600;letter-spacing:0;color:var(--acento);font-variant-numeric:tabular-nums}
-    .plan-etq{display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:600}
-    .cols3 h3{font-size:clamp(22px,2.4vw,30px);margin-top:14px}
-    /* Los tres cierran igual aunque uno diga una cifra y dos una condicion:
-       antes eran 22px en mono, 16px en versalitas y 16px en versalitas, tres
-       tamanos y dos cajas para la misma fila. */
-    .plan-cierre{margin:26px 0 0;font-size:19px;font-weight:600;letter-spacing:-.015em;
-      color:var(--ink);font-variant-numeric:tabular-nums}
-    .plan-cierre span{font-size:14px;font-weight:400;letter-spacing:0;color:var(--dim)}
-    .paso h3{font-size:clamp(20px,2.2vw,27px)}
-    .cols3{display:grid;gap:0;border-top:1px solid var(--line-2)}
-    @media(min-width:900px){.cols3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    .cols3 > div{padding:30px 0;border-bottom:1px solid var(--line)}
-    @media(min-width:900px){
-      .cols3 > div{border-bottom:0;padding:32px 40px 8px}
-      .cols3 > .plan-hogar{grid-column:1 / -1;padding:36px 0 38px;border-bottom:1px solid var(--line)}
-      .cols3 > .plan-hogar h3{font-size:clamp(24px,2.7vw,34px)}
-      .cols3 > .plan-hogar .lista{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px 48px;max-width:900px}
-      .cols3 > div:nth-child(2){padding-left:0;border-right:1px solid var(--line)}
-      .cols3 > div:last-child{padding-right:0}
-    }
-    .lista{margin:22px 0 0;padding:0;list-style:none;display:grid;gap:11px}
-    .lista li{display:flex;gap:11px;font-size:15px;line-height:1.55;color:var(--ink-2)}
-    .lista .ico{color:var(--acento);margin-top:3px}
-    .cobertura-cierre{display:flex;align-items:center;justify-content:flex-end;gap:24px;flex-wrap:wrap;margin-top:32px}
-    .distritos{display:grid;gap:0 44px;border-top:1px solid var(--line-2);grid-template-columns:repeat(2,1fr)}
-    @media(min-width:760px){.distritos{grid-template-columns:repeat(4,1fr)}}
-    .dist{font-size:15px;letter-spacing:0;padding:12px 0;border-bottom:1px solid var(--line)}
-    .qas{display:grid;gap:0 72px}
-    @media(min-width:900px){.qas{grid-template-columns:1fr 1fr}}
-    .qa{padding:26px 0;border-top:1px solid var(--line)}
-    .qa h3{font-size:20px;margin-bottom:12px}
+/* --------------------------------------------------------------------------
+   Frase sobre fondo oscuro
+   -------------------------------------------------------------------------- */
+.frase{position:relative;height:220vh;background:var(--noche)}
+.frase-fija{display:flex;align-items:center;justify-content:center;padding:0 clamp(24px,6vw,96px)}
+.frase-in{max-width:1040px}
+.frase-in .rotulo{margin-bottom:28px}
+.frase-texto{margin:0;font-size:clamp(30px,4.4vw,60px);font-weight:700;line-height:1.12;letter-spacing:-0.035em;color:var(--noche-tinta)}
+.frase-texto span{display:inline-block;margin-right:.24em}
+.frase-texto .acento-oscuro{color:var(--celeste)}
 
+/* --------------------------------------------------------------------------
+   Proceso
+   -------------------------------------------------------------------------- */
+.proceso{position:relative;height:420vh;background:var(--noche);color:var(--noche-tinta)}
+.proceso-fija{display:flex;align-items:center;padding:var(--alto-nav) clamp(24px,5vw,72px) 0}
+.proceso-grid{max-width:1200px;width:100%;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(32px,6vw,96px);align-items:center}
+.proceso-titulo{margin:14px 0 36px;font-size:clamp(38px,5vw,72px);font-weight:700;line-height:1;letter-spacing:-0.04em}
+.pasos{display:flex;flex-direction:column}
+.paso{display:grid;grid-template-columns:44px 1fr;gap:4px 12px;padding:18px 0;border-top:1px solid var(--noche-linea);transition:opacity .5s var(--suave)}
+.paso-n{font-family:var(--mono);font-size:13px;color:var(--celeste);padding-top:5px}
+.paso h3{margin:0;font-size:clamp(19px,1.7vw,24px);font-weight:600;letter-spacing:-0.02em}
+.paso p{margin:6px 0 0;font-size:16px;line-height:1.5;color:var(--noche-tinta-2);max-width:44ch}
+.proceso-foto{margin:0;position:relative;aspect-ratio:4/5;max-height:72vh;border-radius:18px;overflow:hidden;background:#000}
+.proceso-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(calc(1.45 - var(--p, 0) * .45)) translateY(calc((var(--p, 0) - .5) * -6%))}
+.proceso-barra{position:absolute;left:0;right:0;top:0;height:3px;background:rgba(234,242,248,.14)}
+.proceso-barra div{height:100%;width:calc(var(--p, 0) * 100%);background:var(--celeste)}
+.proceso-pie{position:absolute;left:24px;right:24px;bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;gap:16px}
+.proceso-pie .rotulo-sm{color:var(--noche-tinta-2)}
+.proceso-contador{font-size:clamp(56px,7vw,104px);font-weight:700;letter-spacing:-0.05em;line-height:.9;color:var(--noche-tinta)}
 
-/* El estado base sigue siendo la lista completa. La altura adicional y el
-   anclaje sólo existen después de que JavaScript haya confirmado escritorio,
-   movimiento permitido y cuatro pasos; así un fallo del vídeo, el ahorro de
-   datos o la ausencia de JavaScript devuelven el mismo flujo que el móvil. */
-.proceso-cuerpo{display:grid}
-/* El alto va en la condicion junto al ancho: una escena fijada que no cabe
-   recorta contenido y no deja como alcanzarlo. Ver SECUENCIA.escritorio. */
-@media (min-width:900px) and (min-height:640px) and (prefers-reduced-motion:no-preference){
-  .proceso-cuerpo[data-secuencia-activa]{grid-template-columns:minmax(0,.74fr) minmax(0,1.26fr);
-    gap:clamp(32px,4vw,64px);align-items:start;
-    height:calc(100vh + var(--distancia-proceso))}
-  .proceso-cuerpo[data-secuencia-activa] > .visor,
-  .proceso-cuerpo[data-secuencia-activa] > .pasos{
-    position:sticky;top:var(--tope-proceso);margin:0}
-  .visor-video{height:clamp(300px,50vh,460px);object-position:center 18%}
-  /* En la columna estrecha el paso ya no cabe en tres columnas, y el titular
-     tampoco a tamaño de sección: partido en tres líneas deja de ser un titular. */
-  .proceso-cuerpo[data-secuencia-activa] .paso{
-    grid-template-columns:52px 1fr;gap:8px 22px;padding-block:22px}
-  .proceso-cuerpo[data-secuencia-activa] .paso .dimtext{grid-column:2}
-  .proceso-cuerpo[data-secuencia-activa] .paso h3{font-size:clamp(19px,1.45vw,23px)}
-  .proceso-cuerpo[data-secuencia-activa] .paso .k{gap:8px;font-size:12px;letter-spacing:.12em}
-  .proceso-cuerpo[data-secuencia-activa] .pasos{border-top:0}
-  .proceso-cuerpo[data-secuencia-activa] .paso:first-child{border-top:1px solid var(--line-2)}
+/* --------------------------------------------------------------------------
+   Precios
+   -------------------------------------------------------------------------- */
+.precios{margin-top:clamp(48px,6vw,80px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px}
+.precio{background:var(--fondo);border-radius:18px;padding:36px 32px 32px}
+.precio-cabeza{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.precio-cifra{margin-top:20px;display:flex;align-items:flex-start;gap:6px;line-height:.85}
+.precio-moneda{font-size:28px;font-weight:600;padding-top:8px}
+.precio-monto{font-size:clamp(80px,9vw,128px);font-weight:700;letter-spacing:-0.06em}
+.precio p{margin:24px 0 0;font-size:17px;line-height:1.47;color:var(--tinta-2)}
+.precio-destacado{background:var(--acento);color:var(--sobre-acento)}
+.precio-destacado .rotulo{color:inherit}
+.precio-destacado p{color:var(--sobre-acento-2)}
+.precio-ahorro{font-size:12px;font-weight:600;background:var(--sobre-acento);color:var(--acento);padding:3px 10px;border-radius:999px}
+.precios-nota{margin:32px 0 0;text-align:center;font-size:14px;color:var(--tenue)}
 
-  /* Cada valor sale del progreso nativo que también elige el fotograma. Sin
-     transición temporal, volver al mismo píxel devuelve exactamente el mismo
-     estado aunque se llegue desde arriba o desde abajo. El selector gana al
-     revelado general de series, que puede haberse montado en el mismo pintado. */
-  :root .proceso-cuerpo[data-secuencia-activa] .paso{
-    opacity:var(--paso-opacidad);transform:translateY(var(--paso-desplazamiento));
-    transition:none}
-  .proceso-cuerpo[data-secuencia-activa] .paso[data-paso-actual] h3{color:var(--acento)}
+/* --------------------------------------------------------------------------
+   Productos
+   -------------------------------------------------------------------------- */
+.productos-cabeza{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.productos-bajada{margin:0;max-width:36ch;font-size:17px;line-height:1.47;color:var(--tinta-2)}
+.productos{margin-top:48px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:20px}
+.card{background:var(--tarjeta);border-radius:18px;padding:20px 20px 24px;display:flex;flex-direction:column}
+.card-foto{position:relative;aspect-ratio:1/1;border-radius:12px;background:var(--fondo);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.card-foto img{max-width:72%;max-height:78%;object-fit:contain;filter:drop-shadow(3px 6px 16px rgba(10,22,34,.22))}
+.card-etiqueta{position:absolute;top:14px;left:14px;font-size:12px;font-weight:600;background:var(--acento);color:#fff;padding:4px 10px;border-radius:999px}
+.card-nota{margin-top:18px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tenue)}
+.card h3{margin:8px 0 0;font-size:21px;font-weight:700;letter-spacing:-0.02em}
+.card-desc{margin:8px 0 0;font-size:15px;line-height:1.5;color:var(--tinta-2);flex:1}
+.card-pie{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-precio{font-size:19px;font-weight:700;letter-spacing:-0.02em}
+.card-unidad{font-size:13px;color:var(--tenue)}
+.stepper{display:flex;align-items:center;gap:4px;border:1px solid var(--linea);border-radius:999px;padding:3px}
+.stepper span{min-width:24px;text-align:center;font-weight:600}
+.stepper button{width:36px;height:36px;border:0;border-radius:999px;cursor:pointer;font-size:18px;transition:transform .2s var(--suave)}
+.stepper button:active{transform:scale(.92)}
+.stepper-menos{background:var(--fondo);color:var(--tinta)}
+.stepper-mas{background:var(--acento);color:#fff}
+
+/* --------------------------------------------------------------------------
+   Planes
+   -------------------------------------------------------------------------- */
+.planes{overflow:hidden}
+.planes-foto{margin:40px auto 0;width:min(560px,80%);aspect-ratio:668/547;transform:translateY(calc((1 - var(--z, 1)) * 80px)) scale(calc(.78 + var(--z, 1) * .22));opacity:calc(.2 + var(--z, 1) * .8)}
+.planes-foto img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
+.planes-grid{margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px}
+.plan{background:var(--noche-tarjeta);border-radius:18px;padding:32px;display:flex;flex-direction:column}
+.plan-tipo{color:var(--celeste)}
+.plan h3{margin:14px 0 0;font-size:24px;font-weight:700;line-height:1.15;letter-spacing:-0.025em}
+.plan-items{margin:22px 0 0;display:flex;flex-direction:column;gap:12px;flex:1}
+.plan-item{display:flex;gap:10px;font-size:16px;line-height:1.4;color:var(--noche-tinta-2)}
+.ico-check{flex:none;width:18px;height:18px;margin-top:2px;fill:none;stroke:var(--celeste);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.plan-cierre{margin-top:28px;padding-top:20px;border-top:1px solid var(--noche-linea);font-size:19px;font-weight:600}
+
+/* --------------------------------------------------------------------------
+   Cobertura
+   -------------------------------------------------------------------------- */
+.cobertura{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(40px,6vw,96px);align-items:start}
+.cobertura-cta{margin-top:32px}
+.distritos{display:flex;flex-wrap:wrap;gap:10px}
+.distrito{font-size:17px;padding:12px 20px;border-radius:999px;border:1px solid var(--linea);background:var(--tarjeta)}
+
+/* --------------------------------------------------------------------------
+   Preguntas
+   -------------------------------------------------------------------------- */
+.preguntas-titulo{margin-bottom:40px;text-align:center}
+.qa{border-bottom:1px solid var(--linea)}
+.qa-boton{width:100%;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:26px 0;border:0;background:transparent;cursor:pointer;text-align:left;color:var(--tinta)}
+.qa-pregunta{font-size:clamp(19px,1.8vw,24px);font-weight:600;letter-spacing:-0.02em}
+.qa-signo{flex:none;width:32px;height:32px;border-radius:999px;background:var(--tarjeta);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--acento);transition:transform .4s var(--suave)}
+.qa-boton[aria-expanded="true"] .qa-signo{transform:rotate(45deg)}
+.qa-respuesta{margin:0;padding:0 56px 28px 0;font-size:17px;line-height:1.55;color:var(--tinta-2)}
+
+/* --------------------------------------------------------------------------
+   Cierre y pie
+   -------------------------------------------------------------------------- */
+.cierre{background:var(--acento);color:var(--sobre-acento)}
+.cierre-in{text-align:center}
+.cierre-numero{display:block;margin-top:18px;font-size:clamp(56px,11vw,168px);font-weight:700;line-height:.95;letter-spacing:-0.055em;color:var(--sobre-acento)}
+.cierre-numero:hover{color:var(--sobre-acento)}
+.cierre-bajada{margin:28px auto 0;max-width:36ch;color:var(--sobre-acento-2)}
+.cierre-acciones{margin-top:32px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.pie{background:var(--fondo);padding:40px var(--gutter) 110px;font-size:12px;color:var(--tenue)}
+.pie-in{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid var(--linea);padding-top:20px}
+
+/* --------------------------------------------------------------------------
+   Barra flotante y bolsa
+   -------------------------------------------------------------------------- */
+.barra-pedido{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:60;width:min(640px,calc(100% - 32px));height:64px;padding:0 10px 0 24px;border-radius:999px;background:var(--cristal);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border:1px solid var(--linea-suave);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.barra-resumen{border:0;background:transparent;padding:0;cursor:pointer;text-align:left;font-size:15px;line-height:1.3;color:var(--tinta);min-width:0}
+.barra-resumen b{font-weight:600}
+.barra-detalle{display:block;font-size:13px;color:var(--acento)}
+.barra-revisar{padding:11px 22px}
+
+.velo{position:fixed;inset:0;z-index:70;background:var(--velo);opacity:0;pointer-events:none;transition:opacity .45s var(--suave)}
+.velo[data-abierta]{opacity:1;pointer-events:auto}
+.bolsa{position:fixed;top:0;right:0;bottom:0;z-index:80;width:min(460px,100%);background:var(--blanco);display:flex;flex-direction:column;transform:translateX(105%);transition:transform .55s var(--cajon)}
+.bolsa[data-abierta]{transform:translateX(0)}
+.bolsa-cabeza{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid var(--linea-suave)}
+.bolsa-cabeza h2{margin:0;font-size:28px;font-weight:700;letter-spacing:-0.035em}
+.bolsa-cuenta{margin-top:2px;font-size:14px;color:var(--tenue)}
+.bolsa-cerrar{width:36px;height:36px;border:0;border-radius:999px;background:var(--hover);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--tinta);transition:transform .2s var(--suave)}
+.bolsa-cerrar:active{transform:scale(.92)}
+.ico-cerrar{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.bolsa-cuerpo{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 24px 24px}
+.bolsa-vacia{padding:64px 0;text-align:center}
+.bolsa-vacia-ico{width:44px;height:44px;fill:none;stroke:var(--tenue);stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+.bolsa-vacia h3{margin:16px 0 0;font-size:21px;font-weight:700;letter-spacing:-0.02em}
+.bolsa-vacia p{margin:8px auto 0;max-width:30ch;font-size:15px;line-height:1.5;color:var(--tinta-2)}
+.bolsa-vacia .btn{margin-top:24px;padding:11px 22px}
+
+.linea{display:grid;grid-template-columns:76px 1fr auto;gap:16px;padding:20px 0;border-bottom:1px solid var(--linea-suave);align-items:start}
+.linea-foto{width:76px;height:76px;border-radius:12px;background:var(--fondo);display:flex;align-items:center;justify-content:center}
+.linea-foto img{max-width:70%;max-height:82%;object-fit:contain;filter:drop-shadow(2px 4px 8px rgba(10,22,34,.2))}
+.linea-info{min-width:0}
+.linea-nombre{font-size:17px;font-weight:600;letter-spacing:-0.015em}
+.linea-unidad{margin-top:2px;font-size:13px;color:var(--tenue)}
+.linea-controles{margin-top:12px;display:flex;align-items:center;gap:14px}
+.stepper-sm{gap:2px;padding:2px}
+.stepper-sm span{min-width:22px;font-size:15px}
+.stepper-sm button{width:30px;height:30px;font-size:16px;background:transparent;color:var(--tinta)}
+.stepper-sm button:hover{background:var(--fondo)}
+.linea-eliminar{border:0;background:transparent;padding:0;cursor:pointer;font-size:13px;color:var(--acento)}
+.linea-subtotal{font-size:17px;font-weight:600;white-space:nowrap}
+
+.bolsa-bloque{margin-top:28px}
+.bolsa-bloque-pago{margin-top:24px}
+.bolsa-campos{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.campo{width:100%;height:46px;padding:0 16px;border-radius:12px;border:1px solid var(--linea);background:var(--tarjeta);font:inherit;font-size:16px;color:var(--tinta);outline-color:var(--acento)}
+.campo-select{padding:0 12px}
+.segmentado{margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border-radius:12px;background:var(--gris)}
+.segmento{height:38px;border:0;border-radius:9px;cursor:pointer;font-size:14px;font-weight:500;background:transparent;color:var(--tinta);transition:background .25s}
+.segmento[aria-checked="true"]{background:var(--tarjeta)}
+.resumen{margin-top:28px;display:flex;flex-direction:column;gap:10px;font-size:15px}
+.resumen-fila{display:flex;justify-content:space-between;gap:16px}
+.resumen-fila .tenue{color:var(--tinta-2)}
+.resumen-total{padding-top:14px;border-top:1px solid var(--linea-suave);font-size:21px;font-weight:700;letter-spacing:-0.02em}
+.resumen-nota{font-size:13px;color:var(--tenue)}
+.bolsa-pie{padding:16px 24px 24px;border-top:1px solid var(--linea-suave);background:var(--blanco)}
+.bolsa-aviso{margin-bottom:10px;font-size:13px;color:var(--tenue);text-align:center}
+.bolsa-enviar{display:flex;width:100%;height:52px;font-size:17px;font-weight:500}
+.bolsa-enviar:active{transform:scale(.97)}
+.ico-wa{width:20px;height:20px;fill:currentColor}
+
+/* --------------------------------------------------------------------------
+   Pantallas angostas: lo que no cabe junto se retira para no cortarse
+   -------------------------------------------------------------------------- */
+@media (max-width:819.98px){
+  .nav-enlaces,.hero-datos,.proceso-foto{display:none}
+}
+@media (max-width:480px){
+  .barra-pedido{padding-left:18px}
+  .barra-detalle{display:none}
 }
 
-/* ==========================================================================
-   MOVIMIENTO DE PÁGINA
+/* --------------------------------------------------------------------------
+   Movimiento
+   -------------------------------------------------------------------------- */
+/* La entrada de la portada espera escondida mientras carga el JavaScript. La
+   clase la pone el script de index.html sólo si nadie pidió menos movimiento,
+   y se retira sola a los tres segundos si la animación no llega a arrancar. */
+.vf-entrada [data-enter]{opacity:0}
 
-   La versión anterior sí tenía movimiento y aun así el sitio se veía muerto,
-   que es un fallo distinto y más caro de detectar: el revelado desplazaba las
-   filas 12 px repartidos a lo largo de media pantalla de scroll. Eso no es
-   una animación discreta, es una animación que nadie puede ver. Medido: el
-   ojo empieza a leer desplazamiento a partir de unos 20 px, y por debajo de
-   eso el navegador está gastando cuadros en algo que no llega a nadie.
-
-   Ahora hay tres movimientos y cada uno responde a una pregunta distinta:
-
-     1. ¿ESTÁ VIVA?      La marea de la portada. Continua, lenta, sin fin. Es
-                         lo único que se mueve solo, y por eso es lo único que
-                         contesta a esta pregunta antes de que nadie toque
-                         nada.
-     2. ¿ME OYE?         El hover y la pulsación de cada control, y la barra
-                         que se estrecha al bajar. Movimiento como respuesta.
-     3. ¿POR DÓNDE VOY?  El revelado de las series al entrar en pantalla, ya
-                         con recorrido suficiente para notarse.
-
-   En los tres casos **el estado base es el estado final**. La animación sólo
-   puede quitar; nunca es lo que hace aparecer el contenido. Si el navegador
-   no soporta líneas de tiempo de scroll, o si el CSS llega tarde, la página
-   se lee entera igual.
-   ========================================================================== */
-@keyframes surge{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
-/* La marea se desplaza la mitad de su propio ancho, que son cuatro periodos
-   enteros: al reiniciar, la curva cae encima de sí misma y el ciclo no tiene
-   costura. Ver src/components/Marea.tsx. */
-@keyframes marea{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-/* --- la marea de la portada --- */
-/* El testigo que le dice al documento que ya no estamos arriba del todo.
-   Cero de alto: no ocupa, sólo se deja observar. */
-.testigo-tope{height:1px;margin-bottom:-1px}
-
-.marea{position:absolute;left:0;right:0;bottom:0;z-index:0;pointer-events:none;
-  overflow:hidden;line-height:0;height:clamp(106px,16vh,186px)}
-/* El doble de ancho que su marco: la otra mitad es la que va entrando. */
-.marea-capa{position:absolute;left:0;bottom:0;width:200%;height:100%;display:block;fill:var(--acento)}
-.marea-fondo{opacity:.10}
-.marea-cara{opacity:.17}
-@media (prefers-reduced-motion:no-preference){
-
-  /* 1. VIVA. Dos capas a velocidades distintas; la diferencia entre las dos
-     es lo que da profundidad. Lentas a propósito: una marea rápida es una
-     animación, una marea lenta es agua. Y `linear`, porque una superficie de
-     agua no acelera ni frena al desplazarse. */
-  .marea-fondo{animation:marea 38s linear infinite}
-  .marea-cara{animation:marea 24s linear infinite}
-
-  /* La entrada. Es lo único que ocurre sin que el visitante haga nada además
-     de la marea, y por eso es corta y va escalonada: el ojo sigue un orden en
-     vez de recibirlo todo de golpe. */
-  .hero-grid > div > *,
-  .hero .ficha{animation:surge .62s var(--sal) both}
-  .hero-grid > div > *:nth-child(1){animation-delay:.04s}
-  .hero-grid > div > *:nth-child(2){animation-delay:.10s}
-  .hero-grid > div > *:nth-child(3){animation-delay:.16s}
-  .hero-grid > div > *:nth-child(4){animation-delay:.22s}
-  .hero .ficha{animation-delay:.28s}
-  /* El agua se llena desde abajo mientras entra la portada. */
-  .marea{animation:crecida 1.4s var(--sal) both}
-
-  /* El revelado de las series NO vive aquí: lo monta src/revelado.ts con un
-     IntersectionObserver, porque una línea de tiempo de scroll ata la duración
-     al dedo y bajando rápido no se ve nada. Lo que queda abajo es cómo se ve
-     ese revelado; el cuándo lo decide el observador. */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .paso,.qa-signo,.velo,.bolsa,.btn,.stepper button{transition:none}
 }
-@keyframes crecida{from{transform:translateY(60%)}to{transform:none}}
 
-/* --- 3. ¿POR DÓNDE VOY? el revelado de las series ------------------------
-   Sólo se esconde lo que aún no se ve; ver src/revelado.ts. La transición
-   —y no una animación de fotogramas— porque se puede interrumpir y retomar
-   desde donde estaba, mientras que unos fotogramas reempiezan desde cero.
-
-   800 ms es largo para un control y corto para un texto que aparece: aquí lo
-   que se mueve es contenido, y se quiere ver llegar. La curva es `--sal`, que
-   arranca de golpe y frena al final; con `ease-in` el elemento se quedaría
-   quieto justo en el instante en que se está mirando.
-   ---------------------------------------------------------------------- */
-/* `:root` delante no es decoración: sube la especificidad a (0,1,1) para que
-   ninguna clase suelta pueda pisar la transición. Pasó de verdad —`.dist`
-   declara abajo `transition:color .2s` para su hover, misma especificidad y
-   más adelante en el archivo, así que se llevaba por delante el revelado
-   entero de los doce distritos: se encendían de golpe y ninguna prueba lo
-   veía, porque el CSS era correcto leído regla a regla. Es la clase de fallo
-   que sólo aparece midiendo `transitionProperty` en el navegador. */
-:root [data-revela]{opacity:0;transform:translateY(30px);
-  transition:opacity .8s var(--sal),transform .8s var(--sal)}
-:root [data-revela][data-visible]{opacity:1;transform:none}
-/* Al imprimir no hay observador que revele nada, así que lo que no se hubiera
-   revelado saldría en blanco sobre el papel. */
-@media print{:root [data-revela]{opacity:1;transform:none;transition:none}}
-
-/* --- 2. ¿ME OYE? el estado de los controles ------------------------------
-   Estas reglas no van dentro de prefers-reduced-motion: quien pide menos
-   movimiento sigue necesitando saber qué está tocando. Lo que se apaga arriba
-   es la transición, no el estado. -------------------------------------- */
-/* Sólo con ratón: en una pantalla táctil el hover se dispara al tocar y se
-   queda pegado, y el elemento se levanta solo sin volver a bajar. */
-@media (hover:hover) and (pointer:fine){
-  .btn:hover{transform:translateY(-1px)}
-  .dist:hover{color:var(--acento)}
-  /* El botón de la tarjeta se enciende cuando el ratón entra en la tarjeta,
-     no cuando acierta con el botón: el objetivo real es la tarjeta entera. */
-  .card:hover .btn-cyan{background:var(--acento-alto)}
+/* Al imprimir no corre nada: todo en su estado final y las escenas sin fijar. */
+@media print{
+  [data-enter],[data-reveal],[data-w]{opacity:1 !important;transform:none !important}
+  .hero,.frase,.proceso{height:auto}
+  .escena-fija{position:relative;height:auto;min-height:100vh}
+  .nav,.barra-pedido,.velo,.bolsa{display:none}
 }
-/* Después del hover, para que la pulsación gane: quien está pulsando ya no
-   necesita que le confirmen que el ratón está encima. */
-.btn:active,.cart-btn:active,.tema-btn:active{transform:scale(.97)}
-.dist{transition:color .2s ease}
-
-/* La barra al bajar: se estrecha y se despega. El atributo lo pone el
-   observador de src/components/Nav.tsx. */
-.nav{transition:box-shadow .3s ease}
-.nav-in{transition:padding-block .3s var(--sal)}
-:root[data-desplazado] .nav-in{padding-block:12px}
-:root[data-desplazado] .nav{box-shadow:0 10px 30px -22px var(--nav-sombra)}

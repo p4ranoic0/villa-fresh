@@ -1,76 +1,56 @@
-import Marea from '../../components/Marea'
-import { activo } from '../../rutas-publicas'
-import { encuadreDe } from '../../data/encuadre'
-import { IconoWhatsApp } from '../../components/Icono'
+import type { CSSProperties } from 'react'
+import { MENSAJE_PEDIR } from '../../components/Nav'
 import { urlWhatsApp } from '../../data/negocio'
+import { activo } from '../../rutas-publicas'
 
+/** Los cuatro datos que aparecen a los lados del bidón. */
+const DATOS = [
+  { lado: 'izq', top: '30%', inicio: 0.55, rotulo: 'Tratamiento', valor: 'Ósmosis inversa' },
+  { lado: 'izq', top: '58%', inicio: 0.65, rotulo: 'Envase', valor: 'Sellado en planta' },
+  { lado: 'der', top: '33%', inicio: 0.6, rotulo: 'Alcalina', valor: 'pH 8.3', acento: true },
+  { lado: 'der', top: '61%', inicio: 0.7, rotulo: 'Entrega', valor: 'El mismo día' },
+] as const
+
+/**
+ * La portada se queda fija mientras se recorren 260vh: el titular se aleja,
+ * el bidón sube y crece, y los datos entran por los lados. Todo cuelga de una
+ * sola variable, --p (0 → 1), que escribe animaciones.ts.
+ */
 export default function Hero() {
   return (
-    <header className="hero band" id="inicio">
-      {/* Aquí vivía la gota de la marca en trazo, cruzando la esquina superior
-          derecha. Cuando era el único gráfico de la portada tenía sentido; con
-          la foto del producto y la marea pasó a ser el tercero, y decía en
-          línea lo que la marea ya dice con materia. Quitar un accesorio antes
-          de salir. La marca sigue en la barra y en la etiqueta del bidón. */}
-      <Marea />
-      <div className="wrap hero-grid">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-          {/* Antes esto abría con «NO REVENDEMOS AGUA. LA FABRICAMOS.» en
-              versalitas de 100px. El dato es bueno y sigue en la página, pero
-              como primera frase abría negando algo que nadie había acusado, y
-              a ese tamaño no sonaba a alguien hablando: sonaba a pancarta.
-              Ahora la portada dice lo que la portada tiene que decir —qué
-              vendemos y cuándo llega— y el diferencial va en la bajada. */}
-          <h1>
-            Hacemos el agua<br />y te la llevamos<br />el mismo día.
+    <header id="inicio" className="hero" data-escena="hero">
+      <div className="escena-fija hero-fija">
+        <div className="hero-texto">
+          <span data-enter="" className="rotulo">Agua de mesa purificada · Lima</span>
+          <h1 data-enter="" className="hero-titulo">
+            <span>Hacemos el agua.</span>
+            <span className="hero-titulo-2">Te la llevamos hoy.</span>
           </h1>
-          <p className="lede" style={{ maxWidth: '46ch' }}>
-            No se la compramos a nadie para revenderla: sale de nuestra planta en Lima,
-            por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada. De ahí a tu puerta,
-            sin intermediarios.
-          </p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <a
-              className="btn btn-wa"
-              href={urlWhatsApp('Hola Villa Fresh, quiero pedir un bidón de 20L')}
-              target="_blank"
-              rel="noopener"
-            >
-              <IconoWhatsApp />
-              Pedir por WhatsApp
-            </a>
-            <a className="btn btn-ghost" href="#productos">Ver productos</a>
+          <p data-enter="" className="hero-bajada">Planta propia en Lima. Ósmosis inversa, pH 8.3 y ozonización. De ahí a tu puerta, sin intermediarios.</p>
+          <div data-enter="" className="hero-acciones">
+            <a href={urlWhatsApp(MENSAJE_PEDIR)} target="_blank" rel="noopener" className="btn btn-lg">Pedir por WhatsApp</a>
+            <a href="#precio" className="enlace-lg">Ver precios ›</a>
           </div>
         </div>
 
-        <div className="hero-col">
-          {/* La portada de una marca que vende un objeto no puede no
-              enseñarlo. Hasta aquí el hero era texto y una tabla, y por eso
-              se leía como un documento y no como una tienda. */}
-          {/* La envoltura no es un div de más: un <img> no admite ::before, y
-              ahí es donde va la elipse que asienta el bidón. Ver `.objeto`. */}
-          <span className="objeto hero-foto" style={encuadreDe('/producto-bidon-20l.webp')}>
-            <img
-              src={activo('/producto-bidon-20l.webp')}
-              alt="Bidón de 20 litros de Villa Fresh, sellado"
-              width={353}
-              height={668}
-              fetchPriority="high"
-            />
-          </span>
-          {/* Eran once filas en monoespaciada mayúscula: PRODUCTO, TRATAMIENTO,
-              OZONIZADA, PASOS DE PURIFICACIÓN, GREMIO, COBERTURA… Una hoja de
-              inventario en el sitio donde el visitante decide si compra. Quedan
-              las cinco que alguien preguntaría de verdad antes de pedir, y en
-              castellano corriente en vez de mayúsculas espaciadas. */}
-          <aside className="ficha">
-            <p className="ficha-titulo">El bidón de 20 litros</p>
-            <div className="spec" style={{ borderTop: 0 }}><span>Tratamiento</span><b>Ósmosis inversa</b></div>
-            <div className="spec"><span>pH</span><b style={{ color: 'var(--acento)' }}>8.3</b></div>
-            <div className="spec"><span>Envase</span><b>Sellado en planta</b></div>
-            <div className="spec"><span>Registro sanitario</span><b>DIGESA</b></div>
-            <div className="spec"><span>Entrega</span><b>El mismo día</b></div>
-          </aside>
+        <div className="hero-bidon">
+          <div data-enter="bidon" className="hero-bidon-in">
+            <div className="hero-sombra" />
+            <img src={activo('/producto-bidon-20l.webp')} alt="Bidón de 20 litros de Villa Fresh, sellado" />
+          </div>
+        </div>
+
+        <div className="hero-datos" aria-hidden="true">
+          {DATOS.map((d) => (
+            <div
+              key={d.rotulo}
+              className={`hero-dato hero-dato-${d.lado}`}
+              style={{ top: d.top, '--inicio': d.inicio } as CSSProperties}
+            >
+              <div className="rotulo-sm">{d.rotulo}</div>
+              <div className={'acento' in d ? 'hero-dato-valor acento' : 'hero-dato-valor'}>{d.valor}</div>
+            </div>
+          ))}
         </div>
       </div>
     </header>

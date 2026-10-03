@@ -5,22 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<!-- El tema se resuelve aqui, no en React, por dos razones:
-     se aplica antes del primer pintado (sin parpadeo) y el conmutador
-     responde antes de que cargue el bundle, no despues de hidratar. -->
+<!-- La entrada de la portada espera escondida a que arranque la animacion.
+     Solo si nadie pidio menos movimiento, y con salvavidas: a los tres
+     segundos se retira la clase aunque el JavaScript no haya llegado. -->
 <script>(function(){
-  var C='vf-tema',r=document.documentElement;
-  try{var t=localStorage.getItem(C);if(t)r.dataset.tema=t}catch(e){}
-  document.addEventListener('click',function(ev){
-    if(!ev.target.closest||!ev.target.closest('[data-conmuta-tema]'))return;
-    var e=r.dataset.tema,
-        oscuro=e?e==='oscuro':matchMedia('(prefers-color-scheme: dark)').matches,
-        s=oscuro?'claro':'oscuro';
-    r.dataset.tema=s;
-    try{localStorage.setItem(C,s)}catch(e){}
-  });
+  var r=document.documentElement;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  r.classList.add('vf-entrada');
+  setTimeout(function(){r.classList.remove('vf-entrada')},3000);
 })()</script>
 <!--app-head-->
 </head>
