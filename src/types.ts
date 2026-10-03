@@ -4,6 +4,7 @@
    «accesorios»— sin un solo producto, y ninguna pintada en ninguna parte.
    Lo único que las usaba era una prueba que comprobaba que concordaban entre
    sí: se validaba sola sin afirmar nada sobre el sitio. */
+import type { Pago } from './data/contenido'
 
 export interface Producto {
   sku: string
@@ -24,4 +25,13 @@ export interface Producto {
 export interface LineaPedido {
   sku: string
   cantidad: number
+}
+
+/** Lo que se pide en la bolsa para armar el mensaje. Todo es opcional para el
+ *  cliente: lo que falte se completa en el chat. */
+export interface Entrega {
+  direccion: string
+  distrito: string
+  referencia: string
+  pago: Pago
 }

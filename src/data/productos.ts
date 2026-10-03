@@ -20,7 +20,7 @@ export const PRODUCTOS: Producto[] = [
     unidad: 'con envase',
     imagen: activo('/producto-bidon-20l.webp'),
     nota: 'Sellado en planta',
-    desc: 'Agua purificada por ósmosis inversa, alcalinizada a pH 8.3 y ozonizada. Envase sellado, entrega el mismo día.',
+    desc: 'Ósmosis inversa, pH 8.3 y ozonizada. Envase sellado, entrega el mismo día.',
   },
   {
     sku: 'VF-B20X2',
@@ -38,8 +38,8 @@ export const PRODUCTOS: Producto[] = [
     precio: 20,
     unidad: 'con tu envase',
     imagen: activo('/producto-bidon-20l.webp'),
-    nota: 'Cambias envase por envase',
-    desc: 'Cambias tu bidón vacío por uno lleno y sellado. Precio preferencial de recarga.',
+    nota: 'Envase por envase',
+    desc: 'Cambias tu bidón vacío por uno lleno y sellado. Precio preferencial.',
   },
   {
     sku: 'VF-BOT',
@@ -47,7 +47,7 @@ export const PRODUCTOS: Producto[] = [
     precio: null,
     unidad: 'presentación por confirmar',
     imagen: activo('/producto-botella.webp'),
-    desc: 'La misma agua purificada en presentación individual, para llevar. Consulta presentaciones disponibles.',
+    desc: 'La misma agua purificada en presentación individual, para llevar.',
   },
   {
     sku: 'VF-MARCA',
@@ -56,7 +56,7 @@ export const PRODUCTOS: Producto[] = [
     unidad: 'pedido especial',
     imagen: activo('/producto-botella.webp'),
     nota: 'Tu etiqueta, nuestra agua',
-    desc: 'La misma agua purificada con la etiqueta de tu empresa, tu evento o tu obra. Se cotiza según cantidad y presentación.',
+    desc: 'Con la etiqueta de tu empresa, evento u obra. Se cotiza según cantidad.',
   },
   {
     sku: 'VF-EMP',
@@ -66,6 +66,6 @@ export const PRODUCTOS: Producto[] = [
     etiqueta: 'A cotizar',
     imagen: activo('/producto-bidones.webp'),
     nota: 'Entregas programadas',
-    desc: 'Oficina, negocio u obra: entregas programadas, abastecimiento constante y precio por volumen.',
+    desc: 'Oficina, negocio u obra: entregas programadas y precio por volumen.',
   },
 ]

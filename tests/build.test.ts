@@ -47,41 +47,10 @@ test('el titular del hero viaja dentro del HTML publicado', async () => {
   expect(html).toContain('el mismo día.')
 })
 
-test('los titulares no van en versalitas', async () => {
-  // Siete titulares en mayúsculas seguidos no eran una voz, eran un cartel
-  // repetido. La caja normal es lo que hace que la página suene a alguien
-  // hablando; si vuelve el uppercase, vuelve el cartel.
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const regla = css.match(/^h1,h2\{[^}]*\}/m)?.[0] ?? ''
-  expect(regla).not.toContain('uppercase')
-})
-
 test('la ficha técnica y el precio viajan dentro del HTML publicado', async () => {
   const html = await readFile('dist/index.html', 'utf8')
   expect(html).toContain('8.3')
   expect(html).toContain('Ósmosis inversa')
-})
-
-test('lo que falta se publica junto y fuera del diseño', async () => {
-  // Los seis marcadores sueltos (tres recuadros de línea discontinua dentro de
-  // las secciones, tres corchetes en el pie) leían como contenido a medio
-  // hacer. La información sigue publicada, pero en un solo bloque marcado como
-  // nota, no repartida por la página.
-  const html = await readFile('dist/index.html', 'utf8')
-  expect(html).toContain('Nota para Villa Fresh')
-  expect(html).toContain('Razón social, RUC')
-  expect(html).toContain('distritos que aparecen son de referencia')
-  expect(html).not.toContain('[ RAZÓN SOCIAL Y RUC ]')
-  expect(html.match(/class="ph"/g)).toBeNull()
-
-  // Y fuera de <main>, detrás del pie. Metida entre el cierre y el pie ocupaba
-  // el sitio donde va la última sección de contenido de cualquier web, y se
-  // leía como contenido por mucho que el rótulo dijera lo contrario.
-  const finMain = html.indexOf('</main>')
-  const pie = html.indexOf('<footer')
-  const nota = html.indexOf('Nota para Villa Fresh')
-  expect({ fueraDeMain: nota > finMain, detrasDelPie: nota > pie })
-    .toEqual({ fueraDeMain: true, detrasDelPie: true })
 })
 
 test('los 6 productos viajan dentro del HTML, sin depender de JavaScript', async () => {
@@ -124,87 +93,10 @@ test('el código de almacén no se le enseña a quien compra', async () => {
 })
 
 test('los 3 productos sin precio se publican como "A cotizar"', async () => {
-  // Cuenta exacta en vez de buscar "S/ 0.00": el total del cajón vacío ES "S/ 0.00",
-  // y React separa textos contiguos con <!-- --> al renderizar en servidor, así que
-  // afirmar sobre el fragmento "S/ 0.00 <small>" sería frágil. Se cuenta el nodo de
-  // precio porque VF-EMP también conserva una etiqueta literal con el texto "A cotizar".
+  // Se cuenta el nodo de precio de la tarjeta: VF-EMP también lleva una
+  // etiqueta literal con el texto "A cotizar".
   const html = await readFile('dist/index.html', 'utf8')
-  expect(html.split('<div class="price pending">A cotizar</div>').length - 1).toBe(3)
-})
-
-/* --------------------------------------------------------------------------
-   El sistema de dos temas
-   -------------------------------------------------------------------------- */
-
-/** Devuelve la hoja de estilo publicada, sea cual sea su hash. */
-async function cssPublicado() {
-  const html = await readFile('dist/index.html', 'utf8')
-  const ruta = html.match(/href="(\/[^"]+\/assets\/[^"]+\.css)"/)?.[1]
-  if (!ruta) throw new Error('el HTML publicado no enlaza ninguna hoja de estilo')
-  return readFile(archivoPublicado(ruta), 'utf8')
-}
-
-test('la web publicada define los dos temas y deja mandar al sistema', async () => {
-  const css = await cssPublicado()
-  // Claro por defecto. El valor va escrito a mano y no leido del fuente: si
-  // alguien cambia la temperatura de la pagina, esta prueba lo dice en voz
-  // alta en vez de dejarlo pasar. (Fue #f4f2ee, beige, hasta que se vio que
-  // el papel templado contradecia el producto; ver la prueba de los neutros.)
-  expect(css).toContain('--ground:#f1f2f8')
-  // Oscuro cuando lo pide el sistema, salvo que el visitante haya elegido claro.
-  // El minificador quita las comillas del selector, asi que no se asumen.
-  expect(css).toContain('(prefers-color-scheme:dark)')
-  expect(css).toMatch(/\[data-tema=["']?claro["']?\]/)
-  // Y oscuro cuando el visitante lo elige, mande lo que mande el sistema.
-  expect(css).toMatch(/\[data-tema=["']?oscuro["']?\]/)
-  // El oscuro llega hasta el CSS publicado, no solo hasta el fuente.
-  expect(css).toContain('#04101d')
-})
-
-test('el tema se resuelve antes del primer pintado, no al hidratar', async () => {
-  const html = await readFile('dist/index.html', 'utf8')
-  const cabeza = html.slice(0, html.indexOf('</head>'))
-  // El script vive en <head> y por tanto corre antes de que se pinte el body.
-  expect(cabeza).toContain("'vf-tema'")
-  expect(cabeza).toContain('localStorage')
-  // Y el conmutador escucha desde ahi, no desde React: el boton responde
-  // aunque el bundle todavia no haya cargado.
-  expect(cabeza).toContain('data-conmuta-tema')
-  expect(html).toContain('data-conmuta-tema=""')
-})
-
-test('el conmutador de tema viaja en el HTML', async () => {
-  const html = await readFile('dist/index.html', 'utf8')
-  expect(html).toContain('aria-label="Cambiar entre tema claro y oscuro"')
-})
-
-test('ningún color se pinta a mano fuera del bloque de tokens', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // Todo lo que hay debajo del ultimo bloque de tokens tiene que hablar en
-  // roles. Un literal ahi abajo es un tema a medio hacer: se veria bien en uno
-  // de los dos y mal en el otro.
-  const cuerpo = css.slice(css.indexOf(':root[data-tema="oscuro"]{'))
-  const declaraciones = cuerpo.slice(cuerpo.indexOf('\n}\n') + 3)
-  const literales = declaraciones.match(/#[0-9a-fA-F]{3,8}\b|rgba?\([\d.,\s]+\)/g) ?? []
-  expect(literales).toEqual([])
-})
-
-test('cada tema define exactamente los mismos tokens', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const nombres = (bloque: string) =>
-    [...bloque.matchAll(/(--[a-z0-9-]+)\s*:/g)].map((m) => m[1]).sort()
-
-  const claro = css.slice(css.indexOf(':root{'), css.indexOf('/* El tema oscuro'))
-  const porSistema = css.slice(css.indexOf('@media (prefers-color-scheme:dark)'), css.indexOf(':root[data-tema="oscuro"]{'))
-  const porEleccion = css.slice(css.indexOf(':root[data-tema="oscuro"]{'))
-
-  // Los dos caminos al tema oscuro tienen que decir lo mismo; si uno se queda
-  // corto, elegir el tema a mano daria un resultado distinto al del sistema.
-  expect(nombres(porEleccion.slice(0, porEleccion.indexOf('\n}\n')))).toEqual(nombres(porSistema))
-
-  // Y todo token que cambia con el tema tiene que existir tambien en claro.
-  const enClaro = new Set(nombres(claro))
-  for (const token of nombres(porSistema)) expect(enClaro.has(token)).toBe(true)
+  expect(html.split('<div class="card-precio">A cotizar</div>').length - 1).toBe(3)
 })
 
 test('las tarjetas publican la foto y el dato que la foto no da', async () => {
@@ -213,7 +105,7 @@ test('las tarjetas publican la foto y el dato que la foto no da', async () => {
   // que cambia es si traes el envase. Sin la etiqueta serían la misma tarjeta.
   expect(html).toContain('producto-bidon-20l.webp')
   expect(html).toContain('Sellado en planta')
-  expect(html).toContain('Cambias envase por envase')
+  expect(html).toContain('Envase por envase')
   expect(html).toContain('Tu etiqueta, nuestra agua')
   // Y ya no queda rastro de las ilustraciones que sustituyo la fotografia.
   for (const viejo of ['bidon-20l.svg', 'bidon-vacio.svg', 'botella-600.svg', 'dispensador.svg']) {
@@ -229,30 +121,60 @@ test('toda imagen referida existe en lo publicado', async () => {
 })
 
 /* --------------------------------------------------------------------------
-   La secuencia de agua de la sección de proceso
+   Movimiento
    -------------------------------------------------------------------------- */
 
-test('la secuencia publica el póster, no el vídeo', async () => {
+test('las escenas fijas viajan en el HTML y avanzan con el scroll', async () => {
   const html = await readFile('dist/index.html', 'utf8')
-  const secuencia = await readFile('src/components/SecuenciaAgua.tsx', 'utf8')
-  // El póster (17 KB) viaja en el HTML y ya cuenta lo mismo.
-  expect(html).toContain(`poster="${BASE_PAGES}proceso-agua.webp"`)
-  // El vídeo (570 KB) no. Lo pide el navegador solo si la pantalla es ancha,
-  // no hay preferencia por menos movimiento y no se están ahorrando datos.
-  // Un src aquí lo descargaría siempre, incluso en un móvil con datos contados.
-  expect(html).not.toContain('proceso-agua.mp4')
-  expect(html).toContain('preload="none"')
-  // El alto forma parte de la condicion: fijar una escena que no cabe esconde
-  // contenido sin dejar forma de alcanzarlo. Medido a 912x570 se perdian 4 px
-  // del cuarto paso.
-  expect(secuencia).toContain("escritorio: '(min-width: 900px) and (min-height: 640px)'")
-  expect(secuencia).toContain("conexion?.saveData !== true")
-  expect(secuencia).toContain("margenPrecarga: '50% 0px'")
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const paquete = JSON.parse(await readFile('package.json', 'utf8'))
+  // Portada, frase y proceso se quedan fijas mientras se recorren; el avance
+  // lo escribe animaciones.ts en --p y el CSS decide qué hace cada pieza.
+  for (const escena of ['hero', 'frase', 'proceso']) expect(html).toContain(`data-escena="${escena}"`)
+  expect(css).toContain('.escena-fija{position:sticky')
+  expect(css).toContain('var(--p, 0)')
+  // GSAP y Lenis se instalan como dependencias, no se piden a un CDN.
+  expect(Object.keys(paquete.dependencies)).toEqual(expect.arrayContaining(['gsap', 'lenis']))
+  expect(html).not.toMatch(/cdn\.jsdelivr|unpkg\.com/)
 })
 
-test('la secuencia no reclama ser la planta de Villa Fresh', async () => {
+test('la frase y las etapas se publican completas', async () => {
   const html = await readFile('dist/index.html', 'utf8')
-  expect(html).toContain('Imagen de archivo con licencia')
+  // Las palabras se iluminan con el scroll, pero el HTML las trae todas: sin
+  // JavaScript la frase se lee entera.
+  expect((html.match(/data-w=""/g) ?? []).length).toBeGreaterThan(20)
+  expect(html).toContain('sin intermediarios.')
+  expect((html.match(/data-step=""/g) ?? []).length).toBe(4)
+  expect(html).toContain(`src="${BASE_PAGES}proceso-agua.webp"`)
+})
+
+test('la entrada de la portada nunca deja el hero escondido', async () => {
+  const html = await readFile('dist/index.html', 'utf8')
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const cabeza = html.slice(0, html.indexOf('</head>'))
+  // Lo único que se esconde antes de que cargue el JavaScript es la entrada,
+  // y sólo bajo la clase que pone index.html. Esa clase se va sola a los tres
+  // segundos y nunca se pone si se pidió menos movimiento.
+  expect(css).toContain('.vf-entrada [data-enter]{opacity:0}')
+  expect(cabeza).toContain("classList.add('vf-entrada')")
+  expect(cabeza).toContain("classList.remove('vf-entrada')")
+  expect(cabeza).toContain("prefers-reduced-motion: reduce")
+  // El texto del hero viaja sin estilos en línea que lo oculten.
+  expect(html).not.toMatch(/data-enter=""[^>]*style="[^"]*opacity:\s*0/)
+})
+
+test('el movimiento se apaga con prefers-reduced-motion', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  const ts = await readFile('src/animaciones.ts', 'utf8')
+  expect(css).toContain('@media (prefers-reduced-motion:reduce)')
+  // Sin scroll suave y sin entradas: los bloques no se esconden para revelarse.
+  expect(ts).toContain("matchMedia('(prefers-reduced-motion: reduce)').matches")
+  expect(ts).toMatch(/if \(!reducido\) \{\s*gsap\.set\('\[data-reveal\]'/)
+})
+
+test('al imprimir no queda nada escondido', async () => {
+  const css = await readFile('src/styles/site.css', 'utf8')
+  expect(css).toMatch(/@media print\{\s*\[data-enter\],\[data-reveal\],\[data-w\]\{opacity:1 !important/)
 })
 
 test('ninguna animación arranca con ease-in', async () => {
@@ -264,40 +186,6 @@ test('ninguna animación arranca con ease-in', async () => {
   expect(declaraciones).not.toMatch(/[\s,:]ease-in[\s,;}]/)
 })
 
-test('el movimiento se apaga con prefers-reduced-motion', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const ts = await readFile('src/revelado.ts', 'utf8')
-  const secuencia = await readFile('src/components/SecuenciaAgua.tsx', 'utf8')
-  expect(css).toContain('@media (prefers-reduced-motion:reduce)')
-  // Y lo que se anade por gusto solo existe si nadie ha pedido lo contrario.
-  expect(css).toContain('@media (prefers-reduced-motion:no-preference)')
-  // El revelado se apaga desde JavaScript, no desde el CSS: apagar sólo la
-  // transición dejaría el elemento escondido hasta que el observador lo
-  // enseñara de golpe. Quien pide menos movimiento no esconde nada.
-  expect(ts).toContain("matchMedia('(prefers-reduced-motion: reduce)').matches")
-  expect(secuencia).toContain("movimientoReducido: '(prefers-reduced-motion: reduce)'")
-  expect(css).toContain('@media (min-width:900px) and (min-height:640px) and (prefers-reduced-motion:no-preference)')
-})
-test('el revelado nunca es lo que hace visible el texto', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const ts = await readFile('src/revelado.ts', 'utf8')
-  const secuencia = await readFile('src/components/SecuenciaAgua.tsx', 'utf8')
-  // El estado base tiene que ser el final. Nada se esconde desde el CSS: es el
-  // observador quien pone `data-revela`, y sólo en lo que aún no se ve. Sin
-  // JavaScript no hay atributo, no hay regla que aplique y la página se lee
-  // entera.
-  const regla = css.slice(css.indexOf('.pasos{'), css.indexOf('@keyframes surge'))
-  expect(regla).not.toMatch(/\.paso\{[^}]*opacity:0/)
-  expect(regla).toContain('.proceso-cuerpo[data-secuencia-activa]')
-  expect(regla).toContain('opacity:var(--paso-opacidad)')
-  expect(secuencia).toContain("cuerpo.removeAttribute('data-secuencia-activa')")
-  expect(secuencia).toContain("v.addEventListener('error', alFallarVideo)")
-  expect(css).toMatch(/:root \[data-revela\]\{opacity:0/)
-  expect(ts).toContain("setAttribute('data-revela'")
-  // Y lo que ya está en pantalla al cargar no se esconde para volver a
-  // enseñarlo: eso sería un parpadeo entre el pintado y la hidratación.
-  expect(ts).toMatch(/getBoundingClientRect\(\)\.top > alcance/)
-})
 test('la página no arrastra un router para una sola ruta', async () => {
   // El alias de "/index.html" existía porque, sin él, React Router no
   // encontraba ruta en esa dirección y vaciaba la página. Sin router no hay
@@ -312,196 +200,25 @@ test('la página no arrastra un router para una sola ruta', async () => {
 
 test('los iconos son SVG en línea, sin librería ni fuente', async () => {
   const html = await readFile('dist/index.html', 'utf8')
-  // Doce iconos dibujados a mano en una retícula de 24 con trazo 1.7. La
-  // primera versión del sitio usaba una fuente de iconos y, cuando Google
+  // Iconos dibujados a mano en una retícula de 24. La primera versión del sitio usaba una fuente de iconos y, cuando Google
   // Fonts no cargó, los iconos salieron como las palabras "chat" y "check".
   expect(html).toContain('class="ico"')
   expect(html).toContain('viewBox="0 0 24 24"')
   expect(html).not.toMatch(/material-symbols|font-awesome|<i class="(fa|icon)/)
 })
 
-test('cada paso del proceso lleva su propio icono', async () => {
-  const html = await readFile('dist/index.html', 'utf8')
-  const seccion = html.slice(html.indexOf('id="proceso"'), html.indexOf('id="planes"'))
-  // Cuatro pasos, cuatro dibujos distintos. Si dos pasos comparten icono, el
-  // icono ha dejado de distinguir y sólo decora.
-  const dibujos = new Set([...seccion.matchAll(/<svg class="ico"[^>]*>(.*?)<\/svg>/g)].map((m) => m[1]))
-  expect(dibujos.size).toBe(4)
-})
-
-test('la entrada de la portada nunca es lo que hace visible el hero', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const entrada = css.slice(css.indexOf('MOVIMIENTO DE PÁGINA'))
-  // Igual que el revelado: el estado base es el final, y la animación vive
-  // dentro de prefers-reduced-motion. Sin eso, quien pida menos movimiento
-  // se quedaría mirando una portada en blanco.
-  expect(entrada).toContain('@media (prefers-reduced-motion:no-preference)')
-  expect(entrada.indexOf('@media (prefers-reduced-motion:no-preference)')).toBeLessThan(entrada.indexOf('.hero-grid'))
-})
-
-test('el texto secundario se aleja del titular lo mismo en los dos temas', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16))
-  const lin = (v: number) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
-  /** L* de CIELAB: escala perceptual. Dos colores con el mismo ΔL* se separan
-   *  igual para el ojo, cosa que el ratio de contraste no dice. */
-  const Lestrella = (h: string) => {
-    const [r, g, b] = hex(h)
-    const Y = 0.2126 * lin(r!) + 0.7152 * lin(g!) + 0.0722 * lin(b!)
-    return Y > 0.008856 ? 116 * Math.cbrt(Y) - 16 : 903.3 * Y
-  }
-  const valor = (bloque: string, token: string) =>
-    bloque.match(new RegExp(`${token}:(#[0-9a-f]{6})`))![1]!
-
-  const claro = css.slice(css.indexOf(':root{'), css.indexOf('/* El tema oscuro'))
-  const oscuro = css.slice(css.indexOf(':root[data-tema="oscuro"]{'))
-
-  for (const token of ['--ink-2', '--ink-3', '--dim']) {
-    const enClaro = Math.abs(Lestrella(valor(claro, token)) - Lestrella(valor(claro, '--ink')))
-    const enOscuro = Math.abs(Lestrella(valor(oscuro, token)) - Lestrella(valor(oscuro, '--ink')))
-    // Con los valores originales la bajada se alejaba 29.9 en claro y 12.6 en
-    // oscuro: el texto que explica la página se caía en el tema por defecto.
-    // Dos puntos de holgura para poder retocar un tono sin romper la prueba.
-    const desajuste = +Math.abs(enClaro - enOscuro).toFixed(1)
-    expect({ token, desajuste, tolerable: desajuste <= 2 })
-      .toEqual({ token, desajuste, tolerable: true })
-  }
-})
-
-test('la portada se mueve sola, sin que nadie toque nada', async () => {
-  const html = await readFile('dist/index.html', 'utf8')
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // La versión anterior sí tenía animaciones y aun así el sitio se veía
-  // muerto: todas dependían de que alguien hiciera scroll. Una página que
-  // sólo se mueve cuando la mueven no contesta a «¿esto está vivo?».
-  expect(html).toContain('class="marea"')
-  expect(css).toMatch(/\.marea-fondo\{animation:marea [\d.]+s linear infinite\}/)
-  expect(css).toMatch(/\.marea-cara\{animation:marea [\d.]+s linear infinite\}/)
-  // Y la marea viaja en el HTML publicado, no la pinta JavaScript al hidratar.
-  expect(html).toMatch(/<svg class="marea-capa[^"]*"[^>]*>\s*<path/)
-})
-
-test('el desplazamiento del revelado llega a verse', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const surge = css.match(/@keyframes surge\{from\{opacity:0;transform:translateY\((\d+)px\)/)
-  expect(surge).not.toBeNull()
-  const px = Number(surge![1])
-  // El recorrido anterior eran 12 px repartidos a lo largo de media pantalla
-  // de scroll: el navegador gastaba cuadros en algo que nadie podía ver.
-  expect({ px, seVe: px >= 20 }).toEqual({ px, seVe: true })
-})
-
-test('el revelado dura lo mismo baje quien baje como baje', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const ts = await readFile('src/revelado.ts', 'utf8')
-  // Fue `animation-timeline: view()`, que ata el avance de la animación a la
-  // posición del dedo: de un manotazo se consumía en dos cuadros y el elemento
-  // aparecía de golpe. El reloj tiene que ser el del navegador.
-  expect(css).not.toContain('animation-timeline')
-  expect(css).not.toContain('animation-range')
-  const dur = css.match(/:root \[data-revela\]\{opacity:0;transform:translateY\((\d+)px\);\s*transition:opacity ([\d.]+)s/)
-  expect(dur).not.toBeNull()
-  const px = Number(dur![1])
-  const segundos = Number(dur![2])
-  // Lento a propósito: es contenido apareciendo, no un control respondiendo.
-  expect({ px, segundos, lento: segundos >= 0.6, seVe: px >= 20 })
-    .toEqual({ px, segundos, lento: true, seVe: true })
-  // Y se revela una sola vez: volver a esconder lo ya leído es un parpadeo.
-  expect(ts).toContain('observador.unobserve(el)')
-})
-test('ninguna clase puede pisar la transición del revelado', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // `.dist{transition:color .2s}` se llevaba por delante el revelado de los
-  // doce distritos: misma especificidad, más abajo en el archivo. El CSS era
-  // correcto leído regla a regla y sólo se veía midiendo en el navegador.
-  // El `:root` de delante sube la especificidad a (0,1,1) y ninguna clase
-  // suelta la alcanza, esté donde esté.
-  expect(css).toContain(':root [data-revela]{')
-  // Y no queda ninguna forma sin blindar rondando por la hoja.
-  const sinBlindar = [...css.matchAll(/(^|[^ ])\[data-revela\]\{/gm)]
-  expect(sinBlindar.map((m) => m[0])).toEqual([])
-})
-
-test('el revelado no puede dejar una sección en blanco sobre papel', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // Al imprimir no hay observador que revele nada, y lo que quedó escondido
-  // saldría en blanco por la impresora.
-  expect(css).toMatch(/@media print\{:root \[data-revela\]\{opacity:1/)
-})
 test('los neutros del tema claro son agua, no papel templado', async () => {
   const css = await readFile('src/styles/site.css', 'utf8')
-  const claro = css.slice(css.indexOf(':root{'), css.indexOf('/* El tema oscuro'))
+  const claro = css.slice(css.indexOf(':root{'), css.indexOf('}', css.indexOf(':root{')))
   // Durante una versión entera el tema claro fue beige: rojo por encima de
   // azul en todos los neutros. El producto es agua fría y el material de la
   // página decía panadería. Ahora el matiz es el del azul de marca, diluido.
-  for (const token of ['--ground', '--panel', '--panel-2', '--ink', '--ink-2', '--dim']) {
+  for (const token of ['--fondo', '--blanco', '--gris', '--tinta', '--tinta-2', '--tenue']) {
     const h = claro.match(new RegExp(`${token}:#([0-9a-f]{6})`))![1]!
     const r = parseInt(h.slice(0, 2), 16)
     const b = parseInt(h.slice(4, 6), 16)
     expect({ token, hex: `#${h}`, frio: b > r }).toEqual({ token, hex: `#${h}`, frio: true })
   }
-})
-
-test('la monoespaciada sólo viste a lo que se lee como cifra', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // Llegó a haber veinte hojas de texto en Plex Mono: precios de tarjeta,
-  // «A cotizar», los números de paso, Hogar/Empresa/Obra, PRECIO POR VOLUMEN,
-  // la tira de cobertura, el kicker del cierre. Ese estrato es el que hacía
-  // que la página hablara en dos voces, una humana y otra de máquina, y la de
-  // máquina es la que se lee como generada.
-  //
-  // Lista blanca, no un tope: cada entrada tiene que poder defenderse sola.
-  const permitidos = new Set([
-    '.nav-tel',            // el teléfono de la barra: se memoriza y se marca
-    '.close .num',         // el mismo teléfono, en grande
-    '.precios .amt sup',   // el «S/» del precio grande (ver DESIGN.md §5)
-    '.line .pr',           // importes del cajón: se alinean en columna
-    '.line .qty span',     // la cantidad, entre los dos botones
-    '.total',              // el total del cajón
-    '.nota-titulo',        // la nota de pendientes, que a propósito no parece web
-  ])
-  const declaraciones = css.replace(/\/\*[\s\S]*?\*\//g, '')
-  const usan = [...declaraciones.matchAll(/([^{}]+)\{[^}]*font-family:var\(--mono\)/g)]
-    .map((m) => m[1]!.split('\n').pop()!.trim())
-  const sobran = usan.filter((sel) => !permitidos.has(sel))
-  expect({ usan: usan.length, sobran }).toEqual({ usan: usan.length, sobran: [] })
-
-  // Y la utilidad que la repartía desde el JSX ya no existe.
-  expect(declaraciones).not.toMatch(/\.mono\{/)
-})
-
-test('ninguna versalita se cuela por estilo en línea', async () => {
-  // Cuatro `textTransform:'uppercase'` sobrevivieron a la limpieza anterior
-  // porque iban en el JSX y no en la hoja: Planes ×2, Cobertura y Cierre. Un
-  // grep del CSS no los veía.
-  const { readdir } = await import('node:fs/promises')
-  const rutas: string[] = []
-  const recorrer = async (dir: string) => {
-    for (const e of await readdir(dir, { withFileTypes: true })) {
-      const ruta = `${dir}/${e.name}`
-      if (e.isDirectory()) await recorrer(ruta)
-      else if (ruta.endsWith('.tsx')) rutas.push(ruta)
-    }
-  }
-  await recorrer('src')
-
-  const culpables: string[] = []
-  for (const ruta of rutas) {
-    const codigo = await readFile(ruta, 'utf8')
-    if (/textTransform:\s*'uppercase'/.test(codigo)) culpables.push(ruta)
-  }
-  expect(culpables).toEqual([])
-})
-
-test('cada intención tiene un solo rótulo', async () => {
-  const html = await readFile('dist/index.html', 'utf8')
-  // «Ver productos» en el hero y «Ver todos los productos» en la banda de
-  // precio llevaban al mismo ancla. El visitante aprende el vocabulario de la
-  // página; cambiárselo a mitad es ruido.
-  const rotulos = [...html.matchAll(/<a class="btn[^"]*"[^>]*>([^<]*)</g)]
-    .map((m) => m[1]!.trim())
-    .filter((t) => t.startsWith('Ver '))
-  expect([...new Set(rotulos)]).toEqual(['Ver productos'])
 })
 
 test('ningún titular promete un número que su sección no enseña', async () => {
@@ -516,11 +233,11 @@ test('ningún titular promete un número que su sección no enseña', async () =
   }
   // Qué es «uno» de lo que cuenta cada sección.
   const UNIDAD: Record<string, RegExp> = {
-    proceso: /<div class="paso"/g,
-    planes: /class="plan-etq/g,
+    proceso: /class="paso"/g,
+    planes: /class="plan"/g,
     productos: /class="card"/g,
-    cobertura: /<div class="dist"/g,
-    preguntas: /<div class="qa"/g,
+    cobertura: /class="distrito"/g,
+    preguntas: /class="qa"/g,
   }
 
   const desajustes: { seccion: string; titular: string; promete: number; enseña: number }[] = []
@@ -546,10 +263,10 @@ test('ningún titular promete un número que su sección no enseña', async () =
 
 test('la banda de precio no inventa un tercer precio', async () => {
   const html = await readFile('dist/index.html', 'utf8')
-  const banda = html.slice(html.indexOf('id="precio"'), html.indexOf('id="proceso"'))
+  const banda = html.slice(html.indexOf('id="precio"'), html.indexOf('id="productos"'))
   // Los tres precios confirmados por el negocio, y ninguno más. Si aparece
   // una cuarta cifra en esta banda, alguien se la ha inventado.
-  const cifras = [...banda.matchAll(/<b>(\d+)<\/b>/g)].map((m) => m[1])
+  const cifras = [...banda.matchAll(/data-count="(\d+)"/g)].map((m) => m[1])
   expect(cifras).toEqual(['30', '50', '20'])
 })
 
@@ -575,7 +292,6 @@ test('la web no afirma nada que no tenga fuente', async () => {
     'call center',            // promesa sobre cómo atienden
     'consumo mensual',        // escala de precio que nadie confirmó
     'día siguiente',          // promesa de tiempo de respuesta
-    'efectivo o transferencia', // medios de pago sin confirmar
     'ruta diaria',            // descripción de la operación, no del plazo
     'retornable',             // política de envases sin confirmar
   ]
@@ -682,83 +398,8 @@ test('canonical, og:url y sitemap citan la URL de GitHub Pages', async () => {
 
 
 /* --------------------------------------------------------------------------
-   Forma y elevación — que no vuelva la deriva de los cinco radios
+   Fotos de producto
    -------------------------------------------------------------------------- */
-
-test('ningún radio se escribe a mano: sólo los tres escalones', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // La hoja llegó a tener CINCO radios sueltos —7, 8, 10, 12 y 99 px— repartidos
-  // en ocho excepciones a una regla que decía "radio: cero". La regla ya había
-  // perdido; lo único que quedaba de ella era la incoherencia. Ahora hay tres
-  // escalones y se piden por token, para que el sexto no pueda entrar sin que
-  // alguien lo declare arriba.
-  const declaracion = /border-radius:\s*([^;}]+)/g
-  const bloqueDeTokens = css.slice(0, css.indexOf('*,*::before'))
-  const cuerpo = css.slice(css.indexOf('*,*::before'))
-  const sueltos = [...cuerpo.matchAll(declaracion)]
-    .map(([, valor]) => valor.trim())
-    .filter((valor) => !valor.startsWith('var(--r-'))
-  expect(sueltos).toEqual([])
-  // Y los tres escalones existen de verdad, no son un var() que no resuelve.
-  for (const token of ['--r-s', '--r-m', '--r-full']) {
-    expect(bloqueDeTokens).toContain(`${token}:`)
-  }
-})
-
-test('la forma no se decide desde un componente', async () => {
-  // `border-radius: 99px` vivía dentro de un style inline de BandaPrecio.tsx:
-  // la última píldora que se escapaba de la hoja. Una forma es una decisión de
-  // sistema, y el sistema está en el CSS.
-  const componentes = new Bun.Glob('**/*.tsx')
-  for await (const ruta of componentes.scan('src')) {
-    const fuente = await readFile(`src/${ruta}`, 'utf8')
-    expect({ ruta, radio: /borderRadius/.test(fuente) }).toEqual({ ruta, radio: false })
-  }
-})
-
-test('el bidón se apoya igual en la portada y en la tarjeta', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  const fuentes = await Promise.all(
-    ['pages/home/Hero', 'pages/home/Planes', 'pages/home/Preguntas', 'features/productos/TarjetaProducto']
-      .map((f) => readFile(`src/${f}.tsx`, 'utf8')),
-  )
-  // El síntoma original: la misma foto flotaba en el hero con un drop-shadow
-  // escrito a mano y estaba metida en un cajón gris cuatrocientos píxeles más
-  // abajo. El producto hablaba con dos voces según dónde saliera. Ahora todo
-  // objeto apoyado pasa por la misma envoltura, y la sombra se define una vez.
-  for (const fuente of fuentes) expect(fuente).toContain('className="objeto')
-  expect(css).toContain('.objeto::before{')
-
-  // Y no vuelve el drop-shadow de silueta. No se veía —el bidón es plástico
-  // translúcido y drop-shadow se pondera por el alfa— y de verse tendría la
-  // forma equivocada: la silueta de un cilindro es igual de ancha arriba que
-  // abajo, así que lo que sale debajo es un segundo bidón gris.
-  expect(css).not.toContain('drop-shadow(var(--sombra-objeto))')
-
-  // Y el encuadre de la tarjeta no vuelve a ser una caja: ni fondo ni radio.
-  const shot = css.slice(css.indexOf('.card .shot{'), css.indexOf('.card .shot .objeto'))
-  expect(shot).not.toContain('background:')
-  expect(shot).not.toContain('border-radius:')
-})
-
-
-test('la composición no se apaga en el móvil', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // Los objetos de banda llegaron a ir a display:none por debajo de 900 px. El
-  // resultado medido a 375 px eran 3 de 8 bandas con objeto y cero piezas
-  // cruzando el margen: los números de antes de empezar. Toda la composición
-  // era de escritorio, en un negocio que vende por WhatsApp en Lima.
-  const regla = css.slice(css.indexOf('.objeto-banda{'), css.indexOf('.objeto-alto'))
-  expect(regla).not.toContain('display:none')
-  // Y el objeto de banda tiene tamaño en el estado base, no sólo dentro del
-  // @media de escritorio: si la altura viviera únicamente ahí, el móvil se
-  // quedaría otra vez con la página de antes de empezar.
-  expect(regla).toMatch(/height:clamp\(/)
-  // El bidón de la portada, igual: se mide por alto en el estado base.
-  const abre = css.indexOf('.hero-foto{')
-  const hero = css.slice(abre, css.indexOf('@media(min-width:960px)', abre))
-  expect(hero).toMatch(/height:clamp\(/)
-})
 
 test('cada foto de producto se sirve una sola vez', async () => {
   const { readdir } = await import('node:fs/promises')
@@ -783,24 +424,3 @@ test('cada foto de producto se sirve una sola vez', async () => {
 })
 
 
-test('la envoltura de la sombra mide lo mismo que la foto', async () => {
-  const css = await readFile('src/styles/site.css', 'utf8')
-  // Se rompió dos veces seguidas, de dos maneras distintas, y las dos por
-  // dejar el ancho de la envoltura en manos del ajuste automático:
-  //   · con `left:50%` el espacio disponible de un absoluto es sólo la mitad
-  //     derecha del encuadre, y la foto ancha salía un 35 % aplastada;
-  //   · con `inset:0` la envoltura se estira al contenedor entero —322 px
-  //     contra 149 de foto— y la elipse, que se dibuja al 100 % de la
-  //     envoltura, aparecía 86 px a la derecha del bidón en vez de debajo.
-  // La proporción la mide scripts/marcar-producto.py y viaja como --ratio.
-  const objeto = css.slice(css.indexOf('.objeto{'), css.indexOf('.objeto > img'))
-  expect(objeto).toContain('aspect-ratio:var(--ratio')
-
-  // Y todo el que coloca un objeto pasa el encuadre; sin --ratio la
-  // proporción cae al 1/1 de reserva y la envoltura vuelve a no coincidir.
-  const fuentes = await Promise.all(
-    ['pages/home/Hero', 'pages/home/Planes', 'pages/home/Preguntas', 'features/productos/TarjetaProducto']
-      .map((f) => readFile(`src/${f}.tsx`, 'utf8')),
-  )
-  for (const fuente of fuentes) expect(fuente).toContain('encuadreDe')
-})

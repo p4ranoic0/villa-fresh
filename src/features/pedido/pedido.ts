@@ -1,5 +1,8 @@
 import type { LineaPedido, Producto } from '../../types'
 
+/** Tope por producto. Más de 99 bidones ya no es un pedido de la web. */
+export const CANTIDAD_MAXIMA = 99
+
 export type AccionPedido =
   | { tipo: 'agregar'; sku: string }
   | { tipo: 'incrementar'; sku: string }
@@ -14,7 +17,9 @@ export function reducirPedido(estado: LineaPedido[], accion: AccionPedido): Line
     case 'incrementar': {
       const existe = estado.some((l) => l.sku === accion.sku)
       return existe
-        ? estado.map((l) => (l.sku === accion.sku ? { ...l, cantidad: l.cantidad + 1 } : l))
+        ? estado.map((l) =>
+            l.sku === accion.sku ? { ...l, cantidad: Math.min(CANTIDAD_MAXIMA, l.cantidad + 1) } : l,
+          )
         : [...estado, { sku: accion.sku, cantidad: 1 }]
     }
     case 'decrementar':
@@ -28,6 +33,16 @@ export function reducirPedido(estado: LineaPedido[], accion: AccionPedido): Line
     case 'restaurar':
       return accion.lineas
   }
+}
+
+/** Las líneas en el orden del catálogo, cada una con su producto. Así la bolsa
+ *  y el mensaje de WhatsApp listan siempre igual, se agregue en el orden que se
+ *  agregue. Las líneas cuyo SKU ya no existe se descartan. */
+export function lineasConProducto(lineas: LineaPedido[], productos: Producto[]) {
+  return productos.flatMap((producto) => {
+    const linea = lineas.find((l) => l.sku === producto.sku)
+    return linea ? [{ linea, producto }] : []
+  })
 }
 
 export function totalUnidades(lineas: LineaPedido[]): number {
@@ -44,4 +59,9 @@ export function totalSoles(lineas: LineaPedido[], productos: Producto[]): number
 
 export function hayPendientes(lineas: LineaPedido[], productos: Producto[]): boolean {
   return lineas.some((l) => productos.find((p) => p.sku === l.sku)?.precio === null)
+}
+
+/** Cuántos productos distintos quedan por cotizar. */
+export function productosACotizar(lineas: LineaPedido[], productos: Producto[]): number {
+  return lineas.filter((l) => productos.find((p) => p.sku === l.sku)?.precio === null).length
 }

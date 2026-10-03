@@ -1,52 +1,57 @@
 import { useCallback, useEffect, useState } from 'react'
+import { iniciarAnimaciones, irA, pausarScroll } from '../animaciones'
 import Footer from '../components/Footer'
 import Nav from '../components/Nav'
-import WaFlotante from '../components/WaFlotante'
-import BotonCarrito from '../features/pedido/BotonCarrito'
-import CajonPedido from '../features/pedido/CajonPedido'
+import BarraPedido from '../features/pedido/BarraPedido'
+import Bolsa from '../features/pedido/Bolsa'
 import { usePedido } from '../features/pedido/usePedido'
-import { revelar } from '../revelado'
-import BandaPrecio from './home/BandaPrecio'
 import Cierre from './home/Cierre'
 import Cobertura from './home/Cobertura'
-import PorConfirmar from './home/PorConfirmar'
+import Frase from './home/Frase'
 import Hero from './home/Hero'
 import Planes from './home/Planes'
+import Precios from './home/Precios'
 import Preguntas from './home/Preguntas'
 import Proceso from './home/Proceso'
 import Productos from './home/Productos'
 
 export default function Home() {
-  const [abierto, setAbierto] = useState(false)
   const pedido = usePedido()
-  const abrirCajon = useCallback(() => setAbierto(true), [])
-  // Después del primer pintado: el HTML publicado ya trae las secciones y lo
-  // que hace el revelado es esconder únicamente lo que todavía no se ve.
-  useEffect(revelar, [])
-  const cerrarCajon = useCallback(() => setAbierto(false), [])
+  const [bolsaAbierta, setBolsaAbierta] = useState(false)
+
+  useEffect(iniciarAnimaciones, [])
+
+  // Con la bolsa abierta la página no se desplaza por detrás.
+  useEffect(() => {
+    pausarScroll(bolsaAbierta)
+    return () => pausarScroll(false)
+  }, [bolsaAbierta])
+
+  const abrirBolsa = useCallback(() => setBolsaAbierta(true), [])
+  const cerrarBolsa = useCallback(() => setBolsaAbierta(false), [])
+  const verProductos = useCallback(() => {
+    setBolsaAbierta(false)
+    pausarScroll(false)
+    irA('productos')
+  }, [])
 
   return (
     <>
-      <Nav accion={<BotonCarrito unidades={pedido.unidades} onAbrir={abrirCajon} />} />
+      <Nav unidades={pedido.unidades} onAbrirBolsa={abrirBolsa} />
       <main>
         <Hero />
-        <BandaPrecio />
-        <Productos onAgregar={pedido.agregar} />
+        <Frase />
         <Proceso />
+        <Precios />
+        <Productos lineas={pedido.lineas} onAgregar={pedido.agregar} onQuitarUno={pedido.decrementar} />
         <Planes />
         <Cobertura />
         <Preguntas />
         <Cierre />
       </main>
       <Footer />
-      {/* Fuera de <main> y después del pie a propósito. Metida entre el cierre
-          y el pie ocupaba el sitio donde va la última sección de contenido de
-          cualquier web, así que se leía como contenido por mucho que el rótulo
-          dijera lo contrario. Aquí la página termina donde termina —cierre,
-          pie— y la nota queda detrás, que es lo que es: andamio. */}
-      <PorConfirmar />
-      <CajonPedido abierto={abierto} onCerrar={cerrarCajon} pedido={pedido} />
-      <WaFlotante />
+      {pedido.unidades > 0 && !bolsaAbierta && <BarraPedido pedido={pedido} onAbrir={abrirBolsa} />}
+      <Bolsa abierta={bolsaAbierta} onCerrar={cerrarBolsa} onVerProductos={verProductos} pedido={pedido} />
     </>
   )
 }

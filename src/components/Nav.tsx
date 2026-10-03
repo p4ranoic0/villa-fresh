@@ -1,73 +1,52 @@
-import { useEffect, useRef, type ReactNode, type RefObject } from 'react'
-import { NEGOCIO } from '../data/negocio'
-import BotonTema from './BotonTema'
-import Isotipo from './Isotipo'
+import { useEffect, useRef } from 'react'
+import { saltarContador } from '../animaciones'
+import { urlWhatsApp } from '../data/negocio'
+import { IconoBolsa, IconoGota } from './Iconos'
+
+export const MENSAJE_PEDIR = 'Hola Villa Fresh, quiero pedir un bidón de 20L'
+
+const ENLACES = [
+  ['proceso', 'Proceso'],
+  ['precio', 'Precios'],
+  ['productos', 'Productos'],
+  ['cobertura', 'Cobertura'],
+  ['preguntas', 'Preguntas'],
+] as const
 
 interface Props {
-  /** Bloque de acción a la derecha: el botón del pedido. */
-  accion: ReactNode
+  unidades: number
+  onAbrirBolsa: () => void
 }
 
-/**
- * Marca el documento en cuanto la barra deja de estar apoyada en el borde
- * superior de la página.
- *
- * La barra ya era `sticky`, pero se quedaba exactamente igual arriba del todo
- * que flotando sobre el contenido, y eso es lo que hace que una página se
- * sienta impresa: no acusa que la estás recorriendo. Con la marca, la barra se
- * estrecha y se despega del fondo, que es la única señal que da la página de
- * que hay alguien moviéndola.
- *
- * Es un testigo de un píxel y un observador, no un escuchador de scroll: el
- * scroll dispara muchísimas más veces de las que aquí hay algo que decidir.
- */
-function useDesplazado(testigo: RefObject<HTMLDivElement | null>) {
+export default function Nav({ unidades, onAbrirBolsa }: Props) {
+  const contador = useRef<HTMLSpanElement>(null)
+  const previas = useRef(unidades)
+
   useEffect(() => {
-    const t = testigo.current
-    if (!t) return
-    const raiz = document.documentElement
-    const observador = new IntersectionObserver(([entrada]) => {
-      if (!entrada) return
-      if (entrada.isIntersecting) raiz.removeAttribute('data-desplazado')
-      else raiz.setAttribute('data-desplazado', '')
-    })
-    observador.observe(t)
-    return () => {
-      observador.disconnect()
-      raiz.removeAttribute('data-desplazado')
-    }
-  }, [testigo])
-}
-
-export default function Nav({ accion }: Props) {
-  const testigo = useRef<HTMLDivElement>(null)
-  useDesplazado(testigo)
+    if (unidades > previas.current) saltarContador(contador.current)
+    previas.current = unidades
+  }, [unidades])
 
   return (
-    <>
-      <div className="testigo-tope" ref={testigo} aria-hidden="true" />
-      <nav className="nav">
-        <div className="wrap nav-in">
-          <a className="brand" href="#inicio">
-            <Isotipo ancho={26} alto={31} />
-            <span>
-              <span className="brand-name">Villa Fresh</span>
-              <span className="brand-tag">Agua de mesa · Lima</span>
-            </span>
-          </a>
-          <div className="nav-links">
-            <a href="#proceso">Proceso</a>
-            <a href="#productos">Productos</a>
-            <a href="#cobertura">Cobertura</a>
-            <a href="#preguntas">Preguntas</a>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-            <span className="nav-tel">{NEGOCIO.telefonoVisible}</span>
-            <BotonTema />
-            {accion}
-          </div>
+    <nav className="nav">
+      <div className="nav-in">
+        <a href="#inicio" className="nav-marca">
+          <IconoGota />
+          <span>Villa Fresh</span>
+        </a>
+        <div className="nav-enlaces">
+          {ENLACES.map(([id, rotulo]) => (
+            <a key={id} href={`#${id}`}>{rotulo}</a>
+          ))}
         </div>
-      </nav>
-    </>
+        <div className="nav-acciones">
+          <button type="button" className="nav-bolsa" onClick={onAbrirBolsa} aria-label="Ver bolsa">
+            <IconoBolsa />
+            {unidades > 0 && <span ref={contador} className="nav-contador">{unidades}</span>}
+          </button>
+          <a href={urlWhatsApp(MENSAJE_PEDIR)} target="_blank" rel="noopener" className="btn btn-sm">Pedir</a>
+        </div>
+      </div>
+    </nav>
   )
 }

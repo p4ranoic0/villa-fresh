@@ -1,37 +1,52 @@
 import { PRODUCTOS } from '../../data/productos'
-import Grilla from '../../features/productos/Grilla'
+import { soles } from '../../features/pedido/mensajeWhatsApp'
+import type { LineaPedido } from '../../types'
 
 interface Props {
+  lineas: LineaPedido[]
   onAgregar: (sku: string) => void
+  onQuitarUno: (sku: string) => void
 }
 
-/**
- * Los seis productos, en la portada.
- *
- * Vivían en una página aparte con filtros por categoría. Con seis productos
- * ese catálogo era una sala de espera: un clic más para llegar a lo mismo, y
- * un filtro que nunca tendría nada que filtrar. Ahora se pide desde donde se
- * lee el precio.
- */
-export default function Productos({ onAgregar }: Props) {
+export default function Productos({ lineas, onAgregar, onQuitarUno }: Props) {
   return (
-    <section className="band" id="productos">
-      <div className="wrap">
-        <div className="split">
-          <div>
-            <h2 style={{ marginTop: 18 }}>Arma tu pedido.</h2>
-          </div>
-          <p className="lede" style={{ maxWidth: '46ch' }}>
-            Elige lo que necesitas y lo enviamos armado por WhatsApp: llega la lista completa
-            con cantidades y total, y desde ahí coordinamos dirección y hora.
-          </p>
+    <section id="productos" className="seccion">
+      <div className="contenedor">
+        <div data-reveal="" className="productos-cabeza">
+          <h2 className="titulo-seccion">Arma tu pedido.</h2>
+          <p className="productos-bajada">Elige lo que necesitas y lo enviamos a WhatsApp con el mensaje ya escrito.</p>
         </div>
-
-        <div className="cat-head">
-          <span className="lbl">{PRODUCTOS.length} productos</span>
-          <span className="lbl">Precios en soles · IGV incluido</span>
+        <div className="productos">
+          {PRODUCTOS.map((p) => {
+            const cantidad = lineas.find((l) => l.sku === p.sku)?.cantidad ?? 0
+            return (
+              <article key={p.sku} data-reveal="" className="card">
+                <div className="card-foto">
+                  <img src={p.imagen} alt={p.nombre} loading="lazy" />
+                  {p.etiqueta && <span className="card-etiqueta">{p.etiqueta}</span>}
+                </div>
+                {p.nota && <div className="card-nota">{p.nota}</div>}
+                <h3>{p.nombre}</h3>
+                <p className="card-desc">{p.desc}</p>
+                <div className="card-pie">
+                  <div>
+                    <div className="card-precio">{p.precio === null ? 'A cotizar' : soles(p.precio)}</div>
+                    <div className="card-unidad">{p.unidad}</div>
+                  </div>
+                  {cantidad === 0 ? (
+                    <button type="button" className="btn btn-md" onClick={() => onAgregar(p.sku)}>Agregar</button>
+                  ) : (
+                    <div className="stepper">
+                      <button type="button" className="stepper-menos" onClick={() => onQuitarUno(p.sku)} aria-label="Quitar">−</button>
+                      <span>{cantidad}</span>
+                      <button type="button" className="stepper-mas" onClick={() => onAgregar(p.sku)} aria-label="Agregar">+</button>
+                    </div>
+                  )}
+                </div>
+              </article>
+            )
+          })}
         </div>
-        <Grilla productos={PRODUCTOS} onAgregar={onAgregar} />
       </div>
     </section>
   )

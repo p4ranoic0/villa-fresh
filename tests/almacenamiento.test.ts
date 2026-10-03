@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from 'bun:test'
-import { guardarPedido, leerPedido } from '../src/features/pedido/almacenamiento'
+import { ENTREGA_VACIA, guardarEntrega, guardarPedido, leerEntrega, leerPedido } from '../src/features/pedido/almacenamiento'
 import type { Producto } from '../src/types'
 
 const PRODUCTOS: Producto[] = [
@@ -60,4 +60,25 @@ test('un pedido válido hace ida y vuelta por localStorage', () => {
   const lineas = [{ sku: 'VF-B20', cantidad: 2 }]
   guardarPedido(lineas)
   expect(leerPedido(PRODUCTOS)).toEqual(lineas)
+})
+
+test('una cantidad no entera se descarta y una enorme se recorta a 99', () => {
+  localStorage.setItem(
+    'villafresh:pedido',
+    JSON.stringify([{ sku: 'VF-B20', cantidad: 1.5 }, { sku: 'VF-B20', cantidad: 500 }]),
+  )
+  expect(leerPedido(PRODUCTOS)).toEqual([{ sku: 'VF-B20', cantidad: 99 }])
+})
+
+test('los datos de entrega hacen ida y vuelta por localStorage', () => {
+  const entrega = { direccion: 'Av. Larco 123', distrito: 'Miraflores', referencia: 'Portón azul', pago: 'Transferencia' as const }
+  guardarEntrega(entrega)
+  expect(leerEntrega()).toEqual(entrega)
+})
+
+test('una entrega corrupta vuelve a los valores vacíos campo por campo', () => {
+  localStorage.setItem('villafresh:entrega', JSON.stringify({ direccion: 12, distrito: 'Lince', pago: 'Tarjeta' }))
+  expect(leerEntrega()).toEqual({ ...ENTREGA_VACIA, distrito: 'Lince' })
+  localStorage.setItem('villafresh:entrega', '{roto')
+  expect(leerEntrega()).toEqual(ENTREGA_VACIA)
 })
